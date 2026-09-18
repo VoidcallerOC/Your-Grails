@@ -6,8 +6,8 @@ function navigate(to) { window.location.hash = to }
 export function Reveal({ phase, card, onDone }) {
   return (
     <div className="reveal">
-      {phase === 'rip' && (<><div className="rip pack-pro"><div className="pack-face"><div className="pack-title">YOUR<br/>GRAILS</div></div></div><h2>Tearing the seal…</h2></>)}
-      {phase === 'verify' && (<><h2>Verifying fair draw</h2><p className="muted">Demo verification beat. Production uses Chainlink VRF on Avalanche.</p></>)}
+      {phase === 'rip' && (<><div className="rip pack-pro"><div className="pack-face"><div className="pack-title">YOUR<br/>GRAILS</div></div></div><h2>Tearing the seal…</h2><p className="muted">The vault quiets. The pack comes forward.</p></>)}
+      {phase === 'verify' && (<><h2>Hold.</h2><p className="muted">Demo verification beat. Production uses Chainlink VRF on Avalanche.</p></>)}
       {phase === 'show' && card && (
         <>
           <div style={{ display: 'grid', placeItems: 'center', marginBottom: 18 }}><Slab card={card} large /></div>
