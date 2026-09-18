@@ -27,7 +27,7 @@ const TIERS = {
     accent: '#c4b5fd',    // rim-light colour
     // physical behaviour: lighter, quicker, more restless
     idle: { yaw: -0.30, pitch: 0.10, yawAmp: 0.16, pitchAmp: 0.07, speed: 0.55, floatAmp: 0.045, floatSpeed: 0.9, phase: 0.2, roll: 0.03 },
-    envIntensity: 1.15, clearcoat: 0.55,
+    envIntensity: 0.75, clearcoat: 0.5,
   },
   master: {
     front: '/packs/master-vault-front.webp',
@@ -37,7 +37,7 @@ const TIERS = {
     accent: '#f0cf72',    // warm gold rim light
     // physical behaviour: heavier, slower, more deliberate, independently phased
     idle: { yaw: 0.28, pitch: 0.09, yawAmp: 0.12, pitchAmp: 0.05, speed: 0.36, floatAmp: 0.035, floatSpeed: 0.62, phase: 1.7, roll: 0.02 },
-    envIntensity: 1.0, clearcoat: 0.4,
+    envIntensity: 0.7, clearcoat: 0.4,
   },
 }
 
@@ -220,10 +220,14 @@ function PackMesh({ tier, pointer, reveal }) {
     return () => { ok = false }
   }, [tier])
 
+  // The raster IS the look: it already carries real foil, wrinkles and
+  // reflections. So the artwork stays the dominant term (low metalness keeps
+  // its diffuse colour intact) and the material only adds a moving specular /
+  // clearcoat sheen on top. Heavy metalness turned the gold grey.
   const frontMat = useMemo(() => new THREE.MeshPhysicalMaterial({
-    roughness: 1, metalness: 1, envMapIntensity: cfg.envIntensity,
-    clearcoat: cfg.clearcoat, clearcoatRoughness: 0.35,
-    normalScale: new THREE.Vector2(0.4, 0.4),
+    roughness: 1, metalness: 0.2, envMapIntensity: cfg.envIntensity,
+    clearcoat: cfg.clearcoat, clearcoatRoughness: 0.28,
+    normalScale: new THREE.Vector2(0.18, 0.18),
   }), [cfg.envIntensity, cfg.clearcoat])
   const backMat = useMemo(() => new THREE.MeshStandardMaterial({
     color: new THREE.Color(cfg.body), roughness: 0.5, metalness: 0.55, envMapIntensity: cfg.envIntensity * 0.8,
@@ -297,10 +301,11 @@ function Lights({ tier }) {
   const cfg = TIERS[tier]
   return (
     <>
-      <ambientLight intensity={0.32} />
-      <directionalLight position={[2.5, 3.2, 3.5]} intensity={2.3} color="#fff6e8" />
-      <directionalLight position={[-3, 1.5, -1.5]} intensity={1.15} color={cfg.accent} />
-      <pointLight position={[0, -1.5, 2.5]} intensity={0.5} color="#8ea2ff" />
+      {/* Even base light so the artwork reads at its true value, plus a key and
+          a tier-tinted rim that travel across the foil as the pack turns. */}
+      <ambientLight intensity={1.15} />
+      <directionalLight position={[2.5, 3.2, 3.5]} intensity={1.1} color="#fff6e8" />
+      <directionalLight position={[-3, 1.5, 1.5]} intensity={0.55} color={cfg.accent} />
     </>
   )
 }
@@ -331,7 +336,10 @@ function PackCanvas({ tier, reveal }) {
     <div className="pack-canvas" onPointerMove={onMove} onPointerLeave={onLeave}>
       <Canvas
         dpr={[1, isMobile ? 1.5 : 1.9]}
-        gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+        gl={{ antialias: true, alpha: true, powerPreference: 'high-performance',
+              // Keep the raster's own colour: ACES (the default) desaturated the
+              // gold and lifted the blacks away from the supplied artwork.
+              toneMapping: THREE.NoToneMapping }}
         camera={{ position: [0, 0, 3.35], fov: 30 }}
       >
         <PackScene tier={tier} pointer={pointer} reveal={reveal} />
