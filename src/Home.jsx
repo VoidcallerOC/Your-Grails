@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { CHAINS, ODDS, PACKS, VAULT } from './data'
+import { CHAINS, PACKS, VAULT } from './data'
 import { PackArt, PackRail } from './Packs3D'
 
 function navigate(to) { window.location.hash = to }
@@ -17,6 +17,13 @@ function VaultStage({ children }) {
 }
 
 export function Slab({ card, large }) {
+  if (card?.photo) {
+    return (
+      <figure className={large ? 'slab-photo slab-lg' : 'slab-photo'}>
+        <img src={card.photo} alt={`${card.name} ${card.company} ${card.grade} slab`} />
+      </figure>
+    )
+  }
   const style = { background: `radial-gradient(circle at 30% 20%, #fff2, transparent 40%), ${card.art || '#222'}` }
   return (
     <div className={large ? 'slab slab-lg' : 'slab'}>
@@ -31,6 +38,7 @@ export function Slab({ card, large }) {
 }
 
 export function Home({ session, onConnect }) {
+  const hero = VAULT.find((c) => c.id === 'charizard') || VAULT[1]
   return (
     <>
       <section className="hero">
@@ -49,7 +57,7 @@ export function Home({ session, onConnect }) {
           <div className="orbits rev" />
           <div className="hero-mini pro"><PackArt tier="PRO" /></div>
           <div className="hero-mini master"><PackArt tier="MASTER" /></div>
-          <div className="hero-card-wrap"><Slab card={VAULT[1]} /></div>
+          <div className="hero-card-wrap"><Slab card={hero} /></div>
         </VaultStage>
       </section>
       <div className="trust-row">
@@ -61,13 +69,6 @@ export function Home({ session, onConnect }) {
         <div><strong>Pay in USDC, from any chain</strong><p className="muted">One balance, six networks — we bridge it for you</p></div>
         <div className="row">{CHAINS.map((c) => <span key={c} className="badge">{c}</span>)}</div>
       </div>
-      <div className="stats">
-        <div className="stat"><label>Chase cards pulled</label><b>116</b><span className="muted">18 grails · a pack ripped every 5 hr</span></div>
-        <div className="stat"><label>Packs + battle volume</label><b>$814K</b><span className="muted">12K packs ripped</span></div>
-        <div className="stat"><label>Top pull this week</label><b>$1.3K</b><span className="muted">Shining Magikarp</span></div>
-        <div className="stat"><label>Arena & market</label><b>1.0K battles</b><span className="muted">61 active listings</span></div>
-      </div>
-      <p className="notice" style={{ marginTop: 10 }}>Live product figures shown as published on yourgrails.com.</p>
       <div className="section-head">
         <div>
           <span className="badge">FEATURED DROPS</span>
