@@ -69,10 +69,23 @@ function usePackArt(tier) {
 function useLive3D(elRef, opts) {
   const ptr = useRef({ x: 0, y: 0, z: 0, tx: 0, ty: 0, tz: 0 })
   useEffect(() => {
+    // Packs carry their own perspective, scaled to their width, so the depth
+    // reads the same in every context — the pack detail page has no
+    // perspective ancestor at all, which made the rotation orthographic (a
+    // flat shear) instead of a solid turning in space. Opt-in via opts.persp
+    // so the card Slab, which shares this hook, is unaffected.
+    let persp = ''
+    const measure = () => {
+      const el = elRef.current
+      if (!el || !opts.persp) return
+      persp = `perspective(${Math.round(el.offsetWidth * opts.persp)}px) `
+    }
+    measure()
+    window.addEventListener('resize', measure)
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (reduce) {
-      if (elRef.current) elRef.current.style.transform = `rotateY(${opts.yaw}deg) rotateX(8deg)`
-      return
+      if (elRef.current) elRef.current.style.transform = `${persp}rotateY(${opts.yaw}deg) rotateX(8deg)`
+      return () => window.removeEventListener('resize', measure)
     }
     let raf
     const tick = (t) => {
@@ -86,12 +99,12 @@ function useLive3D(elRef, opts) {
       const yaw = opts.yaw + Math.sin(s / opts.period + opts.phase) * opts.yawAmp + p.x * 16
       const pitch = opts.pitch + Math.cos(s / (opts.period * 1.18) + opts.phase) * opts.pitchAmp + p.y * -10
       const lift = Math.sin(s / opts.bob + opts.phase) * opts.bobAmp + p.z
-      el.style.transform = `translateY(${lift.toFixed(2)}px) rotateY(${yaw.toFixed(2)}deg) rotateX(${pitch.toFixed(2)}deg)`
+      el.style.transform = `${persp}translateY(${lift.toFixed(2)}px) rotateY(${yaw.toFixed(2)}deg) rotateX(${pitch.toFixed(2)}deg)`
       el.style.setProperty('--foil', `${50 + Math.sin(s / 2.4 + opts.phase) * 28 + p.x * 20}%`)
       raf = requestAnimationFrame(tick)
     }
     raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
+    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', measure) }
   }, [])
   return {
     aim: (e, hot) => {
@@ -172,8 +185,10 @@ function Pack3D({ tier, pack, onOpen, decorative }) {
   const art = usePackArt(t)
   const hasArt = !!art.front
   const live = useLive3D(ref, master
-    ? { yaw: 22, pitch: 7, yawAmp: 10, pitchAmp: 4, period: 3.4, bob: 2.6, bobAmp: 7, phase: 1.7 }
-    : { yaw: -24, pitch: 8, yawAmp: 9, pitchAmp: 3.5, period: 2.8, bob: 2.2, bobAmp: 6, phase: 0.2 }
+    // Rest pose sits at a readable 3/4 (~27deg) so the side wall and the
+    // top/bottom thickness are visible standing still, not only mid-sweep.
+    ? { yaw: 27, pitch: 9, yawAmp: 10, pitchAmp: 4, period: 3.4, bob: 2.6, bobAmp: 7, phase: 1.7, persp: 3.4 }
+    : { yaw: -27, pitch: 9, yawAmp: 9, pitchAmp: 3.5, period: 2.8, bob: 2.2, bobAmp: 6, phase: 0.2, persp: 3.4 }
   )
   const label = pack ? `${pack.name}, ${pack.tier} tier, $${pack.price} USDC` : `${tier} pack`
   const open = () => { if (onOpen && pack) onOpen(pack) }
