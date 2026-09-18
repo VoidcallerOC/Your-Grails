@@ -80,13 +80,13 @@ export default function App() {
     setRipTier(pack?.tier || 'PRO')
     navigate('/reveal')
     setPhase('rip')
-    setTimeout(() => setPhase('verify'), 1100)
+    setTimeout(() => setPhase('verify'), 2100)
     setTimeout(() => {
       const card = pickCard()
       setPulled(card)
       setOwned((o) => [card, ...o])
       setPhase('show')
-    }, 2200)
+    }, 3200)
   }
   const parts = route.split('/').filter(Boolean)
   let view = <Home session={session} onConnect={connect} />

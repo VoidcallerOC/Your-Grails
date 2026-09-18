@@ -7,7 +7,7 @@ function navigate(to) { window.location.hash = to }
 export function Reveal({ phase, card, tier, onDone }) {
   return (
     <div className="reveal">
-      {phase === 'rip' && (<><div className="reveal-pack"><Pack3D tier={tier} decorative /></div><h2>Tearing the seal…</h2><p className="muted">The vault quiets. The pack comes forward.</p></>)}
+      {phase === 'rip' && (<><div className="reveal-pack"><Pack3D tier={tier} decorative reveal /></div><h2>Tearing the seal…</h2><p className="muted">The vault quiets. The pack comes forward.</p></>)}
       {phase === 'verify' && (<><h2>Hold.</h2><p className="muted">Demo verification beat. Production uses Chainlink VRF on Avalanche.</p></>)}
       {phase === 'show' && card && (
         <>

@@ -7,6 +7,13 @@
   transform-style: preserve-3d; will-change: transform;
   cursor: pointer; outline: none;
 }
+/* Genuine WebGL pack (PackGL.jsx): the <Canvas> fills the sized container and
+   the 3D pack is framed inside it. No CSS 3D faces are used for these. */
+.pack-3d.pack-gl { transform-style: flat; }
+.pack-canvas, .pack-fallback { position: absolute; inset: 0; }
+.pack-canvas canvas { display: block; width: 100% !important; height: 100% !important; }
+.pack-fallback img { width: 100%; height: 100%; object-fit: contain; }
+.pack-3d.pack-gl.is-hot { filter: drop-shadow(0 18px 26px var(--pack-glow)); }
 /* When real artwork is present the physical pack IS the artwork: its box takes
    the source aspect ratio (--art-ar, per tier below) so the front face is
    exactly the art — no letterbox, no crop. Height is derived from width; the
