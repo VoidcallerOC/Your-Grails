@@ -1,7 +1,20 @@
+import { useRef } from 'react'
 import { CHAINS, ODDS, PACKS, VAULT } from './data'
 import { PackArt, PackRail } from './Packs3D'
 
 function navigate(to) { window.location.hash = to }
+
+function VaultStage({ children }) {
+  const ref = useRef(null)
+  const onMove = (e) => {
+    const el = ref.current
+    if (!el) return
+    const r = el.getBoundingClientRect()
+    el.style.setProperty('--lx', ((e.clientX - r.left) / r.width * 100).toFixed(2) + '%')
+    el.style.setProperty('--ly', ((e.clientY - r.top) / r.height * 100).toFixed(2) + '%')
+  }
+  return <div className="vault" ref={ref} onMouseMove={onMove}>{children}</div>
+}
 
 export function Slab({ card, large }) {
   const style = { background: `radial-gradient(circle at 30% 20%, #fff2, transparent 40%), ${card.art || '#222'}` }
@@ -34,8 +47,9 @@ export function Home({ session, onConnect }) {
             <div className="trust-card"><div className="ico">⚡</div><h4>Instant settle</h4><p className="muted">Sell back for up to 90%</p></div>
           </div>
         </div>
-        <div className="stage">
+        <VaultStage>
           <div className="atmos" />
+          <div className="haze" />
           <div className="orbits" />
           <div className="orbits rev" />
           <div className="hero-mini pro"><PackArt tier="PRO" /></div>
@@ -43,7 +57,7 @@ export function Home({ session, onConnect }) {
           <div className="hero-card-wrap"><Slab card={VAULT[1]} large /></div>
           <div className="float-chip" style={{ left: 8, bottom: 86 }}><div className="tag">Just pulled</div>Lugia · PSA 10</div>
           <div className="float-chip buyback" style={{ right: 0, bottom: 18 }}><div className="tag">Instant buyback</div>Up to 90% USDC</div>
-        </div>
+        </VaultStage>
       </section>
       <div className="panel" style={{ marginTop: 18, display: 'flex', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
         <div><strong>Pay in USDC, from any chain</strong><p className="muted">One balance, six networks — we bridge it for you</p></div>
@@ -58,14 +72,8 @@ export function Home({ session, onConnect }) {
       <p className="notice" style={{ marginTop: 10 }}>Live product figures shown as published on yourgrails.com. This demo does not invent additional volume.</p>
       <div className="marquee" aria-hidden="true">
         <div className="marquee-track">
-          <span>Fa/Gyarados ex Pulled $62.74</span>
-          <span>Mareep Pulled $115</span>
-          <span>Blastoise ex Pulled $37.68</span>
-          <span>Rocket's Zapdos Pulled $83.11</span>
-          <span>Fa/Gyarados ex Pulled $62.74</span>
-          <span>Mareep Pulled $115</span>
-          <span>Blastoise ex Pulled $37.68</span>
-          <span>Rocket's Zapdos Pulled $83.11</span>
+          <span>Fa/Gyarados ex Pulled $62.74</span><span>Mareep Pulled $115</span><span>Blastoise ex Pulled $37.68</span><span>Rocket's Zapdos Pulled $83.11</span>
+          <span>Fa/Gyarados ex Pulled $62.74</span><span>Mareep Pulled $115</span><span>Blastoise ex Pulled $37.68</span><span>Rocket's Zapdos Pulled $83.11</span>
         </div>
       </div>
       <div className="section-head">
