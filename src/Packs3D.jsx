@@ -69,9 +69,7 @@ function VaultMark() {
       <circle cx="60" cy="60" r="10" fill="#e8c14a" />
       {[0,45,90,135,180,225,270,315].map((a) => {
         const r = (a * Math.PI) / 180
-        const x2 = 60 + Math.cos(r) * 30
-        const y2 = 60 + Math.sin(r) * 30
-        return <line key={a} x1="60" y1="60" x2={x2} y2={y2} stroke="#c9a227" strokeWidth="1.4" />
+        return <line key={a} x1="60" y1="60" x2={60 + Math.cos(r) * 30} y2={60 + Math.sin(r) * 30} stroke="#c9a227" strokeWidth="1.4" />
       })}
     </svg>
   )
@@ -128,6 +126,9 @@ function Pack3D({ tier, pack, onOpen, decorative }) {
       onKeyDown={(e) => { if (!decorative && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); open() } }}
     >
       <PackFace tier={tier} />
+      <div className="pk grain" aria-hidden="true" />
+      <div className="pk seal seal-top" aria-hidden="true" />
+      <div className="pk seal seal-bot" aria-hidden="true" />
       <div className="pk back" aria-hidden="true"><span>YG</span></div>
       <div className="pk side side-r" aria-hidden="true" />
       <div className="pk side side-l" aria-hidden="true" />
