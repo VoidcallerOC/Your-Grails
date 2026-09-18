@@ -9,7 +9,7 @@ html, body { overflow-x: hidden; }
 .hero-mini { position: absolute; z-index: 3; width: 148px; height: 208px; transform-style: preserve-3d; filter: drop-shadow(18px 28px 24px rgba(0,0,0,.55)); }
 .hero-mini.pro { left: 2%; top: 22%; animation: pack-sway-left 7.2s ease-in-out infinite, enter-left .7s ease .18s both; }
 .hero-mini.master { right: 0; bottom: 10%; animation: pack-sway-right 8.1s ease-in-out .45s infinite, enter-right .7s ease .32s both; }
-.hero-mini .pack-3d { width: 148px; height: 208px; }
+.hero-mini .pack-3d { width: 148px; }
 .hero-card-wrap { position: absolute; left: 50%; top: 46%; transform: translate(-50%,-50%); z-index: 5; animation: grail-float 8s ease-in-out infinite; filter: drop-shadow(0 28px 40px rgba(0,0,0,.55)); }
 .hero-card-wrap .slab { width: 250px; }
 .float-chip { z-index: 6; animation: chip-drift 10s ease-in-out infinite; }
@@ -19,7 +19,7 @@ html, body { overflow-x: hidden; }
 .marquee-track { display: flex; gap: 40px; width: max-content; animation: marquee 42s linear infinite; }
 .reveal { text-align: center; min-height: 420px; display: grid; place-items: center; }
 .reveal-pack { perspective: 1200px; display: grid; place-items: center; margin-bottom: 14px; animation: enter-left .5s ease both; }
-.reveal-pack .pack-3d { width: 184px; height: 262px; }
+.reveal-pack .pack-3d { width: 184px; }
 @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 @keyframes enter-left { from { opacity: 0; } to { opacity: 1; } }
 @keyframes enter-right { from { opacity: 0; } to { opacity: 1; } }
@@ -42,7 +42,7 @@ html, body { overflow-x: hidden; }
     left: auto !important; right: auto !important; top: auto !important; bottom: auto !important;
     width: 78px !important; height: auto !important; flex: 0 0 78px; animation: none !important; filter: none;
   }
-  .hero-mini .pack-3d { width: 78px !important; height: 110px !important; --d: 8px; }
+  .hero-mini .pack-3d { width: 78px !important; --d: 8px; }
   .hero-card-wrap { position: relative !important; left: auto !important; top: auto !important; transform: none !important; margin: 0; animation: none !important; flex: 0 0 150px; }
   .hero-card-wrap .slab, .hero-card-wrap .slab[style] { width: 150px !important; }
   .vault .orbits, .vault .orbits.rev, .float-chip { display: none !important; }
@@ -50,9 +50,4 @@ html, body { overflow-x: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .hero-copy, .hero-card-wrap, .hero-mini.pro, .hero-mini.master, .pack-3d .shine, .float-chip, .vault .orbits, .vault .atmos, .marquee-track { animation: none !important; }
 }
-/* Authoritative sizing for packs showing real artwork: the box takes the source
-   art's aspect ratio in EVERY context (hero, rail, detail, reveal, mobile).
-   Width stays per-context; height follows the art so the front face is exactly
-   the artwork with no frame and no crop. Placed last with !important so it wins
-   over the fixed per-context heights above (including the mobile ones). */
-.pack-3d.has-art { height: auto !important; aspect-ratio: var(--art-ar, 196 / 280); }
+/* Pack sizing is canonical in packs.css (.pack-3d width + aspect-ratio). */

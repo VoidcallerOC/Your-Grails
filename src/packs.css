@@ -1,11 +1,14 @@
 .pack-rail { display: grid; grid-template-columns: repeat(2, minmax(220px, 1fr)); gap: 40px 24px; align-items: end; perspective: 1400px; }
 .pack-slot { display: flex; flex-direction: column; align-items: center; gap: 18px; perspective: 1400px; min-width: 0; }
 .pack-meta { text-align: center; width: min(260px, 100%); }
+/* Canonical pack sizing: width is the only dimension set, height always
+   derives from the tier's source-art aspect ratio. */
 .pack-3d {
   --d: 15px; --foil: 50%;
-  /* The artwork fills the pack's front face, so the pack's own width is what
-     decides how much space the art occupies on screen. */
-  width: 268px; height: 280px; position: relative;
+  width: min(268px, 100%);
+  height: auto;
+  aspect-ratio: var(--art-ar, 196 / 280);
+  position: relative;
   transform-style: preserve-3d; will-change: transform;
   cursor: pointer; outline: none;
 }
@@ -181,7 +184,7 @@
 .hero-mini { animation: none !important; }
 @media (max-width: 800px) {
   .pack-rail { display: flex; flex-direction: column; align-items: center; overflow: visible; gap: 32px; padding: 8px 0 20px; }
-  .pack-3d { width: min(80vw, 330px); height: 240px; }
+  .pack-3d { width: min(82vw, 330px); height: auto; aspect-ratio: var(--art-ar, 196 / 280); }
   .emblem { width: 96px; height: 96px; }
 }
 @media (prefers-reduced-motion: reduce) { .pack-3d { will-change: auto; } }
