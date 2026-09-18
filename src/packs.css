@@ -1,6 +1,12 @@
 .pack-rail { display: grid; grid-template-columns: repeat(2, minmax(220px, 1fr)); gap: 40px 24px; align-items: end; perspective: 1400px; }
 .pack-slot { display: flex; flex-direction: column; align-items: center; gap: 18px; perspective: 1400px; min-width: 0; }
 .pack-meta { text-align: center; width: min(260px, 100%); }
+/* Perspective belongs to the containing context, like .pack-rail / .pack-slot /
+   .reveal-pack / .vault. The pack detail page had no perspective ancestor at
+   all, so its pack rotated orthographically — a flat shear rather than a solid
+   turning in space. Same value as the other stages, so every context shares
+   one camera treatment. */
+.pack-stage { display: grid; place-items: center; perspective: 1400px; }
 /* Canonical pack sizing: width is the only dimension set, height always
    derives from the tier's source-art aspect ratio. */
 .pack-3d {
