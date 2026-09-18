@@ -137,7 +137,39 @@
   background: linear-gradient(#fff2, transparent 40%), var(--pack-edge);
   transform-origin: top center; transform: rotateX(90deg) translateZ(calc(var(--d) / -2));
 }
-.pack-3d .foil, .pack-3d .shine { inset: 6px; border-radius: 8px; pointer-events: none; transform: translateZ(calc(var(--d) / 2 + 1px)); }
+/* Bottom edge — completes the box so the top edge no longer reads as a
+   separate lid sitting on the pack. */
+.pack-3d .base {
+  left: 0; right: 0; bottom: 0; height: var(--d);
+  background: linear-gradient(transparent 55%, #0007), var(--pack-edge);
+  transform-origin: bottom center; transform: rotateX(-90deg) translateZ(calc(var(--d) / -2));
+}
+/* With real artwork each edge shows that side's OWN foil pixels, sampled from
+   the front image, so the thickness is the same wrapper continuing round the
+   pack — including the top and bottom crimped edges — instead of flat bars. */
+.pack-3d.has-art .side-r,
+.pack-3d.has-art .side-l,
+.pack-3d.has-art .lid,
+.pack-3d.has-art .base { background-repeat: no-repeat, no-repeat; }
+.pack-3d.has-art .side-r {
+  background-image: linear-gradient(90deg, #0007, transparent 55%), var(--edge-img);
+  background-size: auto, auto 100%; background-position: center, right center;
+}
+.pack-3d.has-art .side-l {
+  background-image: linear-gradient(-90deg, #0007, transparent 55%), var(--edge-img);
+  background-size: auto, auto 100%; background-position: center, left center;
+}
+.pack-3d.has-art .lid {
+  background-image: linear-gradient(#fff3, transparent 60%), var(--edge-img);
+  background-size: auto, 100% auto; background-position: center, center top;
+}
+.pack-3d.has-art .base {
+  background-image: linear-gradient(transparent 40%, #0006), var(--edge-img);
+  background-size: auto, 100% auto; background-position: center, center bottom;
+}
+/* Flush with the face: a 6px inset drew a second rectangle inside the pack,
+   which read as a duplicated edge. */
+.pack-3d .foil, .pack-3d .shine { inset: 0; border-radius: 10px; pointer-events: none; transform: translateZ(calc(var(--d) / 2 + 1px)); }
 .pack-3d .shine {
   background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.22) 50%, transparent 60%);
   background-size: 240% 100%; background-position: var(--foil) 0; mix-blend-mode: screen;

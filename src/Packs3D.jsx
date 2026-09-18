@@ -177,6 +177,8 @@ function Pack3D({ tier, pack, onOpen, decorative }) {
   )
   const label = pack ? `${pack.name}, ${pack.tier} tier, $${pack.price} USDC` : `${tier} pack`
   const open = () => { if (onOpen && pack) onOpen(pack) }
+  // Hand the front artwork to the edge faces; each one samples its own side.
+  const edgeArt = hasArt ? { '--edge-img': `url("${art.front}")` } : undefined
   return (
     <div
       className={`pack-3d tier-${t} ${hasArt ? 'has-art' : ''} ${hot ? 'is-hot' : ''}`}
@@ -215,9 +217,14 @@ function Pack3D({ tier, pack, onOpen, decorative }) {
         />
       )}
       <div className="pk back" aria-hidden="true"><span>YG</span></div>
-      <div className="pk side side-r" aria-hidden="true" />
-      <div className="pk side side-l" aria-hidden="true" />
-      <div className="pk lid" aria-hidden="true" />
+      {/* The four edges carry the artwork so each one shows that side's own
+          foil pixels — the thickness reads as the same wrapper continuing
+          round the pack, not as separate coloured bars. The bottom edge
+          completes the box so the top no longer looks like an added-on lid. */}
+      <div className="pk side side-r" aria-hidden="true" style={edgeArt} />
+      <div className="pk side side-l" aria-hidden="true" style={edgeArt} />
+      <div className="pk lid" aria-hidden="true" style={edgeArt} />
+      <div className="pk base" aria-hidden="true" style={edgeArt} />
       <div className="pk foil" aria-hidden="true" />
       <div className="pk shine" aria-hidden="true" />
     </div>
