@@ -162,42 +162,33 @@ function getMaps(tier) {
 }
 
 /* ----------------------------------------------------------------------------
- * Pouch geometry: a subdivided plane displaced into a puffed foil pillow that
- * rolls to the silhouette edge, with flattened, serrated crimp seals top and
- * bottom. Front bulges +z, back bulges -z; together they enclose the volume.
+ * Pack body: ONE thin box. Its front (+z) face carries the artwork, so the
+ * silhouette IS the artwork — no outer shell, no second pack. The back is dark
+ * foil and the four thin walls are the physical foil edge/seals. A subtle
+ * front dome adds foil life without changing the silhouette.
+ * BoxGeometry material-group order is [+x, -x, +y, -y, +z(front), -z(back)].
  * ------------------------------------------------------------------------- */
 const geoCache = {}
-function makePlane(w, h, segX, segY, depth, side) {
-  const geo = new THREE.PlaneGeometry(w, h, segX, segY)
-  const pos = geo.attributes.position
-  const teeth = 26
-  for (let i = 0; i < pos.count; i++) {
-    const x = pos.getX(i), y = pos.getY(i)
-    const u = x / (w / 2), v = y / (h / 2)          // -1..1
-    // pillow bulge, smoothly 0 at the edges
-    let bulge = Math.pow(Math.cos(Math.min(1, Math.abs(u)) * Math.PI / 2), 0.62) *
-                Math.pow(Math.cos(Math.min(1, Math.abs(v)) * Math.PI / 2), 0.62)
-    let z = depth * bulge
-    // crimp band near top & bottom: flatten toward a thin lip + serrate
-    const cf = Math.min(1, Math.max(0, (Math.abs(v) - 0.8) / 0.2))
-    if (cf > 0) {
-      const tri = Math.abs(((x / (w / 2)) * teeth % 2 + 2) % 2 - 1) - 0.5 // ~[-0.5,0.5]
-      z = z * (1 - cf) + (0.14 * depth) * cf
-      z += cf * depth * 0.5 * tri
-    }
-    pos.setZ(i, side * z)
-  }
-  geo.computeVertexNormals()
-  return geo
-}
-function getPouch(tier) {
+function getBox(tier) {
   const key = `${TIERS[tier].ar}-${isMobile ? 'm' : 'd'}`
   if (geoCache[key]) return geoCache[key]
-  const h = 1.46, w = h * TIERS[tier].ar, depth = 0.11
-  const sx = isMobile ? 40 : 72, sy = isMobile ? 56 : 100
-  const front = makePlane(w, h, sx, sy, depth, 1)
-  const back = makePlane(w, h, sx, sy, depth, -1)
-  const val = { front, back, w, h, depth }
+  const h = 1.46, w = h * TIERS[tier].ar, depth = 0.06
+  const segX = isMobile ? 24 : 48, segY = isMobile ? 34 : 68
+  const geo = new THREE.BoxGeometry(w, h, depth, segX, segY, 1)
+  // Give ONLY the front (+z) face a whisper of a dome so foil catches light,
+  // while the silhouette (x/y extent) is untouched — still one clean pack edge.
+  const pos = geo.attributes.position
+  const dome = depth * 0.5
+  for (let i = 0; i < pos.count; i++) {
+    const z = pos.getZ(i)
+    if (z > depth * 0.49) {
+      const u = pos.getX(i) / (w / 2), v = pos.getY(i) / (h / 2)
+      const k = Math.cos(Math.min(1, Math.abs(u)) * Math.PI / 2) * Math.cos(Math.min(1, Math.abs(v)) * Math.PI / 2)
+      pos.setZ(i, z + dome * 0.5 * k)
+    }
+  }
+  geo.computeVertexNormals()
+  const val = { geo, w, h, depth }
   geoCache[key] = val
   return val
 }
@@ -219,7 +210,7 @@ function PackMesh({ tier, pointer, reveal }) {
   const group = useRef()
   const sealTop = useRef()
   const [maps, setMaps] = useState(null)
-  const pouch = useMemo(() => getPouch(tier), [tier])
+  const box = useMemo(() => getBox(tier), [tier])
   const p = useRef({ x: 0, y: 0 })
   const prog = useRef(0)
 
@@ -232,11 +223,16 @@ function PackMesh({ tier, pointer, reveal }) {
   const frontMat = useMemo(() => new THREE.MeshPhysicalMaterial({
     roughness: 1, metalness: 1, envMapIntensity: cfg.envIntensity,
     clearcoat: cfg.clearcoat, clearcoatRoughness: 0.35,
-    normalScale: new THREE.Vector2(0.45, 0.45),
+    normalScale: new THREE.Vector2(0.4, 0.4),
   }), [cfg.envIntensity, cfg.clearcoat])
   const backMat = useMemo(() => new THREE.MeshStandardMaterial({
-    color: new THREE.Color(cfg.body), roughness: 0.52, metalness: 0.55, envMapIntensity: cfg.envIntensity * 0.8,
+    color: new THREE.Color(cfg.body), roughness: 0.5, metalness: 0.55, envMapIntensity: cfg.envIntensity * 0.8,
   }), [cfg.body, cfg.envIntensity])
+  const sideMat = useMemo(() => new THREE.MeshStandardMaterial({
+    color: new THREE.Color(cfg.rim), roughness: 0.32, metalness: 0.85, envMapIntensity: cfg.envIntensity,
+  }), [cfg.rim, cfg.envIntensity])
+  // [+x, -x, +y(top seal), -y(bottom seal), +z(front art), -z(back)]
+  const materials = useMemo(() => [sideMat, sideMat, sideMat, sideMat, frontMat, backMat], [sideMat, frontMat, backMat])
 
   useEffect(() => {
     if (!maps || !frontMat) return
@@ -285,13 +281,12 @@ function PackMesh({ tier, pointer, reveal }) {
 
   return (
     <group ref={group}>
-      <mesh geometry={pouch.front} material={frontMat} />
-      <mesh geometry={pouch.back} material={backMat} />
+      <mesh geometry={box.geo} material={materials} />
       {/* separable top-seal sliver used by the reveal opening */}
       {reveal && (
-        <mesh ref={sealTop} position={[0, pouch.h / 2 - 0.02, 0]}>
-          <planeGeometry args={[pouch.w * 0.98, pouch.h * 0.1]} />
-          <meshStandardMaterial color={cfg.rim} metalness={0.7} roughness={0.35} side={THREE.DoubleSide} envMapIntensity={cfg.envIntensity} />
+        <mesh ref={sealTop} position={[0, box.h / 2, box.depth / 2]}>
+          <planeGeometry args={[box.w, box.h * 0.08]} />
+          <meshStandardMaterial color={cfg.rim} metalness={0.85} roughness={0.32} side={THREE.DoubleSide} envMapIntensity={cfg.envIntensity} />
         </mesh>
       )}
     </group>
