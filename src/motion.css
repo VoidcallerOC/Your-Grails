@@ -1,0 +1,43 @@
+/* YourGrails vault motion — CSS transforms/opacity only. */
+.hero { animation: hero-in .7s ease both; }
+.hero-copy { animation: rise .6s ease .05s both; }
+.stage { isolation: isolate; }
+.stage .orbits, .stage .atmos { position: absolute; inset: 6% 10%; pointer-events: none; z-index: 0; }
+.stage .orbits { border: 1px solid rgba(140,110,255,.18); border-radius: 50%; animation: orbit 48s linear infinite; }
+.stage .orbits.rev { inset: 14% 18%; border-color: rgba(232,193,74,.12); animation: orbit-rev 64s linear infinite; }
+.stage .atmos { background: radial-gradient(circle, rgba(90,60,180,.16), transparent 62%); filter: blur(28px); animation: atmos 14s ease-in-out infinite; }
+.hero-card-wrap { position: relative; z-index: 3; animation: grail-float 7.5s ease-in-out infinite; }
+.hero-card-wrap .slab { animation: grail-breathe 8.5s ease-in-out infinite; }
+.hero-mini { position: absolute; z-index: 2; width: 118px; height: 166px; transform-style: preserve-3d; }
+.hero-mini.pro { left: 4%; bottom: 18%; animation: pack-sway-left 6.8s ease-in-out infinite; }
+.hero-mini.master { right: 2%; bottom: 8%; animation: pack-sway-right 7.6s ease-in-out .4s infinite; }
+.hero-mini .pack-3d { width: 118px; height: 166px; }
+.hero-mini .brand { font-size: 16px; }
+.float-chip { z-index: 4; animation: chip-drift 9s ease-in-out infinite; }
+.float-chip.buyback { animation-duration: 11s; animation-delay: .6s; }
+.pack-3d .shine { background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.08) 46%, rgba(255,255,255,.34) 50%, rgba(255,255,255,.08) 54%, transparent 60%); background-size: 220% 100%; opacity: 0; animation: foil-catch 7.2s ease-in-out infinite; }
+.pack-3d.tier-master .shine { animation-delay: 1.4s; }
+.btn { transition: transform .16s ease, filter .16s ease, background .16s ease; }
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(1px) scale(.98); }
+.nav-links a { transition: color .16s ease, box-shadow .16s ease; }
+.marquee { overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 28px 0 8px; padding: 10px 0; color: var(--muted); font-size: 13px; }
+.marquee-track { display: flex; gap: 40px; width: max-content; animation: marquee 42s linear infinite; }
+@keyframes hero-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes orbit { to { transform: rotate(360deg); } }
+@keyframes orbit-rev { to { transform: rotate(-360deg); } }
+@keyframes atmos { 0%,100% { opacity:.55; transform:scale(1); } 50% { opacity:.85; transform:scale(1.06); } }
+@keyframes grail-float { 0%,100% { transform: translate3d(0,0,0) rotate(-0.4deg); } 50% { transform: translate3d(0,-10px,8px) rotate(0.5deg); } }
+@keyframes grail-breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.015); } }
+@keyframes pack-sway-left { 0%,100% { transform: translate3d(0,0,0) rotateY(10deg) rotateZ(-2deg); } 50% { transform: translate3d(-6px,-8px,6px) rotateY(6deg) rotateZ(-1deg); } }
+@keyframes pack-sway-right { 0%,100% { transform: translate3d(0,0,0) rotateY(-12deg) rotateZ(2deg); } 50% { transform: translate3d(8px,-6px,4px) rotateY(-7deg) rotateZ(1deg); } }
+@keyframes foil-catch { 0%,62%,100% { opacity:0; background-position:120% 0; } 70% { opacity:.7; background-position:40% 0; } 78% { opacity:0; background-position:-20% 0; } }
+@keyframes chip-drift { 0%,100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(4px,-6px,0); } }
+@keyframes marquee { to { transform: translateX(-50%); } }
+@media (max-width: 800px) { .hero-mini { display: none; } .stage .orbits.rev { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .hero, .hero-copy, .hero-card-wrap, .hero-card-wrap .slab, .hero-mini.pro, .hero-mini.master, .pack-3d .shine, .float-chip, .stage .orbits, .stage .atmos, .marquee-track, .btn {
+    animation: none !important; transition: none !important;
+  }
+}
