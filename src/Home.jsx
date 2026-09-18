@@ -21,7 +21,7 @@ export function Home({ session, onConnect }) {
   return (
     <>
       <section className="hero">
-        <div>
+        <div className="hero-copy">
           <h1>Rip packs.<br/>Battle players.<br/><em>Own the grail.</em></h1>
           <p className="lead">Real, graded cards sealed in digital packs. Reveal them on-chain, stake them in head-to-head battles, or cash out instantly with our 90% buyback.</p>
           <div className="cta-row">
@@ -35,9 +35,14 @@ export function Home({ session, onConnect }) {
           </div>
         </div>
         <div className="stage">
+          <div className="atmos" />
+          <div className="orbits" />
+          <div className="orbits rev" />
+          <div className="hero-mini pro"><PackArt tier="PRO" /></div>
+          <div className="hero-mini master"><PackArt tier="MASTER" /></div>
           <div className="hero-card-wrap"><Slab card={VAULT[1]} large /></div>
           <div className="float-chip" style={{ left: 8, bottom: 86 }}><div className="tag">Just pulled</div>Lugia · PSA 10</div>
-          <div className="float-chip" style={{ right: 0, bottom: 18 }}><div className="tag">Instant buyback</div>Up to 90% USDC</div>
+          <div className="float-chip buyback" style={{ right: 0, bottom: 18 }}><div className="tag">Instant buyback</div>Up to 90% USDC</div>
         </div>
       </section>
       <div className="panel" style={{ marginTop: 18, display: 'flex', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
@@ -51,6 +56,18 @@ export function Home({ session, onConnect }) {
         <div className="stat"><label>Arena & market</label><b>1.0K battles</b><span className="muted">61 active listings</span></div>
       </div>
       <p className="notice" style={{ marginTop: 10 }}>Live product figures shown as published on yourgrails.com. This demo does not invent additional volume.</p>
+      <div className="marquee" aria-hidden="true">
+        <div className="marquee-track">
+          <span>Fa/Gyarados ex Pulled $62.74</span>
+          <span>Mareep Pulled $115</span>
+          <span>Blastoise ex Pulled $37.68</span>
+          <span>Rocket's Zapdos Pulled $83.11</span>
+          <span>Fa/Gyarados ex Pulled $62.74</span>
+          <span>Mareep Pulled $115</span>
+          <span>Blastoise ex Pulled $37.68</span>
+          <span>Rocket's Zapdos Pulled $83.11</span>
+        </div>
+      </div>
       <div className="section-head">
         <div>
           <span className="badge">FEATURED DROPS</span>
