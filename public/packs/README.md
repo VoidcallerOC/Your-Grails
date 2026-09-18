@@ -31,8 +31,9 @@ Not required for the first integration; the rig consumes them only if present.
 
 ## Status
 
-Until `pro-chase-front.webp` and `master-vault-front.webp` exist here, the pack
-artwork is **BLOCKED — production pack art assets required**, and the app keeps
-its existing vector face. Do not fake these with gradients, filters, noise,
-blur, pseudo-elements, SVG recreation, or generated CSS textures — those are
-presentation effects, not replacement artwork.
+**COMPLETE.** `pro-chase-front.webp` and `master-vault-front.webp` are installed
+and integrated into the existing Pack3D system. If a front file is ever removed,
+the rig falls back to the vector face for that tier. Do not fake missing assets
+with gradients, filters, noise, blur, pseudo-elements, SVG recreation, or
+generated CSS textures — those are presentation effects, not replacement
+artwork; supply a real higher-fidelity rendering of the same design instead.
