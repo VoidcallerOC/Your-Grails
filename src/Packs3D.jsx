@@ -41,6 +41,32 @@ function useLive3D(elRef, opts) {
   }
 }
 
+function PackFace({ tier }) {
+  const master = (tier || '').toUpperCase() === 'MASTER'
+  if (master) {
+    return (
+      <div className="pk face face-master">
+        <div className="seal">YG</div>
+        <p className="eyebrow">VAULT SERIES</p>
+        <div className="crest">YOURGRAILS</div>
+        <h4>MASTER</h4>
+        <p className="sub">SEALED GRADED CARD</p>
+        <div className="gold-rule" />
+        <span className="foot">OBSIDIAN WRAP</span>
+      </div>
+    )
+  }
+  return (
+    <div className="pk face face-pro">
+      <span className="bolt">PRO</span>
+      <div className="hex">YG</div>
+      <strong className="word">YOURGRAILS</strong>
+      <em>CHASE PACK</em>
+      <span className="foot">SEALED COLLECTIBLE</span>
+    </div>
+  )
+}
+
 function PackArt({ tier }) {
   return <Pack3D tier={tier} decorative />
 }
@@ -71,12 +97,8 @@ function Pack3D({ tier, pack, onOpen, decorative }) {
       onClick={decorative ? undefined : open}
       onKeyDown={(e) => { if (!decorative && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); open() } }}
     >
-      <div className="pk face">
-        <span className="pack-tier">{tier}</span>
-        <div className="brand">YOUR<br/>GRAILS</div>
-        <strong>{tier} PACK</strong>
-      </div>
-      <div className="pk back" aria-hidden="true" />
+      <PackFace tier={tier} />
+      <div className="pk back" aria-hidden="true"><span>YG</span></div>
       <div className="pk side side-r" aria-hidden="true" />
       <div className="pk side side-l" aria-hidden="true" />
       <div className="pk lid" aria-hidden="true" />
