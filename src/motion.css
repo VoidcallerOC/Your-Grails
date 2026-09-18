@@ -6,7 +6,7 @@ html, body { overflow-x: hidden; }
 .vault .haze { position: absolute; inset: 8% 6%; pointer-events: none; z-index: 1; }
 .vault .orbits, .vault .orbits.rev { position: absolute; inset: 8% 12%; border: 1px solid rgba(140,110,255,.16); border-radius: 50%; pointer-events: none; z-index: 1; animation: orbit 52s linear infinite; }
 .vault .orbits.rev { inset: 16% 20%; animation: orbit-rev 68s linear infinite; }
-.hero-mini { position: absolute; z-index: 3; width: 148px; height: 208px; transform-style: preserve-3d; filter: drop-shadow(18px 28px 24px rgba(0,0,0,.55)); }
+.hero-mini { position: absolute; z-index: 3; width: 148px; height: auto; transform-style: preserve-3d; filter: drop-shadow(18px 28px 24px rgba(0,0,0,.55)); }
 .hero-mini.pro { left: 2%; top: 22%; animation: pack-sway-left 7.2s ease-in-out infinite, enter-left .7s ease .18s both; }
 .hero-mini.master { right: 0; bottom: 10%; animation: pack-sway-right 8.1s ease-in-out .45s infinite, enter-right .7s ease .32s both; }
 .hero-mini .pack-3d { width: 148px; --d: 12px; }
@@ -40,10 +40,12 @@ html, body { overflow-x: hidden; }
   .hero-mini, .hero-mini.pro, .hero-mini.master {
     display: block !important; position: relative !important;
     left: auto !important; right: auto !important; top: auto !important; bottom: auto !important;
-    width: 78px !important; height: auto !important; flex: 0 0 78px; animation: none !important; filter: none;
+    width: 88px !important; height: auto !important; flex: 0 0 88px; animation: none !important; filter: none;
   }
-  .hero-mini .pack-3d { width: 78px !important; --d: 7px; }
-  .hero-card-wrap { position: relative !important; left: auto !important; top: auto !important; transform: none !important; margin: 0; animation: none !important; flex: 0 0 150px; }
+  .hero-mini .pack-3d { width: 88px !important; --d: 8px; }
+  .hero-mini.pro { order: 1; }
+  .hero-card-wrap { order: 2; position: relative !important; left: auto !important; top: auto !important; transform: none !important; margin: 0; animation: none !important; flex: 0 0 150px; }
+  .hero-mini.master { order: 3; }
   .hero-card-wrap .slab, .hero-card-wrap .slab[style] { width: 150px !important; }
   .vault .orbits, .vault .orbits.rev, .float-chip { display: none !important; }
 }
