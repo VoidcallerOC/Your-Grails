@@ -41,28 +41,58 @@ function useLive3D(elRef, opts) {
   }
 }
 
+function ChaseMark() {
+  return (
+    <svg className="emblem" viewBox="0 0 120 120" aria-hidden="true">
+      <defs>
+        <radialGradient id="pg" cx="40%" cy="30%">
+          <stop offset="0%" stopColor="#f3e8ff" />
+          <stop offset="45%" stopColor="#a78bfa" />
+          <stop offset="100%" stopColor="#4c1d95" />
+        </radialGradient>
+      </defs>
+      <circle cx="60" cy="60" r="56" fill="none" stroke="#c4b5fd" strokeWidth="1.2" opacity=".5" />
+      <circle cx="60" cy="60" r="44" fill="none" stroke="#8b5cf6" strokeWidth=".8" strokeDasharray="3 5" />
+      <path d="M60 16 L68 48 L100 48 L74 66 L84 98 L60 78 L36 98 L46 66 L20 48 L52 48 Z" fill="url(#pg)" opacity=".9" />
+      <rect x="42" y="38" width="36" height="50" rx="3" fill="none" stroke="#ede9fe" strokeWidth="1.4" />
+      <text x="60" y="68" textAnchor="middle" fontSize="16" fontWeight="800" fill="#fff">YG</text>
+    </svg>
+  )
+}
+
+function VaultMark() {
+  return (
+    <svg className="emblem" viewBox="0 0 120 120" aria-hidden="true">
+      <circle cx="60" cy="60" r="56" fill="none" stroke="#e8c14a" strokeWidth="1.6" />
+      <circle cx="60" cy="60" r="46" fill="none" stroke="#8a6a1c" strokeWidth=".7" />
+      <circle cx="60" cy="60" r="34" fill="#120e06" stroke="#e8c14a" strokeWidth="1.2" />
+      <circle cx="60" cy="60" r="10" fill="#e8c14a" />
+      {[0,45,90,135,180,225,270,315].map((a) => {
+        const r = (a * Math.PI) / 180
+        const x2 = 60 + Math.cos(r) * 30
+        const y2 = 60 + Math.sin(r) * 30
+        return <line key={a} x1="60" y1="60" x2={x2} y2={y2} stroke="#c9a227" strokeWidth="1.4" />
+      })}
+    </svg>
+  )
+}
+
 function PackFace({ tier }) {
   const master = (tier || '').toUpperCase() === 'MASTER'
   if (master) {
     return (
       <div className="pk face face-master">
-        <div className="seal">YG</div>
-        <p className="eyebrow">VAULT SERIES</p>
-        <div className="crest">YOURGRAILS</div>
-        <h4>MASTER</h4>
-        <p className="sub">SEALED GRADED CARD</p>
-        <div className="gold-rule" />
-        <span className="foot">OBSIDIAN WRAP</span>
+        <VaultMark />
+        <p className="mark">YOURGRAILS</p>
+        <span className="stamp">MASTER · THE VAULT</span>
       </div>
     )
   }
   return (
     <div className="pk face face-pro">
-      <span className="bolt">PRO</span>
-      <div className="hex">YG</div>
-      <strong className="word">YOURGRAILS</strong>
-      <em>CHASE PACK</em>
-      <span className="foot">SEALED COLLECTIBLE</span>
+      <ChaseMark />
+      <p className="mark">YOURGRAILS</p>
+      <span className="stamp">PRO · THE CHASE</span>
     </div>
   )
 }
