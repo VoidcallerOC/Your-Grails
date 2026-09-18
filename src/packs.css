@@ -1,10 +1,12 @@
 .pack-rail { display: grid; grid-template-columns: repeat(2, minmax(240px, 1fr)); gap: 36px; align-items: end; perspective: 1400px; }
-.pack-slot { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.pack-slot { display: flex; flex-direction: column; align-items: center; gap: 16px; perspective: 1400px; }
 .pack-meta { text-align: center; width: min(280px, 100%); }
 .pack-3d {
-  --d: 22px; width: 200px; height: 286px; position: relative;
-  transform-style: preserve-3d; transform: rotateY(-26deg) rotateX(8deg);
-  transition: transform .35s ease, filter .35s ease; cursor: pointer; outline: none;
+  --d: 24px; --foil: 50%;
+  width: 200px; height: 286px; position: relative;
+  transform-style: preserve-3d;
+  will-change: transform;
+  cursor: pointer; outline: none;
 }
 .pack-3d.is-hot { z-index: 2; filter: drop-shadow(18px 28px 28px var(--pack-glow)); }
 .pack-3d .pk { position: absolute; transform-style: preserve-3d; }
@@ -22,12 +24,17 @@
 .pack-3d .lid { left: 0; right: 0; top: 0; height: var(--d); background: var(--pack-edge); transform-origin: top center; transform: rotateX(90deg) translateZ(calc(var(--d) / -2)); }
 .pack-3d .foil, .pack-3d .shine { inset: 8px; border-radius: 8px; pointer-events: none; transform: translateZ(calc(var(--d) / 2 + 1px)); }
 .pack-3d .foil { border: 1px solid rgba(255,255,255,.16); background: repeating-linear-gradient(135deg, rgba(255,255,255,.05) 0 7px, transparent 7px 14px); }
-.pack-3d .shine { background: linear-gradient(115deg, transparent 42%, rgba(255,255,255,.28) 50%, transparent 58%); mix-blend-mode: screen; }
-.pack-3d .art-slot { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,.45); }
+.pack-3d .shine {
+  background: linear-gradient(115deg, transparent 38%, rgba(255,255,255,.34) 50%, transparent 62%);
+  background-size: 220% 100%;
+  background-position: var(--foil) 0;
+  mix-blend-mode: screen;
+}
 .pack-3d .brand { font-family: Impact, sans-serif; font-size: 28px; line-height: .88; text-align: center; background: linear-gradient(#fff8d0, #f0c14b); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .pack-3d.tier-pro { --pack-face: linear-gradient(165deg, #6d3af0, #2a1260 55%, #12081f); --pack-edge: linear-gradient(#4a2488, #14061f); --pack-glow: rgba(124,58,237,.35); }
 .pack-3d.tier-master { --pack-face: linear-gradient(165deg, #f3d36a, #9a6414 52%, #2a1606); --pack-edge: linear-gradient(#c9962a, #3a2208); --pack-glow: rgba(232,193,74,.32); }
+.hero-mini { animation: none !important; }
 @media (max-width: 800px) {
   .pack-rail { display: flex; overflow-x: auto; gap: 20px; padding: 8px 4px 24px; }
 }
-@media (prefers-reduced-motion: reduce) { .pack-3d { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .pack-3d { will-change: auto; } }

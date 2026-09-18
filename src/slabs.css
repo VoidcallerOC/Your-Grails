@@ -1,39 +1,31 @@
 .slab-3d {
-  --idle: rotateY(-12deg) rotateX(6deg);
-  width: 158px;
-  position: relative;
-  transform-style: preserve-3d;
-  transform: var(--idle);
-  transition: transform .35s ease, filter .35s ease;
+  --d: 14px; --foil: 50%;
+  width: 158px; position: relative;
+  transform-style: preserve-3d; will-change: transform;
   filter: drop-shadow(16px 24px 22px rgba(0,0,0,.55));
-  cursor: default;
 }
 .slab-3d.is-lg { width: 200px; }
+.hero-card-wrap { animation: none !important; }
 .hero-card-wrap .slab-3d { width: 158px; }
 .slab-3d img {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 3px;
-  transform: translateZ(8px);
-  backface-visibility: hidden;
+  width: 100%; height: auto; display: block; border-radius: 3px;
+  transform: translateZ(calc(var(--d) / 2)); backface-visibility: hidden;
+}
+.slab-3d .slab-edge {
+  position: absolute; top: 0; right: 0; width: var(--d); height: 100%;
+  background: linear-gradient(#2a2a32, #111);
+  transform-origin: right center;
+  transform: rotateY(90deg) translateZ(calc(var(--d) / -2));
 }
 .slab-3d .slab-glass {
-  position: absolute; inset: 0;
-  border-radius: 3px; pointer-events: none;
-  background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.16) 50%, transparent 60%);
-  transform: translateZ(9px);
-  mix-blend-mode: screen;
+  position: absolute; inset: 0; border-radius: 3px; pointer-events: none;
+  background: linear-gradient(115deg, transparent 38%, rgba(255,255,255,.2) 50%, transparent 62%);
+  background-size: 220% 100%; background-position: var(--foil) 0;
+  transform: translateZ(calc(var(--d) / 2 + 1px)); mix-blend-mode: screen;
 }
 .slab-3d.is-hot { filter: drop-shadow(18px 28px 26px rgba(0,0,0,.6)); }
-.slab-rail {
-  display: flex; justify-content: center; gap: 28px; align-items: end;
-  perspective: 1200px; margin: 28px 0 8px; flex-wrap: wrap;
-}
+.slab-rail { display: flex; justify-content: center; gap: 28px; align-items: end; perspective: 1200px; margin: 28px 0 8px; flex-wrap: wrap; }
 @media (max-width: 900px) {
   .slab-3d, .hero-card-wrap .slab-3d, .slab-3d.is-lg { width: 124px; }
-  .slab-3d { transform: rotateY(-8deg) rotateX(4deg); animation: none; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .slab-3d { transition: none; transform: none; }
-}
+@media (prefers-reduced-motion: reduce) { .slab-3d { will-change: auto; } }
