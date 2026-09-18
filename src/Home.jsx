@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { CHAINS, PACKS, VAULT } from './data'
-import { PackArt, PackRail } from './Packs3D'
+import { PackArt, PackRail, useLive3D } from './Packs3D'
 
 function navigate(to) { window.location.hash = to }
 
@@ -16,35 +16,21 @@ function VaultStage({ children }) {
   return <div className="vault" ref={ref} onMouseMove={onMove}>{children}</div>
 }
 
-const IDLE = 'rotateY(-12deg) rotateX(6deg)'
-
 export function Slab({ card, large }) {
   const ref = useRef(null)
-  const reduced = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   const [hot, setHot] = useState(false)
-  const onMove = (e) => {
-    if (reduced || !ref.current) return
-    const r = ref.current.getBoundingClientRect()
-    const x = (e.clientX - r.left) / r.width - 0.5
-    const y = (e.clientY - r.top) / r.height - 0.5
-    ref.current.style.transform = `rotateY(${-12 + x * 14}deg) rotateX(${6 - y * 8}deg) translateZ(${hot ? 12 : 0}px)`
-  }
-  const reset = () => {
-    if (!ref.current) return
-    ref.current.style.transform = IDLE
-    setHot(false)
-  }
-  useEffect(() => { reset() }, [])
+  const live = useLive3D(ref, { yaw: -10, pitch: 6, yawAmp: 7, pitchAmp: 3, period: 3.1, bob: 2.5, bobAmp: 5, phase: 0.9 })
   if (card?.photo) {
     return (
       <div
         className={`slab-3d ${large ? 'is-lg' : ''} ${hot ? 'is-hot' : ''}`}
         ref={ref}
-        onMouseMove={onMove}
+        onMouseMove={(e) => live.aim(e, hot)}
         onMouseEnter={() => setHot(true)}
-        onMouseLeave={reset}
+        onMouseLeave={() => { setHot(false); live.clear() }}
       >
         <img src={card.photo} alt={`${card.name} ${card.company} ${card.grade}`} />
+        <span className="slab-edge" aria-hidden="true" />
         <span className="slab-glass" />
       </div>
     )
