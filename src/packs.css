@@ -4,10 +4,7 @@
 /* Canonical pack sizing: width is the only dimension set, height always
    derives from the tier's source-art aspect ratio. */
 .pack-3d {
-  /* --d is the pack's physical thickness, set per context at ~8.5% of that
-     context's width (a real booster pack is ~8% of its width), so the depth
-     stays proportional instead of a fixed pixel value. */
-  --d: 23px; --foil: 50%;
+  --d: 15px; --foil: 50%;
   width: min(268px, 100%);
   height: auto;
   aspect-ratio: var(--art-ar, 196 / 280);
@@ -157,35 +154,21 @@
 .pack-3d.has-art .side-l,
 .pack-3d.has-art .lid,
 .pack-3d.has-art .base { background-repeat: no-repeat, no-repeat; }
-/* ONE virtual light, from the upper front-left. Every wall is shaded by how it
-   faces that light, so the surfaces read as sides of a single object:
-   left wall catches it, right wall turns away, top is lit, bottom is darkest. */
-.pack-3d.has-art .side-l {
-  background-image: linear-gradient(-90deg, rgba(255,255,255,.13), rgba(0,0,0,.34) 72%), var(--edge-img);
-  background-size: auto, auto 100%; background-position: center, left center;
-}
 .pack-3d.has-art .side-r {
-  background-image: linear-gradient(90deg, rgba(0,0,0,.60), rgba(0,0,0,.30) 72%), var(--edge-img);
+  background-image: linear-gradient(90deg, #0007, transparent 55%), var(--edge-img);
   background-size: auto, auto 100%; background-position: center, right center;
 }
+.pack-3d.has-art .side-l {
+  background-image: linear-gradient(-90deg, #0007, transparent 55%), var(--edge-img);
+  background-size: auto, auto 100%; background-position: center, left center;
+}
 .pack-3d.has-art .lid {
-  background-image: linear-gradient(rgba(255,255,255,.20), rgba(0,0,0,.20) 72%), var(--edge-img);
+  background-image: linear-gradient(#fff3, transparent 60%), var(--edge-img);
   background-size: auto, 100% auto; background-position: center, center top;
 }
 .pack-3d.has-art .base {
-  background-image: linear-gradient(rgba(0,0,0,.28), rgba(0,0,0,.70)), var(--edge-img);
+  background-image: linear-gradient(transparent 40%, #0006), var(--edge-img);
   background-size: auto, 100% auto; background-position: center, center bottom;
-}
-/* Foil bow: the pouch is not a rigid board, so the printed face falls away
-   very slightly at the left and right extremes and catches the same light
-   toward the upper left. Shading only — the silhouette is untouched, so this
-   cannot reintroduce an outer shell. Uses the existing (previously inert)
-   .foil layer rather than adding another element. */
-.pack-3d.has-art .foil {
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.24), rgba(0,0,0,0) 15%, rgba(0,0,0,0) 85%, rgba(0,0,0,.28)),
-    radial-gradient(130% 80% at 28% 16%, rgba(255,255,255,.13), rgba(255,255,255,0) 58%);
-  mix-blend-mode: soft-light;
 }
 /* Flush with the face: a 6px inset drew a second rectangle inside the pack,
    which read as a duplicated edge. */
@@ -201,7 +184,7 @@
 .hero-mini { animation: none !important; }
 @media (max-width: 800px) {
   .pack-rail { display: flex; flex-direction: column; align-items: center; overflow: visible; gap: 32px; padding: 8px 0 20px; }
-  .pack-3d { width: min(82vw, 330px); height: auto; aspect-ratio: var(--art-ar, 196 / 280); --d: 26px; }
+  .pack-3d { width: min(82vw, 330px); height: auto; aspect-ratio: var(--art-ar, 196 / 280); }
   .emblem { width: 96px; height: 96px; }
 }
 @media (prefers-reduced-motion: reduce) { .pack-3d { will-change: auto; } }
