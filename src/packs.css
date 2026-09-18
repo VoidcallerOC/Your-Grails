@@ -1,0 +1,12 @@
+/* imported from index.css — 3D pack rail */
+.pack-rail { display: grid; grid-template-columns: repeat(2, minmax(260px, 1fr)); gap: 36px; align-items: end; perspective: 1200px; }
+.pack-slot { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.pack-3d { width: 220px; height: 310px; position: relative; transform-style: preserve-3d; transition: transform .35s ease, filter .35s ease; cursor: pointer; outline: none; }
+.pack-3d .face, .pack-3d .edge, .pack-3d .foil, .pack-3d .shine { position: absolute; inset: 0; border-radius: 14px; transform-style: preserve-3d; }
+.pack-3d .face { background: linear-gradient(180deg, rgba(255,255,255,.14), transparent 28%), var(--pack-face); border: 1px solid rgba(255,255,255,.16); display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 18px 14px 16px; }
+.pack-3d .edge { width: 16px; left: auto; right: -16px; border-radius: 0 10px 10px 0; background: var(--pack-edge); transform: rotateY(90deg) translateZ(8px); transform-origin: left center; }
+.pack-3d.tier-pro { --pack-face: linear-gradient(165deg, #6d3af0, #2a1260 55%, #12081f); --pack-edge: linear-gradient(#3b1d86, #16082e); --pack-glow: rgba(124,58,237,.35); }
+.pack-3d.tier-master { --pack-face: linear-gradient(165deg, #f3d36a, #9a6414 52%, #2a1606); --pack-edge: linear-gradient(#c9962a, #3a2208); --pack-glow: rgba(232,193,74,.32); }
+.pack-3d.is-hot { z-index: 2; filter: drop-shadow(0 22px 36px var(--pack-glow)); }
+@media (max-width: 800px) { .pack-rail { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 20px; } .pack-slot { scroll-snap-align: center; min-width: 240px; } }
+@media (prefers-reduced-motion: reduce) { .pack-3d { transition: none; } }
