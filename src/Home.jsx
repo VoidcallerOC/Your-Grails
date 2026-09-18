@@ -19,7 +19,7 @@ function VaultStage({ children }) {
 export function Slab({ card, large }) {
   const style = { background: `radial-gradient(circle at 30% 20%, #fff2, transparent 40%), ${card.art || '#222'}` }
   return (
-    <div className="slab" style={large ? { width: 260 } : undefined}>
+    <div className={large ? 'slab slab-lg' : 'slab'}>
       <span className="grade-pill">{card.company} {card.grade}</span>
       <div className="inner">
         <div className="slab-art" style={style}>{card.name}</div>
@@ -49,9 +49,7 @@ export function Home({ session, onConnect }) {
           <div className="orbits rev" />
           <div className="hero-mini pro"><PackArt tier="PRO" /></div>
           <div className="hero-mini master"><PackArt tier="MASTER" /></div>
-          <div className="hero-card-wrap"><Slab card={VAULT[1]} large /></div>
-          <div className="float-chip" style={{ left: 8, bottom: 86 }}><div className="tag">Just pulled</div>Lugia · PSA 10</div>
-          <div className="float-chip buyback" style={{ right: 0, bottom: 18 }}><div className="tag">Instant buyback</div>Up to 90% USDC</div>
+          <div className="hero-card-wrap"><Slab card={VAULT[1]} /></div>
         </VaultStage>
       </section>
       <div className="trust-row">
@@ -69,28 +67,15 @@ export function Home({ session, onConnect }) {
         <div className="stat"><label>Top pull this week</label><b>$1.3K</b><span className="muted">Shining Magikarp</span></div>
         <div className="stat"><label>Arena & market</label><b>1.0K battles</b><span className="muted">61 active listings</span></div>
       </div>
-      <p className="notice" style={{ marginTop: 10 }}>Live product figures shown as published on yourgrails.com. This demo does not invent additional volume.</p>
-      <div className="marquee" aria-hidden="true">
-        <div className="marquee-track">
-          <span>Fa/Gyarados ex Pulled $62.74</span><span>Mareep Pulled $115</span><span>Blastoise ex Pulled $37.68</span><span>Rocket's Zapdos Pulled $83.11</span>
-          <span>Fa/Gyarados ex Pulled $62.74</span><span>Mareep Pulled $115</span><span>Blastoise ex Pulled $37.68</span><span>Rocket's Zapdos Pulled $83.11</span>
-        </div>
-      </div>
+      <p className="notice" style={{ marginTop: 10 }}>Live product figures shown as published on yourgrails.com.</p>
       <div className="section-head">
         <div>
           <span className="badge">FEATURED DROPS</span>
           <h2>Pick a pack. Reveal a real card.</h2>
-          <p className="muted">Current featured packs from the vault. CSS 3D skins — not official foil artwork.</p>
         </div>
         <button className="btn btn-ghost" onClick={() => navigate('/packs')}>View all packs →</button>
       </div>
       <PackRail onOpen={(p) => navigate('/packs/' + p.id)} />
-      <div className="section-head"><div><span className="tag">New here?</span><h2>Three steps. Real cards.</h2></div></div>
-      <div className="steps">
-        <div className="step"><div className="n">01 · BUY A PACK</div><h3>Choose your tier</h3><p className="muted">Purchase a sealed pack with USDC from any supported chain.</p></div>
-        <div className="step"><div className="n">02 · RIP IT</div><h3>Tear the pack</h3><p className="muted">Reveal your real graded card — instantly, with a fair random draw.</p></div>
-        <div className="step"><div className="n">03 · CASH OUT OR SHIP</div><h3>Your call</h3><p className="muted">90% instant buyback, list it, battle it, or hold it in the vault.</p></div>
-      </div>
     </>
   )
 }
@@ -99,16 +84,10 @@ export function Packs() {
   return (
     <>
       <span className="tag">Vault drops</span>
-      <h1 style={{ letterSpacing: '-1px' }}>Sealed packs. Real slabs.</h1>
-      <p className="lead">Two live tiers only. Pro and Master. No additional products.</p>
+      <h1>Sealed packs. Real slabs.</h1>
+      <p className="lead">Two live tiers only. Pro and Master.</p>
       <div style={{ marginTop: 28 }}>
         <PackRail onOpen={(p) => navigate('/packs/' + p.id)} />
-      </div>
-      <div className="panel" style={{ marginTop: 24 }}>
-        <h4>Value-tier odds</h4>
-        <div className="grid-4" style={{ marginTop: 12 }}>
-          {ODDS.map((o) => <div key={o.label}><b>{o.pct}%</b><div className="muted">{o.label}</div></div>)}
-        </div>
       </div>
     </>
   )
@@ -123,10 +102,10 @@ export function PackDetail({ id, session, onRip }) {
         <span className="badge">{pack.tier}</span>
         <h1>{pack.name}</h1>
         <p className="lead">{pack.blurb}</p>
-        <p>Price <strong>${pack.price} USDC</strong> · EV ${pack.ev.toFixed(2)}</p>
+        <p>Price <strong>${pack.price} USDC</strong></p>
         <div className="cta-row">
           <button className="btn btn-grad" onClick={() => onRip(pack)} disabled={!session}>Rip this pack</button>
-          {!session && <span className="muted">Connect to enter the vault first.</span>}
+          {!session && <span className="muted">Connect first.</span>}
         </div>
       </div>
     </div>
