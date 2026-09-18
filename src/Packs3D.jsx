@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { PACKS } from './data'
 
+const IDLE = 'rotateY(-26deg) rotateX(8deg)'
+
 function PackArt({ tier }) {
   return <Pack3D tier={tier} decorative />
 }
@@ -14,19 +16,20 @@ function Pack3D({ tier, pack, onOpen, decorative }) {
     const r = ref.current.getBoundingClientRect()
     const x = (e.clientX - r.left) / r.width - 0.5
     const y = (e.clientY - r.top) / r.height - 0.5
-    ref.current.style.transform = `rotateY(${x * 16}deg) rotateX(${-y * 10}deg) translateZ(${hot ? 18 : 0}px)`
+    ref.current.style.transform = `rotateY(${-26 + x * 18}deg) rotateX(${8 - y * 10}deg) translateZ(${hot ? 16 : 0}px)`
   }
   const reset = () => {
     if (!ref.current) return
-    ref.current.style.transform = 'rotateY(-8deg) rotateX(4deg)'
+    ref.current.style.transform = IDLE
     setHot(false)
   }
   useEffect(() => { reset() }, [])
   const label = pack ? `${pack.name}, ${pack.tier} tier, $${pack.price} USDC` : `${tier} pack`
   const open = () => { if (onOpen && pack) onOpen(pack) }
+  const t = (tier || 'PRO').toLowerCase()
   return (
     <div
-      className={`pack-3d tier-${(tier || 'PRO').toLowerCase()} ${hot ? 'is-hot' : ''}`}
+      className={`pack-3d tier-${t} ${hot ? 'is-hot' : ''}`}
       ref={ref}
       role={decorative ? undefined : 'button'}
       tabIndex={decorative ? -1 : 0}
@@ -39,14 +42,18 @@ function Pack3D({ tier, pack, onOpen, decorative }) {
       onClick={decorative ? undefined : open}
       onKeyDown={(e) => { if (!decorative && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); open() } }}
     >
-      <div className="edge" />
-      <div className="face">
+      <div className="pk face">
         <span className="pack-tier">{tier}</span>
         <div className="brand">YOUR<br/>GRAILS</div>
         <strong>{tier} PACK</strong>
+        <span className="art-slot">Artwork slot</span>
       </div>
-      <div className="foil" />
-      <div className="shine" />
+      <div className="pk back" aria-hidden="true" />
+      <div className="pk side side-r" aria-hidden="true" />
+      <div className="pk side side-l" aria-hidden="true" />
+      <div className="pk lid" aria-hidden="true" />
+      <div className="pk foil" aria-hidden="true" />
+      <div className="pk shine" aria-hidden="true" />
     </div>
   )
 }
