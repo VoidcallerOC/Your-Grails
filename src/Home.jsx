@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { CHAINS, PACKS, VAULT } from './data'
 import { PackArt, PackRail } from './Packs3D'
 
@@ -16,12 +16,37 @@ function VaultStage({ children }) {
   return <div className="vault" ref={ref} onMouseMove={onMove}>{children}</div>
 }
 
+const IDLE = 'rotateY(-12deg) rotateX(6deg)'
+
 export function Slab({ card, large }) {
+  const ref = useRef(null)
+  const reduced = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const [hot, setHot] = useState(false)
+  const onMove = (e) => {
+    if (reduced || !ref.current) return
+    const r = ref.current.getBoundingClientRect()
+    const x = (e.clientX - r.left) / r.width - 0.5
+    const y = (e.clientY - r.top) / r.height - 0.5
+    ref.current.style.transform = `rotateY(${-12 + x * 14}deg) rotateX(${6 - y * 8}deg) translateZ(${hot ? 12 : 0}px)`
+  }
+  const reset = () => {
+    if (!ref.current) return
+    ref.current.style.transform = IDLE
+    setHot(false)
+  }
+  useEffect(() => { reset() }, [])
   if (card?.photo) {
     return (
-      <figure className={large ? 'slab-photo slab-lg' : 'slab-photo'}>
-        <img src={card.photo} alt={`${card.name} ${card.company} ${card.grade} slab`} />
-      </figure>
+      <div
+        className={`slab-3d ${large ? 'is-lg' : ''} ${hot ? 'is-hot' : ''}`}
+        ref={ref}
+        onMouseMove={onMove}
+        onMouseEnter={() => setHot(true)}
+        onMouseLeave={reset}
+      >
+        <img src={card.photo} alt={`${card.name} ${card.company} ${card.grade}`} />
+        <span className="slab-glass" />
+      </div>
     )
   }
   const style = { background: `radial-gradient(circle at 30% 20%, #fff2, transparent 40%), ${card.art || '#222'}` }
@@ -39,6 +64,7 @@ export function Slab({ card, large }) {
 
 export function Home({ session, onConnect }) {
   const hero = VAULT.find((c) => c.id === 'charizard') || VAULT[1]
+  const photos = VAULT.filter((c) => c.photo)
   return (
     <>
       <section className="hero">
@@ -60,14 +86,18 @@ export function Home({ session, onConnect }) {
           <div className="hero-card-wrap"><Slab card={hero} /></div>
         </VaultStage>
       </section>
+      <div className="slab-rail">
+        {photos.map((c) => (
+          <div key={c.id} style={{ textAlign: 'center' }}>
+            <Slab card={c} />
+            <p className="muted" style={{ marginTop: 10 }}>{c.name}<br/>{c.company} {c.grade} · ${Number(c.value).toLocaleString()}</p>
+          </div>
+        ))}
+      </div>
       <div className="trust-row">
         <div className="trust-card"><div className="ico">✦</div><h4>Fair random draw</h4><p className="muted">Independently verified on-chain</p></div>
         <div className="trust-card"><div className="ico">◈</div><h4>Graded & vaulted</h4><p className="muted">PSA · BGS · CGC, fully insured</p></div>
         <div className="trust-card"><div className="ico">⚡</div><h4>Instant settle</h4><p className="muted">Sell back for up to 90%</p></div>
-      </div>
-      <div className="panel" style={{ marginTop: 18, display: 'flex', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
-        <div><strong>Pay in USDC, from any chain</strong><p className="muted">One balance, six networks — we bridge it for you</p></div>
-        <div className="row">{CHAINS.map((c) => <span key={c} className="badge">{c}</span>)}</div>
       </div>
       <div className="section-head">
         <div>
@@ -86,10 +116,7 @@ export function Packs() {
     <>
       <span className="tag">Vault drops</span>
       <h1>Sealed packs. Real slabs.</h1>
-      <p className="lead">Two live tiers only. Pro and Master.</p>
-      <div style={{ marginTop: 28 }}>
-        <PackRail onOpen={(p) => navigate('/packs/' + p.id)} />
-      </div>
+      <PackRail onOpen={(p) => navigate('/packs/' + p.id)} />
     </>
   )
 }
@@ -103,11 +130,7 @@ export function PackDetail({ id, session, onRip }) {
         <span className="badge">{pack.tier}</span>
         <h1>{pack.name}</h1>
         <p className="lead">{pack.blurb}</p>
-        <p>Price <strong>${pack.price} USDC</strong></p>
-        <div className="cta-row">
-          <button className="btn btn-grad" onClick={() => onRip(pack)} disabled={!session}>Rip this pack</button>
-          {!session && <span className="muted">Connect first.</span>}
-        </div>
+        <button className="btn btn-grad" onClick={() => onRip(pack)} disabled={!session}>Rip this pack</button>
       </div>
     </div>
   )
