@@ -41,11 +41,6 @@ export function Home({ session, onConnect }) {
             <button className="btn btn-grad" onClick={() => session ? navigate('/packs') : onConnect()}>Get Started →</button>
             <button className="btn btn-ghost" onClick={() => navigate('/battles')}>Enter the Arena</button>
           </div>
-          <div className="trust-row">
-            <div className="trust-card"><div className="ico">✦</div><h4>Fair random draw</h4><p className="muted">Independently verified on-chain</p></div>
-            <div className="trust-card"><div className="ico">◈</div><h4>Graded & vaulted</h4><p className="muted">PSA · BGS · CGC, fully insured</p></div>
-            <div className="trust-card"><div className="ico">⚡</div><h4>Instant settle</h4><p className="muted">Sell back for up to 90%</p></div>
-          </div>
         </div>
         <VaultStage>
           <div className="atmos" />
@@ -59,6 +54,11 @@ export function Home({ session, onConnect }) {
           <div className="float-chip buyback" style={{ right: 0, bottom: 18 }}><div className="tag">Instant buyback</div>Up to 90% USDC</div>
         </VaultStage>
       </section>
+      <div className="trust-row">
+        <div className="trust-card"><div className="ico">✦</div><h4>Fair random draw</h4><p className="muted">Independently verified on-chain</p></div>
+        <div className="trust-card"><div className="ico">◈</div><h4>Graded & vaulted</h4><p className="muted">PSA · BGS · CGC, fully insured</p></div>
+        <div className="trust-card"><div className="ico">⚡</div><h4>Instant settle</h4><p className="muted">Sell back for up to 90%</p></div>
+      </div>
       <div className="panel" style={{ marginTop: 18, display: 'flex', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
         <div><strong>Pay in USDC, from any chain</strong><p className="muted">One balance, six networks — we bridge it for you</p></div>
         <div className="row">{CHAINS.map((c) => <span key={c} className="badge">{c}</span>)}</div>
