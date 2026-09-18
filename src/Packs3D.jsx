@@ -1,6 +1,71 @@
 import { useEffect, useRef, useState } from 'react'
 import { PACKS } from './data'
 
+// Production pack artwork lives in /public/packs. The front render is the
+// real printed surface; foil and normal are optional material maps that the
+// 3D rig consumes when present. WebP is preferred, PNG is an accepted
+// fallback (see public/packs/README.md). Until these files are supplied the
+// pack keeps its existing vector face — nothing here fabricates artwork.
+const PACK_ART = {
+  pro: {
+    front: ['/packs/pro-chase-front.webp', '/packs/pro-chase-front.png'],
+    foil: ['/packs/pro-chase-foil.webp', '/packs/pro-chase-foil.png'],
+    normal: ['/packs/pro-chase-normal.webp', '/packs/pro-chase-normal.png'],
+  },
+  master: {
+    front: ['/packs/master-vault-front.webp', '/packs/master-vault-front.png'],
+    foil: ['/packs/master-vault-foil.webp', '/packs/master-vault-foil.png'],
+    normal: ['/packs/master-vault-normal.webp', '/packs/master-vault-normal.png'],
+  },
+}
+
+// Resolve the first candidate URL that actually decodes, or null if none exist.
+function resolveFirst(candidates) {
+  return new Promise((resolve) => {
+    let i = 0
+    const tryNext = () => {
+      if (i >= candidates.length) { resolve(null); return }
+      const src = candidates[i++]
+      const img = new Image()
+      img.onload = () => resolve(src)
+      img.onerror = tryNext
+      img.src = src
+    }
+    tryNext()
+  })
+}
+
+// Probe each tier's artwork once and share the result across every pack
+// instance (the hero, rail, detail and reveal all render the same tiers), so
+// the URLs are resolved a single time instead of on every mount.
+const artCache = {}
+function loadPackArt(key) {
+  if (!artCache[key]) {
+    const cfg = PACK_ART[key]
+    artCache[key] = Promise.all([
+      resolveFirst(cfg.front),
+      resolveFirst(cfg.foil),
+      resolveFirst(cfg.normal),
+    ]).then(([front, foil, normal]) => ({ front, foil, normal }))
+  }
+  return artCache[key]
+}
+
+// Detects whether real production artwork exists for a tier and returns the
+// resolved URLs the 3D rig should paint. Missing files resolve to null, which
+// keeps the existing vector face in place — this is the graceful path while
+// the pack art is still BLOCKED on source assets.
+function usePackArt(tier) {
+  const key = (tier || 'PRO').toLowerCase() === 'master' ? 'master' : 'pro'
+  const [art, setArt] = useState({ front: null, foil: null, normal: null })
+  useEffect(() => {
+    let alive = true
+    loadPackArt(key).then((resolved) => { if (alive) setArt(resolved) })
+    return () => { alive = false }
+  }, [key])
+  return art
+}
+
 function useLive3D(elRef, opts) {
   const ptr = useRef({ x: 0, y: 0, z: 0, tx: 0, ty: 0, tz: 0 })
   useEffect(() => {
@@ -104,6 +169,8 @@ function Pack3D({ tier, pack, onOpen, decorative }) {
   const [hot, setHot] = useState(false)
   const t = (tier || 'PRO').toLowerCase()
   const master = t === 'master'
+  const art = usePackArt(t)
+  const hasArt = !!art.front
   const live = useLive3D(ref, master
     ? { yaw: 22, pitch: 7, yawAmp: 10, pitchAmp: 4, period: 3.4, bob: 2.6, bobAmp: 7, phase: 1.7 }
     : { yaw: -24, pitch: 8, yawAmp: 9, pitchAmp: 3.5, period: 2.8, bob: 2.2, bobAmp: 6, phase: 0.2 }
@@ -112,7 +179,7 @@ function Pack3D({ tier, pack, onOpen, decorative }) {
   const open = () => { if (onOpen && pack) onOpen(pack) }
   return (
     <div
-      className={`pack-3d tier-${t} ${hot ? 'is-hot' : ''}`}
+      className={`pack-3d tier-${t} ${hasArt ? 'has-art' : ''} ${hot ? 'is-hot' : ''}`}
       ref={ref}
       role={decorative ? undefined : 'button'}
       tabIndex={decorative ? -1 : 0}
@@ -125,10 +192,28 @@ function Pack3D({ tier, pack, onOpen, decorative }) {
       onClick={decorative ? undefined : open}
       onKeyDown={(e) => { if (!decorative && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); open() } }}
     >
-      <PackFace tier={tier} />
+      {hasArt ? (
+        <div className="pk face face-art" aria-hidden="true">
+          <img src={art.front} alt="" draggable="false" />
+        </div>
+      ) : (
+        <PackFace tier={tier} />
+      )}
+      {/* CSS grain/seals stand in for print detail on the vector face only;
+          real artwork carries its own surface, so they're hidden via has-art. */}
       <div className="pk grain" aria-hidden="true" />
       <div className="pk seal seal-top" aria-hidden="true" />
       <div className="pk seal seal-bot" aria-hidden="true" />
+      {hasArt && art.normal && (
+        <div className="pk normal-map" aria-hidden="true" style={{ backgroundImage: `url("${art.normal}")` }} />
+      )}
+      {hasArt && art.foil && (
+        <div
+          className="pk foil-map"
+          aria-hidden="true"
+          style={{ WebkitMaskImage: `url("${art.foil}")`, maskImage: `url("${art.foil}")` }}
+        />
+      )}
       <div className="pk back" aria-hidden="true"><span>YG</span></div>
       <div className="pk side side-r" aria-hidden="true" />
       <div className="pk side side-l" aria-hidden="true" />

@@ -69,13 +69,15 @@ export default function App() {
   const [owned, setOwned] = useState([])
   const [phase, setPhase] = useState(null)
   const [pulled, setPulled] = useState(null)
+  const [ripTier, setRipTier] = useState('PRO')
   useEffect(() => {
     const on = () => setRoute(path())
     window.addEventListener('hashchange', on)
     return () => window.removeEventListener('hashchange', on)
   }, [])
   const connect = () => setSession({ name: 'Vault 0xYG' })
-  const rip = () => {
+  const rip = (pack) => {
+    setRipTier(pack?.tier || 'PRO')
     navigate('/reveal')
     setPhase('rip')
     setTimeout(() => setPhase('verify'), 1100)
@@ -90,7 +92,7 @@ export default function App() {
   let view = <Home session={session} onConnect={connect} />
   if (route === '/packs') view = <Packs />
   else if (parts[0] === 'packs' && parts[1]) view = <PackDetail id={parts[1]} session={session} onRip={rip} />
-  else if (route === '/reveal') view = <Reveal phase={phase} card={pulled} onDone={() => navigate('/packs')} />
+  else if (route === '/reveal') view = <Reveal phase={phase} card={pulled} tier={ripTier} onDone={() => navigate('/packs')} />
   else if (route === '/collection') view = <Collection owned={owned} />
   else if (parts[0] === 'card') view = <CardPage id={parts[1]} owned={owned} />
   else if (route === '/battles') view = <Battles owned={owned} />

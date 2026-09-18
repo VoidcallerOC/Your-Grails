@@ -39,6 +39,20 @@ Home → Packs → Pack detail → Rip / reveal → Card → Collection → Batt
 
 Reveal sequence: anticipation → rip → verification → reveal → identity → value → ownership
 
+## Pack artwork (production assets)
+
+The 3D pack rig (`src/Packs3D.jsx`) powers the hero, featured drops, pack rail,
+pack detail, and reveal from one component. It renders real production artwork
+as the printed surface as soon as the source files are dropped into
+`public/packs/` (see that folder's `README.md`), and falls back to the existing
+vector face until they exist — no redesign, no faked textures.
+
+- Required: `public/packs/pro-chase-front.webp` (`PRO · THE CHASE`) and
+  `public/packs/master-vault-front.webp` (`MASTER · THE VAULT`). PNG accepted.
+- Optional: `*-foil.*` (masked material sheen) and `*-normal.*` (surface relief).
+- **Status: BLOCKED — production pack art assets required** until the two front
+  files exist. The rig is wired and runtime-ready to consume them.
+
 ## Demo vs production
 
 - Connect is a demo vault session

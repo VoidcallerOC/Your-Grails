@@ -18,6 +18,8 @@ html, body { overflow-x: hidden; }
 .marquee { overflow: hidden; margin: 28px 0 8px; padding: 10px 0; color: var(--muted); font-size: 13px; }
 .marquee-track { display: flex; gap: 40px; width: max-content; animation: marquee 42s linear infinite; }
 .reveal { text-align: center; min-height: 420px; display: grid; place-items: center; }
+.reveal-pack { perspective: 1200px; display: grid; place-items: center; margin-bottom: 14px; animation: enter-left .5s ease both; }
+.reveal-pack .pack-3d { width: 184px; height: 262px; }
 @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 @keyframes enter-left { from { opacity: 0; } to { opacity: 1; } }
 @keyframes enter-right { from { opacity: 0; } to { opacity: 1; } }
