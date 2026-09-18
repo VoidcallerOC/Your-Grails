@@ -2,11 +2,16 @@
 .pack-slot { display: flex; flex-direction: column; align-items: center; gap: 18px; perspective: 1400px; min-width: 0; }
 .pack-meta { text-align: center; width: min(260px, 100%); }
 .pack-3d {
-  --d: 26px; --foil: 50%;
+  --d: 15px; --foil: 50%;
   width: 196px; height: 280px; position: relative;
   transform-style: preserve-3d; will-change: transform;
   cursor: pointer; outline: none;
 }
+/* When real artwork is present the physical pack IS the artwork: its box takes
+   the source aspect ratio (--art-ar, per tier below) so the front face is
+   exactly the art — no letterbox, no crop. Height is derived from width; the
+   authoritative sizing override lives at the end of motion.css so it wins over
+   the per-context heights (hero, reveal, mobile) defined there. */
 .pack-3d.is-hot { z-index: 2; filter: drop-shadow(16px 26px 24px var(--pack-glow)); }
 .pack-3d .pk { position: absolute; transform-style: preserve-3d; }
 .pack-3d .face {
@@ -55,15 +60,17 @@
   transform: translateZ(calc(var(--d) / 2 + .5px)); mix-blend-mode: overlay;
 }
 /* Production raster artwork — the real printed front surface. Rendered only
-   when the source files exist; otherwise the vector .face above stays. */
+   when the source files exist; otherwise the vector .face above stays.
+   padding:0/display:block override the vector .face's inherited padding + flex
+   centering, so the image fills the whole face instead of sitting in a frame. */
 .pk.face-art {
-  inset: 0; border-radius: 10px; overflow: hidden;
+  inset: 0; padding: 0; display: block; border-radius: 10px; overflow: hidden;
   transform: translateZ(calc(var(--d) / 2)); backface-visibility: hidden;
   background: #0a0612;
 }
 .pack-3d.tier-master .pk.face-art { background: #050505; }
 .pk.face-art img {
-  width: 100%; height: 100%; object-fit: cover; display: block;
+  width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;
   border-radius: 10px; -webkit-user-drag: none; user-select: none;
 }
 /* When real artwork is present it is the sole printed surface: drop the CSS
@@ -133,8 +140,10 @@
   background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.22) 50%, transparent 60%);
   background-size: 240% 100%; background-position: var(--foil) 0; mix-blend-mode: screen;
 }
-.pack-3d.tier-pro { --pack-edge: linear-gradient(#6d28d9, #1e1b4b); --pack-glow: rgba(139,92,246,.35); }
-.pack-3d.tier-master { --pack-edge: linear-gradient(#c9962a, #1a1204); --pack-glow: rgba(232,193,74,.3); }
+/* --art-ar is the source artwork's width/height, so has-art packs take the
+   exact pack proportions and object-fit: cover shows the full art uncropped. */
+.pack-3d.tier-pro { --pack-edge: linear-gradient(#6d28d9, #1e1b4b); --pack-glow: rgba(139,92,246,.35); --art-ar: 684 / 1024; }
+.pack-3d.tier-master { --pack-edge: linear-gradient(#c9962a, #1a1204); --pack-glow: rgba(232,193,74,.3); --art-ar: 701 / 1024; }
 .hero-mini { animation: none !important; }
 @media (max-width: 800px) {
   .pack-rail { display: flex; flex-direction: column; align-items: center; overflow: visible; gap: 32px; padding: 8px 0 20px; }

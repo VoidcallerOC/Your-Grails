@@ -40,9 +40,9 @@ html, body { overflow-x: hidden; }
   .hero-mini, .hero-mini.pro, .hero-mini.master {
     display: block !important; position: relative !important;
     left: auto !important; right: auto !important; top: auto !important; bottom: auto !important;
-    width: 78px !important; height: 110px !important; flex: 0 0 78px; animation: none !important; filter: none;
+    width: 78px !important; height: auto !important; flex: 0 0 78px; animation: none !important; filter: none;
   }
-  .hero-mini .pack-3d { width: 78px !important; height: 110px !important; }
+  .hero-mini .pack-3d { width: 78px !important; height: 110px !important; --d: 8px; }
   .hero-card-wrap { position: relative !important; left: auto !important; top: auto !important; transform: none !important; margin: 0; animation: none !important; flex: 0 0 150px; }
   .hero-card-wrap .slab, .hero-card-wrap .slab[style] { width: 150px !important; }
   .vault .orbits, .vault .orbits.rev, .float-chip { display: none !important; }
@@ -50,3 +50,9 @@ html, body { overflow-x: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .hero-copy, .hero-card-wrap, .hero-mini.pro, .hero-mini.master, .pack-3d .shine, .float-chip, .vault .orbits, .vault .atmos, .marquee-track { animation: none !important; }
 }
+/* Authoritative sizing for packs showing real artwork: the box takes the source
+   art's aspect ratio in EVERY context (hero, rail, detail, reveal, mobile).
+   Width stays per-context; height follows the art so the front face is exactly
+   the artwork with no frame and no crop. Placed last with !important so it wins
+   over the fixed per-context heights above (including the mobile ones). */
+.pack-3d.has-art { height: auto !important; aspect-ratio: var(--art-ar, 196 / 280); }
