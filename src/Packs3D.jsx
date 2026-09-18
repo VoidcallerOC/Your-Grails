@@ -1,7 +1,45 @@
 import { useEffect, useRef, useState } from 'react'
 import { PACKS } from './data'
 
-const IDLE = 'rotateY(-26deg) rotateX(8deg)'
+function useLive3D(elRef, opts) {
+  const ptr = useRef({ x: 0, y: 0, z: 0, tx: 0, ty: 0, tz: 0 })
+  useEffect(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduce) {
+      if (elRef.current) elRef.current.style.transform = `rotateY(${opts.yaw}deg) rotateX(8deg)`
+      return
+    }
+    let raf
+    const tick = (t) => {
+      const el = elRef.current
+      if (!el) { raf = requestAnimationFrame(tick); return }
+      const p = ptr.current
+      p.x += (p.tx - p.x) * 0.08
+      p.y += (p.ty - p.y) * 0.08
+      p.z += (p.tz - p.z) * 0.08
+      const s = t * 0.001
+      const yaw = opts.yaw + Math.sin(s / opts.period + opts.phase) * opts.yawAmp + p.x * 16
+      const pitch = opts.pitch + Math.cos(s / (opts.period * 1.18) + opts.phase) * opts.pitchAmp + p.y * -10
+      const lift = Math.sin(s / opts.bob + opts.phase) * opts.bobAmp + p.z
+      el.style.transform = `translateY(${lift.toFixed(2)}px) rotateY(${yaw.toFixed(2)}deg) rotateX(${pitch.toFixed(2)}deg)`
+      el.style.setProperty('--foil', `${50 + Math.sin(s / 2.4 + opts.phase) * 28 + p.x * 20}%`)
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [])
+  return {
+    aim: (e, hot) => {
+      const el = elRef.current
+      if (!el) return
+      const r = el.getBoundingClientRect()
+      ptr.current.tx = (e.clientX - r.left) / r.width - 0.5
+      ptr.current.ty = (e.clientY - r.top) / r.height - 0.5
+      ptr.current.tz = hot ? 16 : 0
+    },
+    clear: () => { ptr.current.tx = 0; ptr.current.ty = 0; ptr.current.tz = 0 }
+  }
+}
 
 function PackArt({ tier }) {
   return <Pack3D tier={tier} decorative />
@@ -9,24 +47,15 @@ function PackArt({ tier }) {
 
 function Pack3D({ tier, pack, onOpen, decorative }) {
   const ref = useRef(null)
-  const reduced = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   const [hot, setHot] = useState(false)
-  const onMove = (e) => {
-    if (reduced || !ref.current) return
-    const r = ref.current.getBoundingClientRect()
-    const x = (e.clientX - r.left) / r.width - 0.5
-    const y = (e.clientY - r.top) / r.height - 0.5
-    ref.current.style.transform = `rotateY(${-26 + x * 18}deg) rotateX(${8 - y * 10}deg) translateZ(${hot ? 16 : 0}px)`
-  }
-  const reset = () => {
-    if (!ref.current) return
-    ref.current.style.transform = IDLE
-    setHot(false)
-  }
-  useEffect(() => { reset() }, [])
+  const t = (tier || 'PRO').toLowerCase()
+  const master = t === 'master'
+  const live = useLive3D(ref, master
+    ? { yaw: 22, pitch: 7, yawAmp: 10, pitchAmp: 4, period: 3.4, bob: 2.6, bobAmp: 7, phase: 1.7 }
+    : { yaw: -24, pitch: 8, yawAmp: 9, pitchAmp: 3.5, period: 2.8, bob: 2.2, bobAmp: 6, phase: 0.2 }
+  )
   const label = pack ? `${pack.name}, ${pack.tier} tier, $${pack.price} USDC` : `${tier} pack`
   const open = () => { if (onOpen && pack) onOpen(pack) }
-  const t = (tier || 'PRO').toLowerCase()
   return (
     <div
       className={`pack-3d tier-${t} ${hot ? 'is-hot' : ''}`}
@@ -34,11 +63,11 @@ function Pack3D({ tier, pack, onOpen, decorative }) {
       role={decorative ? undefined : 'button'}
       tabIndex={decorative ? -1 : 0}
       aria-label={decorative ? undefined : label}
-      onMouseMove={onMove}
+      onMouseMove={(e) => live.aim(e, hot)}
       onMouseEnter={() => setHot(true)}
-      onMouseLeave={reset}
+      onMouseLeave={() => { setHot(false); live.clear() }}
       onFocus={() => setHot(true)}
-      onBlur={reset}
+      onBlur={() => { setHot(false); live.clear() }}
       onClick={decorative ? undefined : open}
       onKeyDown={(e) => { if (!decorative && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); open() } }}
     >
@@ -46,7 +75,6 @@ function Pack3D({ tier, pack, onOpen, decorative }) {
         <span className="pack-tier">{tier}</span>
         <div className="brand">YOUR<br/>GRAILS</div>
         <strong>{tier} PACK</strong>
-        <span className="art-slot">Artwork slot</span>
       </div>
       <div className="pk back" aria-hidden="true" />
       <div className="pk side side-r" aria-hidden="true" />
@@ -82,4 +110,4 @@ function PackRail({ onOpen }) {
   )
 }
 
-export { PackArt, Pack3D, PackRail }
+export { PackArt, Pack3D, PackRail, useLive3D }
