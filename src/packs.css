@@ -3,7 +3,9 @@
 .pack-meta { text-align: center; width: min(260px, 100%); }
 .pack-3d {
   --d: 15px; --foil: 50%;
-  width: 196px; height: 280px; position: relative;
+  /* The artwork fills the pack's front face, so the pack's own width is what
+     decides how much space the art occupies on screen. */
+  width: 268px; height: 280px; position: relative;
   transform-style: preserve-3d; will-change: transform;
   cursor: pointer; outline: none;
 }
@@ -147,7 +149,7 @@
 .hero-mini { animation: none !important; }
 @media (max-width: 800px) {
   .pack-rail { display: flex; flex-direction: column; align-items: center; overflow: visible; gap: 32px; padding: 8px 0 20px; }
-  .pack-3d { width: 168px; height: 240px; }
+  .pack-3d { width: min(80vw, 330px); height: 240px; }
   .emblem { width: 96px; height: 96px; }
 }
 @media (prefers-reduced-motion: reduce) { .pack-3d { will-change: auto; } }
