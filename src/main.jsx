@@ -4,6 +4,7 @@ import './index.css'
 import './packs.css'
 import './motion.css'
 import './slabs.css'
+import './rip.css'
 import App from './App.jsx'
 
 createRoot(document.getElementById('root')).render(

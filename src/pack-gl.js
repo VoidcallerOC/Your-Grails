@@ -2,7 +2,7 @@ import * as THREE from 'three'
 
 const DEG = Math.PI / 180
 const cache = new Map()
-const CACHE_VER = 'pouch6'
+const CACHE_VER = 'pouch7'
 
 const VERT = /* glsl */ `
 attribute float aKind;
@@ -174,9 +174,9 @@ function buildGeometry(img) {
       const belly = Math.sin(Math.PI * u) * Math.sin(Math.PI * Math.min(1, Math.max(0, (vn - 0.08) / 0.84)))
       if (crimp) {
         const rib = Math.abs(Math.sin(u * Math.PI * 22))
-        zGrid[i] = 0.03 + 0.03 * sm + 0.012 * rib
+        zGrid[i] = 0.016 + 0.018 * sm + 0.01 * rib
       } else {
-        zGrid[i] = 0.055 + 0.18 * sm + 0.14 * belly * sm
+        zGrid[i] = 0.028 + 0.085 * sm + 0.06 * belly * sm
       }
     }
   }
@@ -427,8 +427,8 @@ export function createPackEngine(canvas, opts) {
     renderer.setPixelRatio(dpr)
     renderer.setSize(w, h, false)
     camera.aspect = w / h
-    const packH = 3
-    const pad = state.mode === 'rip' ? 1.62 : 1.18
+    const packH = state.packH || 2.4
+    const pad = state.mode === 'rip' ? 1.48 : 1.08
     const dist = (packH * pad / 2) / Math.tan((camera.fov * Math.PI) / 360)
     camera.position.set(0, 0.04, dist)
     camera.lookAt(0, 0, 0)
@@ -462,6 +462,10 @@ export function createPackEngine(canvas, opts) {
     const { geo: data, img, edge } = await getAssets(opts.src)
     if (state.disposed) return
     const geo = makeGeometry(data)
+    geo.computeBoundingBox()
+    const size = new THREE.Vector3()
+    geo.boundingBox.getSize(size)
+    state.packH = Math.max(size.y, size.x * 1.15)
     const tex = makeTexture(img, renderer)
     state.geo = geo
     state.tex = tex

@@ -1,29 +1,18 @@
 .pack-rail { display: grid; grid-template-columns: repeat(2, minmax(220px, 1fr)); gap: 40px 24px; align-items: end; perspective: 1400px; }
-.pack-slot { display: flex; flex-direction: column; align-items: center; gap: 18px; perspective: 1400px; min-width: 0; }
+.pack-slot { display: flex; flex-direction: column; align-items: center; gap: 18px; perspective: 1400px; min-width: 0; position: relative; }
 .pack-meta { text-align: center; width: min(260px, 100%); }
-/* Perspective belongs to the containing context, like .pack-rail / .pack-slot /
-   .reveal-pack / .vault. The pack detail page had no perspective ancestor at
-   all, so its pack rotated orthographically — a flat shear rather than a solid
-   turning in space. Same value as the other stages, so every context shares
-   one camera treatment. */
-.pack-stage { display: grid; place-items: center; perspective: 1400px; }
-/* Canonical pack sizing: width is the only dimension set, height always
-   derives from the tier's source-art aspect ratio. */
+.pack-stage { display: grid; place-items: center; perspective: 1400px; position: relative; }
 .pack-3d {
-  --d: 15px; --foil: 50%;
+  --d: 8px; --foil: 50%;
   width: min(268px, 100%);
   height: auto;
   aspect-ratio: var(--art-ar, 196 / 280);
   position: relative;
   transform-style: preserve-3d; will-change: transform;
   cursor: pointer; outline: none;
+  filter: none;
 }
-/* When real artwork is present the physical pack IS the artwork: its box takes
-   the source aspect ratio (--art-ar, per tier below) so the front face is
-   exactly the art — no letterbox, no crop. Height is derived from width; the
-   authoritative sizing override lives at the end of motion.css so it wins over
-   the per-context heights (hero, reveal, mobile) defined there. */
-.pack-3d.is-hot { z-index: 2; filter: drop-shadow(16px 26px 24px var(--pack-glow)); }
+.pack-3d.is-hot { z-index: 2; }
 .pack-3d .pk { position: absolute; transform-style: preserve-3d; }
 .pack-3d .face {
   inset: 0; border-radius: 10px;
@@ -31,6 +20,7 @@
   gap: 10px; padding: 22px 12px 18px;
   transform: translateZ(calc(var(--d) / 2)); backface-visibility: hidden; overflow: hidden;
 }
+.face-pending { padding: 0; }
 .face-pro {
   background:
     radial-gradient(circle at 50% 38%, rgba(167,139,250,.5), transparent 46%),
@@ -70,26 +60,23 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
   transform: translateZ(calc(var(--d) / 2 + .5px)); mix-blend-mode: overlay;
 }
-/* Production raster artwork — the real printed front surface. Rendered only
-   when the source files exist; otherwise the vector .face above stays.
-   padding:0/display:block override the vector .face's inherited padding + flex
-   centering, so the image fills the whole face instead of sitting in a frame. */
 .pk.face-art {
-  inset: 0; padding: 0; display: block; border-radius: 10px; overflow: hidden;
+  inset: 0; padding: 0; display: block; border-radius: 0; overflow: visible;
   transform: translateZ(calc(var(--d) / 2)); backface-visibility: hidden;
-  background: #0a0612;
+  background: transparent; border: 0;
 }
-.pack-3d.tier-master .pk.face-art { background: #050505; }
+.pack-3d.tier-master .pk.face-art { background: transparent; }
 .pk.face-art img {
-  width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;
-  border-radius: 10px; -webkit-user-drag: none; user-select: none;
+  width: 100%; height: 100%; max-width: none; object-fit: contain; object-position: center; display: block;
+  border-radius: 0; -webkit-user-drag: none; user-select: none;
 }
-/* When real artwork is present it is the sole printed surface: drop the CSS
-   grain and seal stand-ins so nothing is faked on top of the source art. */
 .pack-3d.has-art .pk.grain,
 .pack-3d.has-art .pk.seal { display: none; }
-/* Foil map: the controlled environmental sheen only catches where the supplied
-   foil map says there is foil — a separate, asset-driven material response. */
+.pack-3d.has-art .lid,
+.pack-3d.has-art .base,
+.pack-3d.has-art .back,
+.pack-3d.has-art .side,
+.pack-3d.has-art .foil { display: none; }
 .pk.foil-map {
   inset: 0; border-radius: 10px; pointer-events: none;
   transform: translateZ(calc(var(--d) / 2 + 1.2px));
@@ -103,9 +90,6 @@
 .pack-3d.tier-master .pk.foil-map {
   background-image: linear-gradient(115deg, transparent 42%, rgba(255,220,140,.6) 50%, transparent 60%);
 }
-/* Normal map: optional surface relief. True per-pixel normal lighting belongs
-   to a future WebGL material; in this CSS rig the supplied map adds subtle
-   tactile variation that the 3D movement reveals. Off unless the asset exists. */
 .pk.normal-map {
   inset: 0; border-radius: 10px; pointer-events: none; opacity: .22;
   transform: translateZ(calc(var(--d) / 2 + .6px));
@@ -123,9 +107,6 @@
   transform: rotateY(180deg) translateZ(calc(var(--d) / 2));
   background: repeating-linear-gradient(45deg, #160b24 0 8px, #0a0612 8px 16px);
   color: rgba(255,255,255,.18); font-weight: 800;
-  /* The pack only ever faces the viewer; hiding the back's backface keeps it
-     from painting over the front when the is-hot drop-shadow filter flattens
-     the 3D scene — otherwise hover would cover the pack art with a blank back. */
   backface-visibility: hidden;
 }
 .pack-3d.tier-master .back {
@@ -146,54 +127,42 @@
   background: linear-gradient(#fff2, transparent 40%), var(--pack-edge);
   transform-origin: top center; transform: rotateX(90deg) translateZ(calc(var(--d) / -2));
 }
-/* Bottom edge — completes the box so the top edge no longer reads as a
-   separate lid sitting on the pack. */
 .pack-3d .base {
   left: 0; right: 0; bottom: 0; height: var(--d);
   background: linear-gradient(transparent 55%, #0007), var(--pack-edge);
   transform-origin: bottom center; transform: rotateX(-90deg) translateZ(calc(var(--d) / -2));
 }
-/* With real artwork each edge shows that side's OWN foil pixels, sampled from
-   the front image, so the thickness is the same wrapper continuing round the
-   pack — including the top and bottom crimped edges — instead of flat bars. */
-.pack-3d.has-art .side-r,
-.pack-3d.has-art .side-l,
-.pack-3d.has-art .lid,
-.pack-3d.has-art .base { background-repeat: no-repeat, no-repeat; }
-.pack-3d.has-art .side-r {
-  background-image: linear-gradient(90deg, #0007, transparent 55%), var(--edge-img);
-  background-size: auto, auto 100%; background-position: center, right center;
+.pack-3d .foil, .pack-3d .shine, .pack-3d .env-light {
+  inset: 0; border-radius: 10px; pointer-events: none;
+  transform: translateZ(calc(var(--d) / 2 + 1px));
 }
-.pack-3d.has-art .side-l {
-  background-image: linear-gradient(-90deg, #0007, transparent 55%), var(--edge-img);
-  background-size: auto, auto 100%; background-position: center, left center;
+.pack-3d .env-light {
+  background: radial-gradient(circle at var(--lx, 50%) var(--ly, 32%), rgba(255,255,255,.1), transparent 48%);
+  mix-blend-mode: soft-light; opacity: .45;
 }
-.pack-3d.has-art .lid {
-  background-image: linear-gradient(#fff3, transparent 60%), var(--edge-img);
-  background-size: auto, 100% auto; background-position: center, center top;
-}
-.pack-3d.has-art .base {
-  background-image: linear-gradient(transparent 40%, #0006), var(--edge-img);
-  background-size: auto, 100% auto; background-position: center, center bottom;
-}
-/* Flush with the face: a 6px inset drew a second rectangle inside the pack,
-   which read as a duplicated edge. */
-.pack-3d .foil, .pack-3d .shine { inset: 0; border-radius: 10px; pointer-events: none; transform: translateZ(calc(var(--d) / 2 + 1px)); }
 .pack-3d .shine {
-  background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.22) 50%, transparent 60%);
+  background: linear-gradient(115deg, transparent 42%, rgba(255,255,255,.18) 50%, transparent 58%);
   background-size: 240% 100%; background-position: var(--foil) 0; mix-blend-mode: screen;
 }
-/* --art-ar is the source artwork's width/height, so has-art packs take the
-   exact pack proportions and object-fit: cover shows the full art uncropped. */
-.pack-3d.tier-pro { --pack-edge: linear-gradient(#6d28d9, #1e1b4b); --pack-glow: rgba(139,92,246,.35); --art-ar: 684 / 1024; }
-.pack-3d.tier-master { --pack-edge: linear-gradient(#c9962a, #1a1204); --pack-glow: rgba(232,193,74,.3); --art-ar: 701 / 1024; }
-.hero-mini { animation: none !important; }
-@media (max-width: 800px) {
-  .pack-rail { display: flex; flex-direction: column; align-items: center; overflow: visible; gap: 32px; padding: 8px 0 20px; }
-  .pack-3d { width: min(82vw, 330px); height: auto; aspect-ratio: var(--art-ar, 196 / 280); }
-  .emblem { width: 96px; height: 96px; }
+.pack-3d.has-art .shine { opacity: .28; }
+.pack-3d.has-art .shine,
+.pack-3d.has-art .env-light {
+  border-radius: 0;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
 }
-@media (prefers-reduced-motion: reduce) { .pack-3d { will-change: auto; } }
+.pack-3d.tier-pro { --pack-edge: linear-gradient(#6d28d9, #1e1b4b); --pack-glow: rgba(139,92,246,.28); --art-ar: 2 / 3; }
+.pack-3d.tier-master { --pack-edge: linear-gradient(#c9962a, #1a1204); --pack-glow: rgba(232,193,74,.24); --art-ar: 2 / 3; }
+
+.obj-shadow {
+  position: absolute;
+  left: 12%; right: 12%; bottom: -6px;
+  height: 22px; border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,.55), transparent 70%);
+  pointer-events: none; z-index: 0;
+}
 
 .pack-3d.is-gl .pk { display: none !important; }
 .pack-gl-wrap {
@@ -205,11 +174,8 @@
   width: 100%; height: 100%; display: block;
   background: transparent;
 }
-.obj-shadow {
-  position: absolute;
-  left: 12%; right: 12%; bottom: -6px;
-  height: 22px; border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(0,0,0,.55), transparent 70%);
-  pointer-events: none; z-index: 0;
+
+@media (max-width: 800px) {
+  .pack-rail { display: flex; flex-direction: column; align-items: center; overflow: visible; gap: 32px; padding: 8px 0 20px; }
+  .pack-3d { width: min(82vw, 330px); height: auto; aspect-ratio: var(--art-ar, 196 / 280); }
 }
-.pack-slot { position: relative; }
