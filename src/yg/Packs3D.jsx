@@ -59,15 +59,15 @@ function usePackArt(tier) {
 
 function packPose(tier, pose) {
   if (pose === 'hero-left') {
-    return { yaw: -30, pitch: 8, yawAmp: 5, pitchAmp: 2, period: 3.4, bob: 2.6, bobAmp: 4.2, phase: 0.18 }
+    return { yaw: -38, pitch: 10, yawAmp: 6, pitchAmp: 2.4, period: 3.4, bob: 2.6, bobAmp: 4.2, phase: 0.18 }
   }
   if (pose === 'hero-right') {
-    return { yaw: 30, pitch: 8, yawAmp: 5, pitchAmp: 2, period: 3.7, bob: 2.8, bobAmp: 4.2, phase: 1.62 }
+    return { yaw: 38, pitch: 10, yawAmp: 6, pitchAmp: 2.4, period: 3.7, bob: 2.8, bobAmp: 4.2, phase: 1.62 }
   }
   const master = (tier || '').toLowerCase() === 'master'
   return master
-    ? { yaw: 24, pitch: 8, yawAmp: 7, pitchAmp: 3, period: 3.4, bob: 2.6, bobAmp: 6, phase: 1.7 }
-    : { yaw: -24, pitch: 9, yawAmp: 7, pitchAmp: 3, period: 2.8, bob: 2.2, bobAmp: 6, phase: 0.2 }
+    ? { yaw: 32, pitch: 10, yawAmp: 8, pitchAmp: 3.2, period: 3.4, bob: 2.6, bobAmp: 6, phase: 1.7 }
+    : { yaw: -32, pitch: 11, yawAmp: 8, pitchAmp: 3.2, period: 2.8, bob: 2.2, bobAmp: 6, phase: 0.2 }
 }
 
 function useLive3D(elRef, opts, { css = true } = {}) {

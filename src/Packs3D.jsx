@@ -1,11 +1,9 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
 import { useEffect, useRef, useState } from 'react'
 import { PACKS } from './data'
+import { PackGL } from './PackGL'
 
-// Production pack artwork lives in /public/packs. The front render is the
-// real printed surface; foil and normal are optional material maps that the
-// 3D rig consumes when present. WebP is preferred, PNG is an accepted
-// fallback (see public/packs/README.md). Until these files are supplied the
-// pack keeps its existing vector face — nothing here fabricates artwork.
 const PACK_ART = {
   pro: {
     front: ['/packs/pro-chase-front.webp', '/packs/pro-chase-front.png'],
@@ -19,7 +17,6 @@ const PACK_ART = {
   },
 }
 
-// Resolve the first candidate URL that actually decodes, or null if none exist.
 function resolveFirst(candidates) {
   return new Promise((resolve) => {
     let i = 0
@@ -35,9 +32,6 @@ function resolveFirst(candidates) {
   })
 }
 
-// Probe each tier's artwork once and share the result across every pack
-// instance (the hero, rail, detail and reveal all render the same tiers), so
-// the URLs are resolved a single time instead of on every mount.
 const artCache = {}
 function loadPackArt(key) {
   if (!artCache[key]) {
@@ -51,56 +45,76 @@ function loadPackArt(key) {
   return artCache[key]
 }
 
-// Detects whether real production artwork exists for a tier and returns the
-// resolved URLs the 3D rig should paint. Missing files resolve to null, which
-// keeps the existing vector face in place — this is the graceful path while
-// the pack art is still BLOCKED on source assets.
 function usePackArt(tier) {
   const key = (tier || 'PRO').toLowerCase() === 'master' ? 'master' : 'pro'
-  const [art, setArt] = useState({ front: null, foil: null, normal: null })
+  const [art, setArt] = useState({ front: null, foil: null, normal: null, ready: false })
   useEffect(() => {
     let alive = true
-    loadPackArt(key).then((resolved) => { if (alive) setArt(resolved) })
+    loadPackArt(key).then((resolved) => { if (alive) setArt({ ...resolved, ready: true }) })
     return () => { alive = false }
   }, [key])
   return art
 }
 
-function useLive3D(elRef, opts) {
+function packPose(tier, pose) {
+  if (pose === 'hero-left') {
+    return { yaw: -38, pitch: 10, yawAmp: 6, pitchAmp: 2.4, period: 3.4, bob: 2.6, bobAmp: 4.2, phase: 0.18 }
+  }
+  if (pose === 'hero-right') {
+    return { yaw: 38, pitch: 10, yawAmp: 6, pitchAmp: 2.4, period: 3.7, bob: 2.8, bobAmp: 4.2, phase: 1.62 }
+  }
+  const master = (tier || '').toLowerCase() === 'master'
+  return master
+    ? { yaw: 32, pitch: 10, yawAmp: 8, pitchAmp: 3.2, period: 3.4, bob: 2.6, bobAmp: 6, phase: 1.7 }
+    : { yaw: -32, pitch: 11, yawAmp: 8, pitchAmp: 3.2, period: 2.8, bob: 2.2, bobAmp: 6, phase: 0.2 }
+}
+
+function useLive3D(elRef, opts, { css = true } = {}) {
   const ptr = useRef({ x: 0, y: 0, z: 0, tx: 0, ty: 0, tz: 0 })
+  const optsRef = useRef(opts)
+  optsRef.current = opts
+  const cssRef = useRef(css)
+  cssRef.current = css
   useEffect(() => {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (reduce) {
-      if (elRef.current) elRef.current.style.transform = `rotateY(${opts.yaw}deg) rotateX(8deg)`
+      const o = optsRef.current
+      if (cssRef.current && elRef.current) elRef.current.style.transform = `rotateY(${o.yaw}deg) rotateX(${o.pitch}deg)`
       return
     }
     let raf
     const tick = (t) => {
       const el = elRef.current
+      const o = optsRef.current
       if (!el) { raf = requestAnimationFrame(tick); return }
       const p = ptr.current
       p.x += (p.tx - p.x) * 0.08
       p.y += (p.ty - p.y) * 0.08
       p.z += (p.tz - p.z) * 0.08
-      const s = t * 0.001
-      const yaw = opts.yaw + Math.sin(s / opts.period + opts.phase) * opts.yawAmp + p.x * 16
-      const pitch = opts.pitch + Math.cos(s / (opts.period * 1.18) + opts.phase) * opts.pitchAmp + p.y * -10
-      const lift = Math.sin(s / opts.bob + opts.phase) * opts.bobAmp + p.z
-      el.style.transform = `translateY(${lift.toFixed(2)}px) rotateY(${yaw.toFixed(2)}deg) rotateX(${pitch.toFixed(2)}deg)`
-      el.style.setProperty('--foil', `${50 + Math.sin(s / 2.4 + opts.phase) * 28 + p.x * 20}%`)
+      if (cssRef.current) {
+        const s = t * 0.001
+        const yaw = o.yaw + Math.sin(s / o.period + o.phase) * o.yawAmp + p.x * 16
+        const pitch = o.pitch + Math.cos(s / (o.period * 1.18) + o.phase) * o.pitchAmp + p.y * -10
+        const lift = Math.sin(s / o.bob + o.phase) * o.bobAmp + p.z
+        el.style.transform = `translateY(${lift.toFixed(2)}px) rotateY(${yaw.toFixed(2)}deg) rotateX(${pitch.toFixed(2)}deg)`
+        el.style.setProperty('--foil', `${50 + Math.sin(s / 2.4 + o.phase) * 28 + p.x * 20}%`)
+      } else {
+        el.style.transform = ''
+      }
       raf = requestAnimationFrame(tick)
     }
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
-  }, [])
+  }, [elRef])
   return {
+    ptr,
     aim: (e, hot) => {
       const el = elRef.current
       if (!el) return
       const r = el.getBoundingClientRect()
       ptr.current.tx = (e.clientX - r.left) / r.width - 0.5
       ptr.current.ty = (e.clientY - r.top) / r.height - 0.5
-      ptr.current.tz = hot ? 16 : 0
+      ptr.current.tz = hot ? 14 : 0
     },
     clear: () => { ptr.current.tx = 0; ptr.current.ty = 0; ptr.current.tz = 0 }
   }
@@ -132,7 +146,7 @@ function VaultMark() {
       <circle cx="60" cy="60" r="46" fill="none" stroke="#8a6a1c" strokeWidth=".7" />
       <circle cx="60" cy="60" r="34" fill="#120e06" stroke="#e8c14a" strokeWidth="1.2" />
       <circle cx="60" cy="60" r="10" fill="#e8c14a" />
-      {[0,45,90,135,180,225,270,315].map((a) => {
+      {[0, 45, 90, 135, 180, 225, 270, 315].map((a) => {
         const r = (a * Math.PI) / 180
         return <line key={a} x1="60" y1="60" x2={60 + Math.cos(r) * 30} y2={60 + Math.sin(r) * 30} stroke="#c9a227" strokeWidth="1.4" />
       })}
@@ -160,28 +174,22 @@ function PackFace({ tier }) {
   )
 }
 
-function PackArt({ tier }) {
-  return <Pack3D tier={tier} decorative />
+function PackArt({ tier, pose }) {
+  return <Pack3D tier={tier} decorative pose={pose} />
 }
 
-function Pack3D({ tier, pack, onOpen, decorative }) {
+function Pack3D({ tier, pack, onOpen, decorative, pose }) {
   const ref = useRef(null)
   const [hot, setHot] = useState(false)
   const t = (tier || 'PRO').toLowerCase()
-  const master = t === 'master'
   const art = usePackArt(t)
   const hasArt = !!art.front
-  const live = useLive3D(ref, master
-    ? { yaw: 22, pitch: 7, yawAmp: 10, pitchAmp: 4, period: 3.4, bob: 2.6, bobAmp: 7, phase: 1.7 }
-    : { yaw: -24, pitch: 8, yawAmp: 9, pitchAmp: 3.5, period: 2.8, bob: 2.2, bobAmp: 6, phase: 0.2 }
-  )
+  const live = useLive3D(ref, packPose(tier, pose), { css: !hasArt })
   const label = pack ? `${pack.name}, ${pack.tier} tier, $${pack.price} USDC` : `${tier} pack`
   const open = () => { if (onOpen && pack) onOpen(pack) }
-  // Hand the front artwork to the edge faces; each one samples its own side.
-  const edgeArt = hasArt ? { '--edge-img': `url("${art.front}")` } : undefined
   return (
     <div
-      className={`pack-3d tier-${t} ${hasArt ? 'has-art' : ''} ${hot ? 'is-hot' : ''}`}
+      className={`pack-3d tier-${t} ${art.ready && hasArt ? 'has-art is-gl' : ''} ${hot ? 'is-hot' : ''}`}
       ref={ref}
       role={decorative ? undefined : 'button'}
       tabIndex={decorative ? -1 : 0}
@@ -194,37 +202,22 @@ function Pack3D({ tier, pack, onOpen, decorative }) {
       onClick={decorative ? undefined : open}
       onKeyDown={(e) => { if (!decorative && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); open() } }}
     >
-      {hasArt ? (
-        <div className="pk face face-art" aria-hidden="true">
-          <img src={art.front} alt="" draggable="false" />
-        </div>
+      {!art.ready ? (
+        <div className={`pk face face-pending face-${t === 'master' ? 'master' : 'pro'}`} aria-hidden="true" />
+      ) : hasArt ? (
+        <PackGL src={art.front} tier={t} pose={packPose(tier, pose)} ptrRef={live.ptr} />
       ) : (
         <PackFace tier={tier} />
       )}
-      {/* CSS grain/seals stand in for print detail on the vector face only;
-          real artwork carries its own surface, so they're hidden via has-art. */}
       <div className="pk grain" aria-hidden="true" />
       <div className="pk seal seal-top" aria-hidden="true" />
       <div className="pk seal seal-bot" aria-hidden="true" />
-      {hasArt && art.normal && (
-        <div className="pk normal-map" aria-hidden="true" style={{ backgroundImage: `url("${art.normal}")` }} />
-      )}
-      {hasArt && art.foil && (
-        <div
-          className="pk foil-map"
-          aria-hidden="true"
-          style={{ WebkitMaskImage: `url("${art.foil}")`, maskImage: `url("${art.foil}")` }}
-        />
-      )}
       <div className="pk back" aria-hidden="true"><span>YG</span></div>
-      {/* The four edges carry the artwork so each one shows that side's own
-          foil pixels — the thickness reads as the same wrapper continuing
-          round the pack, not as separate coloured bars. The bottom edge
-          completes the box so the top no longer looks like an added-on lid. */}
-      <div className="pk side side-r" aria-hidden="true" style={edgeArt} />
-      <div className="pk side side-l" aria-hidden="true" style={edgeArt} />
-      <div className="pk lid" aria-hidden="true" style={edgeArt} />
-      <div className="pk base" aria-hidden="true" style={edgeArt} />
+      <div className="pk side side-r" aria-hidden="true" />
+      <div className="pk side side-l" aria-hidden="true" />
+      <div className="pk lid" aria-hidden="true" />
+      <div className="pk base" aria-hidden="true" />
+      <div className="pk env-light" aria-hidden="true" />
       <div className="pk foil" aria-hidden="true" />
       <div className="pk shine" aria-hidden="true" />
     </div>
@@ -232,11 +225,13 @@ function Pack3D({ tier, pack, onOpen, decorative }) {
 }
 
 function PackRail({ onOpen }) {
+  const open = onOpen || ((p) => { window.location.hash = `/packs/${p.id}` })
   return (
     <div className="pack-rail">
       {PACKS.map((p) => (
         <div className="pack-slot" key={p.id}>
-          <Pack3D tier={p.tier} pack={p} onOpen={onOpen} />
+          <span className="obj-shadow" aria-hidden="true" />
+          <Pack3D tier={p.tier} pack={p} onOpen={open} />
           <div className="pack-meta">
             <div className="row" style={{ justifyContent: 'center' }}>
               <span className="badge">{p.tier}</span>
@@ -246,7 +241,7 @@ function PackRail({ onOpen }) {
             <p className="muted">Expected pull value ${p.ev.toFixed(2)}</p>
             <div className="row" style={{ justifyContent: 'center', marginTop: 8 }}>
               <span className="price">${p.price.toFixed(2)} USDC</span>
-              <button className="btn btn-grad" onClick={() => onOpen(p)}>Open</button>
+              <button className="btn btn-grad" onClick={() => open(p)}>Open</button>
             </div>
           </div>
         </div>
