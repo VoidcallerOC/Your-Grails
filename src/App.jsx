@@ -13,18 +13,8 @@ function navigate(to) { window.location.hash = to }
 
 function Logo() {
   return (
-    <a className="logo" href="#/" onClick={(e) => { e.preventDefault(); navigate('/') }}>
-      <svg className="logo-mark" viewBox="0 0 56 56" aria-hidden="true">
-        <defs>
-          <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#fff4b0" />
-            <stop offset=".5" stopColor="#f5c542" />
-            <stop offset="1" stopColor="#b8860b" />
-          </linearGradient>
-        </defs>
-        <path d="M8 14 L28 6 L48 14 L44 42 L28 50 L12 42 Z" fill="#1a1030" stroke="url(#g)" strokeWidth="2" />
-        <text x="28" y="34" textAnchor="middle" fontFamily="Impact, sans-serif" fontSize="16" fill="url(#g)">YG</text>
-      </svg>
+    <a className="logo" href="#/" aria-label="YourGrails home" onClick={(e) => { e.preventDefault(); navigate('/') }}>
+      <img className="logo-mark" src="/brand/header.png" alt="" />
       <span className="wordmark"><strong>YOURGRAILS</strong><span>RIP · BATTLE · GRAIL</span></span>
     </a>
   )
