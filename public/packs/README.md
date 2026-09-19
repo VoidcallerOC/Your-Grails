@@ -1,39 +1,12 @@
-# Pack artwork — production drop-in
+# Pack artwork — locked
 
-The 3D pack rig (`src/Packs3D.jsx`) renders real production artwork the moment
-these files exist here. No code change is needed to switch from the current
-vector face to the raster art — the rig probes for the files at runtime and
-falls back to the existing SVG/CSS face when they are absent.
+Canonical files (do not redesign, regenerate, recolor, crop, or replace):
 
-## Required (front / printed surface)
-
-| File | Tier | Design (must be preserved) |
-| --- | --- | --- |
-| `pro-chase-front.webp`    | Pro    | `PRO · THE CHASE` — purple / indigo identity, YG emblem, YOURGRAILS branding |
-| `master-vault-front.webp` | Master | `MASTER · THE VAULT` — obsidian / gold identity, vault emblem, YOURGRAILS branding |
-
-- Keep the **exact existing composition, emblem, branding, typography, tier name,
-  color direction**. The raster is a higher-fidelity rendering of the *same*
-  design, not a redesign.
-- Preferred source resolution: **2K or higher**. Do not downsample unnecessarily.
-- Aspect ratio ~**196 × 280** (the pack face). Art is drawn `object-fit: cover`.
-- `.png` is an accepted fallback if WebP is not appropriate — name it
-  `pro-chase-front.png` / `master-vault-front.png` and the rig will use it.
-
-## Optional material maps
-
-Not required for the first integration; the rig consumes them only if present.
-
-| File | Purpose |
+| File | Tier |
 | --- | --- |
-| `pro-chase-foil.webp` / `master-vault-foil.webp`     | Foil mask — the environmental sheen only catches where the map marks foil (a separate material response). |
-| `pro-chase-normal.webp` / `master-vault-normal.webp` | Surface relief — subtle tactile variation revealed by the 3D movement. |
+| `pro-chase-front.png` (+ `.webp` encode) | Pro · The Chase — transparent bag, purple/indigo |
+| `master-vault-front.png` (+ `.webp` encode) | Master · The Vault — transparent bag, obsidian/gold |
 
-## Status
+Source: locked transparent PNGs. WebP is a high-quality encode of the same pixels for serving. Aspect **2:3**. Art is drawn `object-fit: contain` so the bag silhouette and crimps stay intact.
 
-**COMPLETE.** `pro-chase-front.webp` and `master-vault-front.webp` are installed
-and integrated into the existing Pack3D system. If a front file is ever removed,
-the rig falls back to the vector face for that tier. Do not fake missing assets
-with gradients, filters, noise, blur, pseudo-elements, SVG recreation, or
-generated CSS textures — those are presentation effects, not replacement
-artwork; supply a real higher-fidelity rendering of the same design instead.
+Optional foil/normal maps are unused until supplied.
