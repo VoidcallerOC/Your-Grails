@@ -46,18 +46,18 @@ void main() {
   if (vKind < 0.5) {
     if (tex.a < 0.08) discard;
     float facing = max(dot(n, view), 0.0);
-    float wrap = pow(1.0 - facing, 1.7);
-    float spec = pow(max(dot(n, normalize(L + view)), 0.0), 40.0) * wrap;
-    vec3 col = tex.rgb * (0.88 + 0.12 * max(dot(n, L), 0.0)) + uRim * wrap * 0.22 + vec3(spec) * 0.18;
+    float limb = mix(0.93, 1.0, facing);
+    float ndl = 0.98 + 0.02 * max(dot(n, L), 0.0);
+    vec3 col = tex.rgb * ndl * limb;
     gl_FragColor = vec4(col * tex.a * fade, tex.a * fade);
     return;
   }
 
   if (vKind < 1.5) {
-    float ndl = 0.2 + 0.55 * max(dot(n, L), 0.0) + 0.28 * max(dot(n, F), 0.0);
-    float spec = pow(max(dot(n, normalize(L + view)), 0.0), 36.0);
-    vec3 base = mix(uSideTint, tex.rgb, 0.62);
-    vec3 col = base * ndl + vec3(0.95, 0.9, 0.8) * spec * 0.55;
+    float ndl = 0.28 + 0.5 * max(dot(n, L), 0.0) + 0.18 * max(dot(n, F), 0.0);
+    float spec = pow(max(dot(n, normalize(L + view)), 0.0), 48.0);
+    vec3 base = mix(uSideTint, tex.rgb, 0.7);
+    vec3 col = base * ndl + vec3(0.95, 0.9, 0.8) * spec * 0.18;
     float a = max(tex.a, 0.94) * fade;
     gl_FragColor = vec4(col * a, a);
     return;
@@ -525,7 +525,7 @@ export function createPackEngine(canvas, opts) {
     root.rotation.x = pitch * DEG
     root.position.y = lift
     const L = state.mats[0]?.uniforms.uLight.value
-    if (L) L.set(-0.45 + p.x * 0.8, 0.7 - p.y * 0.5, 0.85)
+    if (L) L.set(-0.28 + p.x * 0.18, 0.52 - p.y * 0.12, 0.92)
   }
 
   const applyRip = (dt) => {
