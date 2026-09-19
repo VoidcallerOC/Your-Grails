@@ -111,7 +111,7 @@ export function PackDetail({ id, session, onRip }) {
   const pack = PACKS.find((p) => p.id === id) || PACKS[0]
   return (
     <div className="grid-2" style={{ alignItems: 'center' }}>
-      <div style={{ display: 'grid', placeItems: 'center' }}><PackArt tier={pack.tier} /></div>
+      <div className="pack-stage"><PackArt tier={pack.tier} /></div>
       <div>
         <span className="badge">{pack.tier}</span>
         <h1>{pack.name}</h1>

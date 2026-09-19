@@ -1,12 +1,13 @@
 import { LISTINGS, VAULT } from './data'
 import { Slab } from './Home'
+import { Pack3D } from './Packs3D'
 
 function navigate(to) { window.location.hash = to }
 
-export function Reveal({ phase, card, onDone }) {
+export function Reveal({ phase, card, tier, onDone }) {
   return (
     <div className="reveal">
-      {phase === 'rip' && (<><div className="rip pack-pro"><div className="pack-face"><div className="pack-title">YOUR<br/>GRAILS</div></div></div><h2>Tearing the seal…</h2><p className="muted">The vault quiets. The pack comes forward.</p></>)}
+      {phase === 'rip' && (<><div className="reveal-pack"><Pack3D tier={tier} decorative /></div><h2>Tearing the seal…</h2><p className="muted">The vault quiets. The pack comes forward.</p></>)}
       {phase === 'verify' && (<><h2>Hold.</h2><p className="muted">Demo verification beat. Production uses Chainlink VRF on Avalanche.</p></>)}
       {phase === 'show' && card && (
         <>
