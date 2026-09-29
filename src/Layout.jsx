@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import { useEffect, useState } from 'react'
+import { Menu, X } from 'lucide-react'
 import { Link, useRouterState } from './nav'
 import { useVault } from './store'
 import { money } from './data'
@@ -16,9 +17,9 @@ const LINKS = [
 ]
 const INTERIOR_PATHS = ['/collection', '/battles', '/marketplace', '/trading', '/lending', '/leaderboard', '/trust']
 
-function Logo() {
+function Logo({ onNavigate }) {
   return (
-    <Link to="/" className="logo" aria-label="YourGrails home">
+    <Link to="/" className="logo" aria-label="YourGrails home" onClick={onNavigate}>
       <img className="logo-mark" src="/brand/header.png" alt="" />
     </Link>
   )
@@ -27,26 +28,24 @@ function Logo() {
 export function Layout({ children }) {
   const path = useRouterState({ select: (s) => s.location.pathname })
   const interior = INTERIOR_PATHS.includes(path)
+  const packPage = path.startsWith('/packs')
   const session = useVault((s) => s.session)
   const usdc = useVault((s) => s.usdc)
   const connect = useVault((s) => s.connect)
   const addUsdc = useVault((s) => s.addUsdc)
   const toast = useVault((s) => s.toast)
   const [hydrated, setHydrated] = useState(false)
+  const [navOpen, setNavOpen] = useState(false)
   useEffect(() => setHydrated(true), [])
-  useEffect(() => {
-    const active = document.querySelector('.nav-links a.active')
-    if (active && window.innerWidth <= 900) active.scrollIntoView({ block: 'nearest', inline: 'center' })
-  }, [path])
   const live = hydrated && session
   return (
-    <div className={`app ${path === '/' ? 'home-app' : ''} ${interior ? `interior-app route-${path.slice(1)}` : ''}`}>
+    <div className={`app ${path === '/' ? 'home-app' : ''} ${packPage ? 'pack-app' : ''} ${interior ? `interior-app route-${path.slice(1)}` : ''}`}>
       <div className="beta">Private beta · Help us improve the vault.</div>
-      <header className="nav">
-        <Logo />
-        <nav className="nav-links">
+      <header className={`nav ${navOpen ? 'nav-open' : ''}`}>
+        <Logo onNavigate={() => setNavOpen(false)} />
+        <nav id="mobile-navigation" className={`nav-links ${navOpen ? 'is-open' : ''}`} aria-label="Main navigation">
           {LINKS.map(([href, label]) => (
-            <Link key={href} to={href} className={path.startsWith(href) ? 'active' : ''}>{label}</Link>
+            <Link key={href} to={href} className={path.startsWith(href) ? 'active' : ''} onClick={() => setNavOpen(false)}>{label}</Link>
           ))}
         </nav>
         <div className="nav-end">
@@ -60,6 +59,16 @@ export function Layout({ children }) {
           ) : (
             <button className="btn btn-blue" onClick={connect}>Connect</button>
           )}
+          <button
+            type="button"
+            className="nav-toggle"
+            aria-label={navOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={navOpen}
+            aria-controls="mobile-navigation"
+            onClick={() => setNavOpen((open) => !open)}
+          >
+            {navOpen ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
+          </button>
         </div>
       </header>
       <main className="page"><div className="wrap">{children}</div></main>

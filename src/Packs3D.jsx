@@ -225,27 +225,31 @@ function Pack3D({ tier, pack, onOpen, decorative, pose }) {
   )
 }
 
-function PackRail({ onOpen, editorial = false }) {
+function PackRail({ onOpen, featured = false, listing = false }) {
   const navigate = useNavigate()
   const open = onOpen || ((p) => navigate({ to: '/packs/$id', params: { id: p.id } }))
   return (
-    <div className="pack-rail">
-      {PACKS.map((p) => (
-        <div className="pack-slot" key={p.id}>
-          <span className="obj-shadow" aria-hidden="true" />
-          <Pack3D tier={p.tier} pack={p} onOpen={open} />
+    <div className={`pack-rail ${featured ? 'is-featured' : ''} ${listing ? 'is-listing' : ''}`}>
+      {PACKS.map((p, index) => (
+        <article className={`pack-slot tier-${p.tier.toLowerCase()}`} key={p.id}>
+          <div className="pack-artwell">
+            <span className="pack-art-index">0{index + 1} / {p.tier}</span>
+            <span className="obj-shadow" aria-hidden="true" />
+            <Pack3D tier={p.tier} pack={p} onOpen={open} />
+          </div>
           <div className="pack-meta">
-            <div className={editorial ? 'pack-tier-label' : 'row'} style={editorial ? undefined : { justifyContent: 'center' }}>
-              {editorial ? `${p.tier}${p.hot ? ' / FEATURED' : ''}` : <><span className="badge">{p.tier}</span>{p.hot && <span className="badge">HOT</span>}</>}
+            <div className="pack-tier-label">
+              <span>{p.tier}</span>{p.hot && <span className="pack-featured-label">FEATURED</span>}
             </div>
             <h3>{p.name}</h3>
-            <p className="muted">Expected pull value ${p.ev.toFixed(2)}</p>
-            <div className="row" style={{ justifyContent: 'center', marginTop: 8 }}>
-              <span className="price">${p.price.toFixed(2)} USDC</span>
-              <button className={editorial ? 'btn btn-quiet' : 'btn btn-grad'} onClick={() => open(p)}>Open</button>
+            <p className="muted pack-blurb">{p.blurb}</p>
+            <div className="pack-specs">
+              <div><span className="detail-label">PRICE</span><strong className="price">${p.price.toFixed(2)} <small>USDC</small></strong></div>
+              <div><span className="detail-label">EXPECTED PULL VALUE</span><strong>${p.ev.toFixed(2)}</strong></div>
             </div>
+            <button className="btn btn-pack-link" onClick={() => open(p)}>View pack details <span aria-hidden="true">→</span></button>
           </div>
-        </div>
+        </article>
       ))}
     </div>
   )

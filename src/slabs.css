@@ -84,3 +84,10 @@
   .hero-card-wrap .slab-stage { width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) { .slab-3d { will-change: auto; } }
+
+.detail-slab-art .slab-stage, .detail-slab-art .slab-stage.is-lg { width: min(188px, 100%); }
+.detail-slab-art .grail-meta { gap: 5px; margin-top: 7px; }
+.detail-slab-art .grade-chip, .detail-slab-art .value-chip { padding: 4px 6px; font-size: 9px; }
+@media (max-width: 800px) {
+  .detail-slab-art .slab-stage, .detail-slab-art .slab-stage.is-lg { width: min(132px, 100%); }
+}
