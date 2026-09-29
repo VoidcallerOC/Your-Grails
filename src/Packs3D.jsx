@@ -59,15 +59,15 @@ function usePackArt(tier) {
 
 function packPose(tier, pose) {
   if (pose === 'hero-left') {
-    return { yaw: -26, pitch: 8, yawAmp: 4.5, pitchAmp: 1.8, period: 3.4, bob: 2.6, bobAmp: 3.6, phase: 0.18 }
+    return { yaw: -22, pitch: 7, yawAmp: 1.3, pitchAmp: 0.7, period: 7.2, bob: 5.4, bobAmp: 1.2, phase: 0.18 }
   }
   if (pose === 'hero-right') {
-    return { yaw: 26, pitch: 8, yawAmp: 4.5, pitchAmp: 1.8, period: 3.7, bob: 2.8, bobAmp: 3.6, phase: 1.62 }
+    return { yaw: 22, pitch: 7, yawAmp: 1.3, pitchAmp: 0.7, period: 7.6, bob: 5.7, bobAmp: 1.2, phase: 1.62 }
   }
   const master = (tier || '').toLowerCase() === 'master'
   return master
-    ? { yaw: 22, pitch: 8, yawAmp: 6, pitchAmp: 2.4, period: 3.4, bob: 2.6, bobAmp: 5, phase: 1.7 }
-    : { yaw: -22, pitch: 9, yawAmp: 6, pitchAmp: 2.4, period: 2.8, bob: 2.2, bobAmp: 5, phase: 0.2 }
+    ? { yaw: 18, pitch: 7, yawAmp: 1.8, pitchAmp: 0.8, period: 7.4, bob: 5.6, bobAmp: 1.4, phase: 1.7 }
+    : { yaw: -18, pitch: 7, yawAmp: 1.8, pitchAmp: 0.8, period: 7.0, bob: 5.2, bobAmp: 1.4, phase: 0.2 }
 }
 
 function useLive3D(elRef, opts, { css = true } = {}) {
@@ -94,11 +94,11 @@ function useLive3D(elRef, opts, { css = true } = {}) {
       p.z += (p.tz - p.z) * 0.08
       if (cssRef.current) {
         const s = t * 0.001
-        const yaw = o.yaw + Math.sin(s / o.period + o.phase) * o.yawAmp + p.x * 16
-        const pitch = o.pitch + Math.cos(s / (o.period * 1.18) + o.phase) * o.pitchAmp + p.y * -10
+        const yaw = o.yaw + Math.sin(s / o.period + o.phase) * o.yawAmp + p.x * 8
+        const pitch = o.pitch + Math.cos(s / (o.period * 1.18) + o.phase) * o.pitchAmp + p.y * -6
         const lift = Math.sin(s / o.bob + o.phase) * o.bobAmp + p.z
         el.style.transform = `translateY(${lift.toFixed(2)}px) rotateY(${yaw.toFixed(2)}deg) rotateX(${pitch.toFixed(2)}deg)`
-        el.style.setProperty('--foil', `${50 + Math.sin(s / 2.4 + o.phase) * 28 + p.x * 20}%`)
+        el.style.setProperty('--foil', `${50 + p.x * 20}%`)
       } else {
         el.style.transform = ''
       }
@@ -115,7 +115,7 @@ function useLive3D(elRef, opts, { css = true } = {}) {
       const r = el.getBoundingClientRect()
       ptr.current.tx = (e.clientX - r.left) / r.width - 0.5
       ptr.current.ty = (e.clientY - r.top) / r.height - 0.5
-      ptr.current.tz = hot ? 14 : 0
+      ptr.current.tz = hot ? 5 : 0
     },
     clear: () => { ptr.current.tx = 0; ptr.current.ty = 0; ptr.current.tz = 0 }
   }
@@ -225,7 +225,7 @@ function Pack3D({ tier, pack, onOpen, decorative, pose }) {
   )
 }
 
-function PackRail({ onOpen }) {
+function PackRail({ onOpen, editorial = false }) {
   const navigate = useNavigate()
   const open = onOpen || ((p) => navigate({ to: '/packs/$id', params: { id: p.id } }))
   return (
@@ -235,15 +235,14 @@ function PackRail({ onOpen }) {
           <span className="obj-shadow" aria-hidden="true" />
           <Pack3D tier={p.tier} pack={p} onOpen={open} />
           <div className="pack-meta">
-            <div className="row" style={{ justifyContent: 'center' }}>
-              <span className="badge">{p.tier}</span>
-              {p.hot && <span className="badge">HOT</span>}
+            <div className={editorial ? 'pack-tier-label' : 'row'} style={editorial ? undefined : { justifyContent: 'center' }}>
+              {editorial ? `${p.tier}${p.hot ? ' / FEATURED' : ''}` : <><span className="badge">{p.tier}</span>{p.hot && <span className="badge">HOT</span>}</>}
             </div>
             <h3>{p.name}</h3>
             <p className="muted">Expected pull value ${p.ev.toFixed(2)}</p>
             <div className="row" style={{ justifyContent: 'center', marginTop: 8 }}>
               <span className="price">${p.price.toFixed(2)} USDC</span>
-              <button className="btn btn-grad" onClick={() => open(p)}>Open</button>
+              <button className={editorial ? 'btn btn-quiet' : 'btn btn-grad'} onClick={() => open(p)}>Open</button>
             </div>
           </div>
         </div>

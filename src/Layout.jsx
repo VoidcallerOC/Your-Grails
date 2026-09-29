@@ -14,6 +14,7 @@ const LINKS = [
   ['/collection', 'Collection'],
   ['/leaderboard', 'Leaderboard'],
 ]
+const INTERIOR_PATHS = ['/collection', '/battles', '/marketplace', '/trading', '/lending', '/leaderboard', '/trust']
 
 function Logo() {
   return (
@@ -25,6 +26,7 @@ function Logo() {
 
 export function Layout({ children }) {
   const path = useRouterState({ select: (s) => s.location.pathname })
+  const interior = INTERIOR_PATHS.includes(path)
   const session = useVault((s) => s.session)
   const usdc = useVault((s) => s.usdc)
   const connect = useVault((s) => s.connect)
@@ -32,10 +34,14 @@ export function Layout({ children }) {
   const toast = useVault((s) => s.toast)
   const [hydrated, setHydrated] = useState(false)
   useEffect(() => setHydrated(true), [])
+  useEffect(() => {
+    const active = document.querySelector('.nav-links a.active')
+    if (active && window.innerWidth <= 900) active.scrollIntoView({ block: 'nearest', inline: 'center' })
+  }, [path])
   const live = hydrated && session
   return (
-    <div className="app">
-      <div className="beta">We're in beta. Help us improve by reporting any bugs or issues. Demo vault — not production.</div>
+    <div className={`app ${path === '/' ? 'home-app' : ''} ${interior ? `interior-app route-${path.slice(1)}` : ''}`}>
+      <div className="beta">Private beta · Help us improve the vault.</div>
       <header className="nav">
         <Logo />
         <nav className="nav-links">
@@ -59,7 +65,7 @@ export function Layout({ children }) {
       <main className="page"><div className="wrap">{children}</div></main>
       <footer className="footer">
         <div className="wrap footer-inner">
-          <div>YourGrails demo presentation layer. PSA · BGS · CGC vaulted cards. 90% buyback.</div>
+          <div>Vaulted collectibles · PSA · BGS · CGC · 90% buyback.</div>
           <div className="row">
             <Link to="/trust">Trust</Link>
             <span>USDC · Circle CCTP</span>

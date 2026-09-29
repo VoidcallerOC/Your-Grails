@@ -47,8 +47,10 @@ void main() {
     if (tex.a < 0.08) discard;
     float facing = max(dot(n, view), 0.0);
     float limb = mix(0.93, 1.0, facing);
-    float ndl = 0.98 + 0.02 * max(dot(n, L), 0.0);
-    vec3 col = tex.rgb * ndl * limb;
+    float ndl = 0.94 + 0.06 * max(dot(n, L), 0.0);
+    float fresnel = pow(1.0 - max(dot(n, view), 0.0), 3.0);
+    float spec = pow(max(dot(n, normalize(L + view)), 0.0), 72.0);
+    vec3 col = tex.rgb * ndl * limb + uRim * fresnel * 0.12 + vec3(1.0) * spec * 0.1;
     gl_FragColor = vec4(col * tex.a * fade, tex.a * fade);
     return;
   }
@@ -174,9 +176,9 @@ function buildGeometry(img) {
       const belly = Math.sin(Math.PI * u) * Math.sin(Math.PI * Math.min(1, Math.max(0, (vn - 0.08) / 0.84)))
       if (crimp) {
         const rib = Math.abs(Math.sin(u * Math.PI * 22))
-        zGrid[i] = 0.016 + 0.018 * sm + 0.01 * rib
+        zGrid[i] = 0.02 + 0.024 * sm + 0.012 * rib
       } else {
-        zGrid[i] = 0.028 + 0.085 * sm + 0.06 * belly * sm
+        zGrid[i] = 0.034 + 0.11 * sm + 0.075 * belly * sm
       }
     }
   }
@@ -518,14 +520,14 @@ export function createPackEngine(canvas, opts) {
       root.position.y = 0
       return
     }
-    const yaw = o.yaw + Math.sin(s / o.period + o.phase) * o.yawAmp + p.x * 18
-    const pitch = o.pitch + Math.cos(s / (o.period * 1.18) + o.phase) * o.pitchAmp + p.y * -11
-    const lift = Math.sin(s / o.bob + o.phase) * o.bobAmp * 0.012 + p.z * 0.012
+    const yaw = o.yaw + Math.sin(s / o.period + o.phase) * o.yawAmp + p.x * 8
+    const pitch = o.pitch + Math.cos(s / (o.period * 1.18) + o.phase) * o.pitchAmp + p.y * -6
+    const lift = Math.sin(s / o.bob + o.phase) * o.bobAmp * 0.006 + p.z * 0.004
     root.rotation.y = yaw * DEG
     root.rotation.x = pitch * DEG
     root.position.y = lift
     const L = state.mats[0]?.uniforms.uLight.value
-    if (L) L.set(-0.28 + p.x * 0.18, 0.52 - p.y * 0.12, 0.92)
+    if (L) L.set(-0.32 + p.x * 0.08, 0.56 - p.y * 0.06, 0.92)
   }
 
   const applyRip = (dt) => {
