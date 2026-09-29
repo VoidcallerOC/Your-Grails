@@ -146,3 +146,46 @@ html, body { overflow-x: hidden; }
 }
 .home-app .vault .atmos { opacity: .42; }
 .home-app .pack-3d .shine { animation: none; opacity: .16; }
+
+/* The hero reads as a collector's display: sealed packs flank a legible slab. */
+.home-app .hero { grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr); gap: 24px; padding: 10px 0 8px; align-items: center; }
+.home-app .hero-copy { animation: none; }
+.home-app .hero h1 { font-size: clamp(44px, 5vw, 66px); line-height: .98; letter-spacing: -1.8px; }
+.home-app .vault {
+  min-height: 420px; grid-template-columns: minmax(96px, 1fr) 220px minmax(96px, 1fr); grid-template-areas: "pro grail master";
+  gap: 6px; padding: 24px 18px; overflow: hidden; border: 1px solid rgba(255,255,255,.1); border-radius: 4px; background: #100f0c;
+  isolation: isolate; perspective: 1100px;
+}
+.home-app .vault .atmos, .home-app .vault .haze, .home-app .vault .orbits, .home-app .vault .orbits.rev, .home-app .vault-floor { display: none; }
+.home-app .hero-mini, .home-app .hero-mini.pro, .home-app .hero-mini.master { width: min(158px, 100%); margin: 0; animation: none; }
+.home-app .hero-mini.pro { justify-self: end; }
+.home-app .hero-mini.master { justify-self: start; }
+.home-app .hero-mini .pack-3d { width: 100%; }
+.home-app .hero-card-wrap { width: min(202px, 44%); animation: none; }
+.home-app .hero-card-wrap .slab-stage { width: 100%; }
+.home-app .grail-meta { gap: 6px; margin-top: 10px; }
+.home-app .grade-chip, .home-app .value-chip { padding: 5px 7px; font-size: 10px; }
+
+@media (max-width: 800px) {
+  .home-app .hero { grid-template-columns: minmax(0, 1fr); gap: 16px; padding-top: 8px; }
+  .home-app .hero-copy { padding-top: 2px; }
+  .home-app .hero h1 { font-size: clamp(38px, 9vw, 48px); line-height: .98; margin-bottom: 13px; }
+  .home-app .hero-copy .lead { font-size: 15px; line-height: 1.45; }
+  .home-app .hero-copy .cta-row { margin: 17px 0 2px; gap: 8px; }
+  .home-app .vault {
+    display: grid; grid-template-columns: minmax(58px, .72fr) minmax(0, 1.5fr) minmax(58px, .72fr); grid-template-areas: "pro grail master";
+    align-items: center; justify-items: center; gap: 6px; min-height: 0 !important; height: auto; padding: 18px 7px 20px;
+  }
+  .home-app .hero-mini, .home-app .hero-mini.pro, .home-app .hero-mini.master { display: block !important; position: relative !important; width: 100% !important; height: auto !important; flex: initial; margin: 0 !important; filter: none; grid-area: auto; }
+  .home-app .hero-mini.pro { grid-area: pro; }
+  .home-app .hero-mini.master { grid-area: master; }
+  .home-app .hero-mini .pack-3d { width: 100% !important; --d: 6px; }
+  .home-app .hero-card-wrap { grid-area: grail; width: min(184px, 100%); flex: initial; margin: 0; }
+  .home-app .hero-card-wrap .slab-stage { width: 100%; }
+  .home-app .grail-meta { gap: 5px; margin-top: 8px; }
+  .home-app .grade-chip, .home-app .value-chip { font-size: 9px; padding: 4px 6px; }
+}
+@media (max-width: 390px) {
+  .home-app .vault { grid-template-columns: minmax(54px, .68fr) minmax(0, 1.55fr) minmax(54px, .68fr); gap: 5px; padding: 16px 4px 18px; }
+  .home-app .hero-card-wrap { width: min(174px, 100%); }
+}

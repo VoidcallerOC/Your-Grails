@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react'
 import { useNavigate } from './nav'
 import { Sparkles, Package, BadgeDollarSign } from 'lucide-react'
-import { CHAINS, LIVE_STATS, ODDS, PACKS, VAULT, money } from './data'
+import { CHAINS, ODDS, PACKS, VAULT, money } from './data'
 import { PackArt, PackRail, useLive3D } from './Packs3D'
 import { unlockRipAudio } from './RipScene'
 import { useVault } from './store'
@@ -91,6 +91,7 @@ export function Home() {
     <>
       <section className="hero">
         <div className="hero-copy">
+          <span className="hero-overline">YOURGRAILS / THE VAULT</span>
           <h1>Rip packs.<br />Battle players.<br /><em>Own the grail.</em></h1>
           <p className="lead">Real, graded cards sealed in digital packs. Reveal them on-chain, stake them in head-to-head battles, or cash out instantly with our 90% buyback.</p>
           <div className="cta-row">
@@ -99,11 +100,6 @@ export function Home() {
           </div>
         </div>
         <VaultStage>
-          <div className="atmos" />
-          <div className="haze" />
-          <div className="orbits" />
-          <div className="orbits rev" />
-          <div className="vault-floor" aria-hidden="true" />
           <div className="hero-mini pro">
             <span className="obj-shadow" aria-hidden="true" />
             <PackArt tier="PRO" pose="hero-left" />
@@ -118,10 +114,20 @@ export function Home() {
         </VaultStage>
       </section>
 
+      <div className="section-head">
+        <div>
+          <span className="section-kicker">THE VAULT / CURRENT DROPS</span>
+          <h2>Pick a pack. Reveal a real card.</h2>
+          <p className="muted" style={{ marginTop: 8, maxWidth: 560 }}>Current featured packs from the vault. Each one opens into a real graded card you can keep, list, battle, ship, or sell back.</p>
+        </div>
+        <button className="btn btn-ghost" onClick={() => navigate({ to: '/packs' })}>View all packs →</button>
+      </div>
+      <div className="featured-packs"><PackRail featured /></div>
+
       <div className="pay-row editorial-support">
         <div>
           <h4>Pay in USDC, from any chain</h4>
-          <p className="muted">One balance, six networks — we bridge it for you. Circle CCTP.</p>
+          <p className="muted">One balance across supported chains — bridged with Circle CCTP.</p>
         </div>
         <div className="chain-list chain-list-quiet">
           {CHAINS.map((c) => <span key={c}>{c}</span>)}
@@ -136,7 +142,7 @@ export function Home() {
         </div>
         <div className="trust-card">
           <div className="proof-kicker">02 / REAL INVENTORY</div>
-          <h4>Graded & vaulted</h4>
+          <h4>Graded &amp; vaulted</h4>
           <p className="muted">PSA · BGS · CGC, fully insured</p>
         </div>
         <div className="trust-card">
@@ -145,27 +151,6 @@ export function Home() {
           <p className="muted">Sell back for up to 90%</p>
         </div>
       </div>
-
-      <p className="notice" style={{ marginTop: 28 }}>Published live-site figures — not this demo’s volume.</p>
-      <div className="stats stats-editorial">
-        {LIVE_STATS.map((s) => (
-          <div className="stat" key={s.label}>
-            <label>{s.label}</label>
-            <b>{s.value}</b>
-            <p className="muted">{s.sub}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="section-head">
-        <div>
-          <span className="section-kicker">THE VAULT / CURRENT DROPS</span>
-          <h2>Pick a pack. Reveal a real card.</h2>
-          <p className="muted" style={{ marginTop: 8, maxWidth: 560 }}>Current featured packs from the vault. Each one opens into a real graded card you can keep, list, battle, ship, or sell back.</p>
-        </div>
-        <button className="btn btn-ghost" onClick={() => navigate({ to: '/packs' })}>View all packs →</button>
-      </div>
-      <div className="featured-packs"><PackRail editorial /></div>
 
       <div className="section-head">
         <div>
@@ -212,12 +197,14 @@ export function Home() {
 
 export function Packs() {
   return (
-    <>
-      <span className="tag">Vault drops</span>
-      <h1>Sealed packs. Real slabs.</h1>
-      <p className="lead">Published ToS odds: 75 / 20 / 4 / 1. Same vaulted PSA · BGS · CGC cards in every tier.</p>
-      <PackRail />
-    </>
+    <section className="packs-page">
+      <div className="packs-heading">
+        <span className="section-kicker">THE VAULT / CURRENT DROPS</span>
+        <h1>Sealed packs.<br />Real slabs.</h1>
+        <p className="lead">Published ToS odds: 75 / 20 / 4 / 1. Same vaulted PSA · BGS · CGC cards in every tier.</p>
+      </div>
+      <PackRail listing />
+    </section>
   )
 }
 
@@ -228,6 +215,7 @@ export function PackDetail({ id }) {
   const connect = useVault((s) => s.connect)
   const startRip = useVault((s) => s.startRip)
   const pack = PACKS.find((p) => p.id === id) || PACKS[0]
+  const featuredCard = VAULT.find((c) => c.id === 'charizard') || VAULT[0]
   const canAfford = session && usdc >= pack.price
   const onRip = () => {
     if (!session) { connect(); return }
@@ -236,17 +224,29 @@ export function PackDetail({ id }) {
     navigate({ to: '/reveal' })
   }
   return (
-    <div className="grid-2 pack-detail" style={{ alignItems: 'center' }}>
-      <div className="pack-stage">
-        <span className="obj-shadow" aria-hidden="true" />
-        <PackArt tier={pack.tier} />
+    <div className="pack-detail">
+      <div className="detail-display" role="group" aria-label={`${pack.name} and a featured graded card from the vault`}>
+        <div className="detail-pack-art">
+          <span className="detail-object-label">SEALED / {pack.tier}</span>
+          <span className="obj-shadow" aria-hidden="true" />
+          <PackArt tier={pack.tier} />
+          <span className="detail-object-name">{pack.tier === 'PRO' ? 'THE CHASE' : 'THE VAULT'}</span>
+        </div>
+        <div className="detail-slab-art">
+          <span className="detail-object-label">FEATURED VAULT SLAB</span>
+          <Slab card={featuredCard} large pose="hero" />
+          <span className="detail-object-name">{featuredCard.name} · {featuredCard.company} {featuredCard.grade}</span>
+        </div>
       </div>
-      <div>
-        <span className="badge">{pack.tier}{pack.hot ? ' · HOT' : ''}</span>
+      <div className="pack-detail-copy">
+        <span className="detail-tier">{pack.tier}{pack.hot ? ' · FEATURED' : ' · THE CHASE'}</span>
         <h1>{pack.name}</h1>
         <p className="lead">{pack.blurb}</p>
-        <p className="price" style={{ fontSize: 22, margin: '12px 0 4px' }}>${pack.price.toFixed(2)} USDC</p>
-        <p className="muted">Expected pull value ${pack.ev.toFixed(2)} · 5-day 90% buyback</p>
+        <div className="detail-value-row">
+          <div><span className="detail-label">PACK PRICE</span><strong className="price">${pack.price.toFixed(2)} <small>USDC</small></strong></div>
+          <div><span className="detail-label">EXPECTED PULL VALUE</span><strong>${pack.ev.toFixed(2)}</strong></div>
+        </div>
+        <p className="muted detail-buyback">5-day 90% buyback window</p>
         <div className="odds" aria-label="Published odds">
           {ODDS.map((o) => (
             <div className="odds-row" key={o.label}>

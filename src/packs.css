@@ -184,3 +184,54 @@
   .pack-3d { width: min(76vw, 292px); height: auto; aspect-ratio: var(--art-ar, 196 / 280); }
   .pack-3d.has-art { filter: drop-shadow(0 12px 13px rgba(0,0,0,.38)) drop-shadow(0 2px 3px rgba(0,0,0,.3)); }
 }
+
+/* Sealed products are presented as a small catalog, not as metric tiles. */
+.pack-rail.is-featured, .pack-rail.is-listing { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: stretch; perspective: none; }
+.pack-rail .pack-slot {
+  display: grid; grid-template-columns: minmax(142px, .78fr) minmax(0, 1.22fr); align-items: center; gap: 22px;
+  min-width: 0; padding: 18px; border: 1px solid rgba(255,255,255,.1); border-radius: 4px; background: #0e0d0a; perspective: none;
+}
+.pack-artwell { position: relative; min-width: 0; min-height: 100%; display: grid; place-items: center; padding: 26px 6px 8px; background: #11100d; border: 1px solid rgba(255,255,255,.055); }
+.pack-artwell .pack-3d { width: min(174px, 100%); }
+.pack-artwell .obj-shadow { left: 18%; right: 18%; bottom: 8px; height: 16px; }
+.pack-art-index { position: absolute; top: 10px; left: 12px; z-index: 2; color: #8f8778; font-size: 9px; font-weight: 700; letter-spacing: 1.2px; }
+.pack-meta { width: 100%; min-width: 0; text-align: left; }
+.pack-tier-label { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; color: var(--gold); font-size: 10px; font-weight: 700; letter-spacing: 1.7px; }
+.pack-featured-label { color: #a9a08f; font-size: 9px; letter-spacing: 1.2px; }
+.pack-meta h3 { margin: 9px 0 7px; font-size: clamp(18px, 1.55vw, 22px); font-weight: 650; line-height: 1.15; }
+.pack-blurb { max-width: 34ch; min-height: 56px; line-height: 1.45; }
+.pack-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; padding: 13px 0; border-top: 1px solid rgba(255,255,255,.1); border-bottom: 1px solid rgba(255,255,255,.1); }
+.pack-specs > div, .detail-value-row > div { display: grid; gap: 4px; min-width: 0; }
+.detail-label { color: #8d8577; font-size: 9px; letter-spacing: 1.1px; }
+.pack-specs strong { color: #eee8db; font-size: 15px; font-weight: 600; white-space: nowrap; }
+.pack-specs strong.price { color: var(--gold); }
+.pack-specs small { color: var(--muted); font-size: 10px; font-weight: 500; }
+.btn-pack-link { display: flex; justify-content: space-between; width: 100%; min-height: 44px; margin-top: 12px; padding: 9px 0; border: 0; border-bottom: 1px solid rgba(232,193,74,.48); border-radius: 0; color: var(--gold); background: transparent; font-size: 13px; }
+.btn-pack-link:hover { color: #fff0b2; border-bottom-color: var(--gold); }
+.pack-rail.is-featured .pack-slot { grid-template-columns: minmax(138px, .78fr) minmax(0, 1.22fr); }
+.pack-rail.is-featured .pack-artwell .pack-3d { width: min(160px, 100%); }
+
+@media (max-width: 1050px) {
+  .pack-rail.is-featured, .pack-rail.is-listing { grid-template-columns: 1fr; gap: 12px; }
+  .pack-rail .pack-slot { grid-template-columns: minmax(150px, .48fr) minmax(0, 1fr); }
+}
+@media (max-width: 800px) {
+  .pack-rail.is-featured, .pack-rail.is-listing { gap: 10px; padding: 0; }
+  .pack-rail .pack-slot, .pack-rail.is-featured .pack-slot {
+    grid-template-columns: minmax(96px, .68fr) minmax(0, 1.32fr); gap: 13px; padding: 12px; align-items: center;
+  }
+  .pack-artwell { min-height: 0; padding: 20px 3px 4px; }
+  .pack-artwell .pack-3d, .pack-rail.is-featured .pack-artwell .pack-3d { width: min(126px, 100%); }
+  .pack-art-index { top: 7px; left: 8px; font-size: 8px; }
+  .pack-meta h3 { font-size: 19px; }
+  .pack-blurb { min-height: 0; font-size: 12px; }
+  .pack-specs { gap: 6px; margin-top: 11px; padding: 10px 0; }
+  .pack-specs strong { font-size: 14px; }
+  .detail-label { font-size: 9px; letter-spacing: .5px; }
+  .btn-pack-link { margin-top: 8px; min-height: 44px; }
+}
+@media (max-width: 360px) {
+  .pack-rail .pack-slot, .pack-rail.is-featured .pack-slot { grid-template-columns: minmax(82px, .62fr) minmax(0, 1.38fr); gap: 10px; padding: 10px; }
+  .pack-meta h3 { font-size: 17px; }
+  .pack-blurb { font-size: 11px; }
+}
