@@ -1,7 +1,7 @@
 html, body { overflow-x: hidden; }
 .hero {
   display: grid;
-  grid-template-columns: minmax(260px, 0.86fr) minmax(0, 1.14fr);
+  grid-template-columns: minmax(300px, 0.86fr) minmax(560px, 1.14fr);
   gap: 20px 28px;
   align-items: center;
   padding: 8px 0 12px;
@@ -13,7 +13,7 @@ html, body { overflow-x: hidden; }
   min-height: 540px;
   min-width: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-columns: minmax(120px, 1fr) auto minmax(120px, 1fr);
   grid-template-areas: "pro grail master";
   align-items: center;
   justify-items: center;
@@ -46,7 +46,7 @@ html, body { overflow-x: hidden; }
 .hero-mini {
   position: relative;
   z-index: 3;
-  width: min(198px, 34%);
+  width: min(198px, 100%);
   transform-style: preserve-3d;
   filter: none;
   animation: enter-pack .8s ease both;
@@ -64,8 +64,7 @@ html, body { overflow-x: hidden; }
 }
 .hero-card-wrap .slab-stage { width: 100%; }
 .hero-card-wrap .slab-3d { width: 100%; }
-.pack-3d .shine { opacity: 0; animation: foil-catch 9s ease-in-out infinite; }
-.pack-3d.has-art .shine { animation-name: foil-catch-art; }
+.pack-3d .shine { opacity: .12; }
 .reveal { text-align: center; min-height: min(480px, calc(100dvh - 200px)); display: grid; place-items: center; align-content: center; gap: 8px; padding: 8px 0 24px; }
 .reveal-pack { perspective: 1200px; display: grid; place-items: center; margin-bottom: 8px; position: relative; animation: enter-pack .5s ease both; }
 .reveal-pack .pack-3d { width: 128px; }
@@ -79,8 +78,6 @@ html, body { overflow-x: hidden; }
 @keyframes orbit { to { transform: rotate(360deg); } }
 @keyframes orbit-rev { to { transform: rotate(-360deg); } }
 @keyframes atmos { 0%,100% { opacity:.55; } 50% { opacity:.88; } }
-@keyframes foil-catch { 0%,64%,100% { opacity:0; } 72% { opacity:.55; } }
-@keyframes foil-catch-art { 0%,64%,100% { opacity:0; } 72% { opacity:.28; } }
 @keyframes marquee { to { transform: translateX(-50%); } }
 @keyframes pack-rip {
   0% { transform: rotateY(-8deg) scale(1); }
@@ -90,12 +87,12 @@ html, body { overflow-x: hidden; }
 }
 
 @media (max-width: 1024px) {
-  .hero { gap: 16px 18px; }
+  .hero { gap: 16px 18px; grid-template-columns: minmax(260px, .9fr) minmax(0, 1.1fr); }
   .hero-mini { width: min(136px, 100%); }
   .hero-card-wrap { width: min(184px, 42%); }
   .hero-mini.pro { margin-right: -8%; }
   .hero-mini.master { margin-left: -8%; }
-  .vault { min-height: 440px; padding: 18px 22px 28px; }
+  .vault { min-height: 440px; padding: 18px 22px 28px; grid-template-columns: minmax(96px, 1fr) auto minmax(96px, 1fr); }
 }
 @media (max-width: 900px) {
   html, body, .app, .page, .wrap, .hero { overflow-x: hidden; max-width: 100%; }
@@ -118,7 +115,7 @@ html, body { overflow-x: hidden; }
   .hero-card-wrap {
     order: 2; position: relative !important; left: auto !important; top: auto !important;
     transform: none !important; margin: 0; animation: none !important;
-    flex: 0 0 132px; width: 132px; grid-area: auto;
+    flex: 0 0 140px; width: 140px; grid-area: auto;
   }
   .hero-mini.master { order: 3; }
   .vault .orbits, .vault .orbits.rev { display: none !important; }
@@ -127,7 +124,7 @@ html, body { overflow-x: hidden; }
 @media (max-width: 390px) {
   .hero-mini, .hero-mini.pro, .hero-mini.master { width: 70px !important; flex-basis: 70px; }
   .hero-mini .pack-3d { width: 70px !important; }
-  .hero-card-wrap { flex-basis: 124px; width: 124px; }
+  .hero-card-wrap { flex-basis: 132px; width: 132px; }
   .wrap { width: min(1240px, calc(100% - 24px)); }
 }
 @media (max-width: 340px) {
@@ -137,7 +134,15 @@ html, body { overflow-x: hidden; }
   .hero-mini.master { order: 3; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero-copy, .hero-card-wrap, .hero-mini.pro, .hero-mini.master, .pack-3d .shine, .vault .orbits, .vault .atmos, .reveal-pack, .marquee-track, .reveal-pack.is-rip .pack-3d {
+  .hero-copy, .hero-card-wrap, .hero-mini.pro, .hero-mini.master, .vault .orbits, .vault .atmos, .reveal-pack, .marquee-track, .reveal-pack.is-rip .pack-3d {
     animation: none !important;
   }
 }
+
+/* The packs remain interactive; ambient motion is no longer the main event. */
+.home-app .vault .atmos, .home-app .vault .orbits, .home-app .vault .orbits.rev,
+.home-app .hero-copy, .home-app .hero-card-wrap, .home-app .hero-mini.pro, .home-app .hero-mini.master {
+  animation: none;
+}
+.home-app .vault .atmos { opacity: .42; }
+.home-app .pack-3d .shine { animation: none; opacity: .16; }

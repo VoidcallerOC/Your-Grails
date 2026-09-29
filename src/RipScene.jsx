@@ -152,23 +152,24 @@ export function RipScene({ tier = 'PRO', card, children }) {
       <div className="rip-copy">
         {beat !== 'reveal' && beat !== 'hold' && (
           <>
-            <h2>Opening pack…</h2>
+            <h2>{beat === 'enter' ? 'Hold the pack.' : beat === 'wind' ? 'Seal breaking…' : 'Opening pack…'}</h2>
             <p className="muted">One pull. Vaulted and graded.</p>
           </>
         )}
         {beat === 'hold' && (
           <>
             <h2>Verifying pull…</h2>
-            <p className="muted">Demo verification beat. Production uses Chainlink VRF on Avalanche.</p>
+            <p className="muted">Checking the vault record.</p>
           </>
         )}
         {beat === 'reveal' && card && (
           <>
-            <div className="tag">{epic ? 'Grail pull' : 'You own this'}</div>
+            <div className="tag">{epic ? 'Grail pull' : 'Vaulted to you'}</div>
             <h2>{card.name}</h2>
             <p>{card.company} {card.grade} · {card.rarity} · ${money(card.value)}</p>
+            <p className="reveal-cert muted">{card.set}{card.cert ? ` · cert ${card.cert}` : ''}</p>
             <div className="cta-row" style={{ justifyContent: 'center' }}>
-              <button className="btn btn-gold" onClick={() => navigate({ to: '/collection' })}>Add to vault</button>
+              <button className="btn btn-gold" onClick={() => navigate({ to: '/collection' })}>View in vault</button>
               <button className="btn btn-ghost" onClick={() => navigate({ to: '/packs' })}>Rip another</button>
             </div>
           </>

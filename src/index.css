@@ -17,23 +17,23 @@ img { max-width: 100%; display: block; }
   radial-gradient(1200px 500px at 50% -10%, rgba(124,92,255,.12), transparent 55%),
   radial-gradient(900px 420px at 80% 0%, rgba(232,193,74,.05), transparent 50%),
   var(--bg); }
-.beta { background: #12122a; color: #d7d7e4; font-size: 13px; text-align: center; padding: 8px 16px; border-bottom: 1px solid rgba(255,255,255,.06); }
+.beta { background: #0b0b0f; color: #92929f; font-size: 11px; letter-spacing: .15px; text-align: center; padding: 6px 16px; border-bottom: 1px solid rgba(255,255,255,.06); }
 .beta a { color: #c4b5fd; text-decoration: underline; }
 .nav { display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: 12px; padding: 10px 22px; border-bottom: 1px solid rgba(255,255,255,.06); background: rgba(5,5,8,.92); backdrop-filter: blur(16px); position: sticky; top: 0; z-index: 40; }
 .nav-links { display: flex; gap: 2px; margin: 0; flex-wrap: nowrap; justify-content: center; overflow-x: auto; scrollbar-width: none; }
 .nav-links::-webkit-scrollbar { display: none; }
-.nav-links a { color: #c9c9d6; font-size: 13px; font-weight: 500; padding: 8px 10px; border-radius: 8px; white-space: nowrap; }
-.nav-links a.active { color: #fff; box-shadow: inset 0 -2px 0 #fff; }
+.nav-links a { color: #9d9da9; font-size: 12px; font-weight: 500; padding: 8px 9px; border-radius: 4px; white-space: nowrap; }
+.nav-links a.active { color: var(--gold); box-shadow: inset 0 -1px 0 var(--gold); }
 .logo { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 0 0 auto; }
 .logo-mark { height: 36px; width: auto; max-width: 168px; }
 .wordmark { display: flex; flex-direction: column; line-height: 1; }
 .wordmark strong { font-family: Impact, "Arial Black", sans-serif; font-size: 22px; letter-spacing: .3px; background: linear-gradient(#fff4b0, #f5c542 45%, #b8860b); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .wordmark span { font-size: 8px; letter-spacing: 2.4px; color: #c4b5fd; font-weight: 700; margin-top: 3px; }
 .btn { border: 0; border-radius: 999px; padding: 11px 18px; font-weight: 650; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
-.btn-blue { background: var(--blue); color: #fff; }
-.btn-grad { background: linear-gradient(90deg, #7c3aed, #d946ef); color: #fff; }
+.btn-blue { background: #efede4; color: #17150e; }
+.btn-grad { background: var(--gold); color: #171107; }
 .btn-ghost { background: transparent; color: #fff; border: 1px solid var(--line-strong); }
-.btn-gold { background: linear-gradient(#f3d36a, #c9962a); color: #1a1204; }
+.btn-gold { background: var(--gold); color: #1a1204; }
 .btn:disabled { opacity: .45; cursor: not-allowed; }
 .btn:active:not(:disabled) { scale: 0.96; }
 .wrap { width: min(1240px, calc(100% - 40px)); margin: 0 auto; }
@@ -76,6 +76,10 @@ h3 { font-size: 18px; margin: 0 0 6px; }
 .grade-pill, .value-pill { position: absolute; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 999px; }
 .grade-pill { top: 16px; right: 16px; background: var(--gold); color: #1a1204; }
 .value-pill { left: 50%; bottom: 8px; transform: translateX(-50%); background: #1a1204; color: var(--gold); border: 1px solid #c9a227; }
+.slab-placeholder { background: #111218; border: 1px solid rgba(255,255,255,.12); border-radius: 4px; box-shadow: 0 14px 24px rgba(0,0,0,.28); }
+.slab-placeholder .inner { background: #15161d; border-radius: 2px; }
+.slab-placeholder .slab-art { color: #f2f0e8; background: #15161d !important; border-bottom: 1px solid rgba(255,255,255,.08); }
+.slab-placeholder .grade-pill, .slab-placeholder .value-pill { border-radius: 2px; background: #111218; border-color: rgba(232,193,74,.7); }
 
 .pay-row {
   display: flex; justify-content: space-between; align-items: center; gap: 18px; flex-wrap: wrap;
@@ -122,7 +126,7 @@ h3 { font-size: 18px; margin: 0 0 6px; }
 .odds { display: grid; gap: 8px; margin: 18px 0; max-width: 420px; }
 .odds-row { display: grid; grid-template-columns: 92px 1fr 42px; gap: 10px; align-items: center; font-size: 13px; color: var(--muted); }
 .odds-bar { height: 6px; background: #16161e; border-radius: 99px; overflow: hidden; }
-.odds-bar > i { display: block; height: 100%; background: linear-gradient(90deg, #7c3aed, #d946ef); border-radius: inherit; }
+.odds-bar > i { display: block; height: 100%; background: var(--gold); border-radius: inherit; }
 .field {
   font: inherit; color: var(--text); background: #0b0b10;
   border: 1px solid var(--line-strong); border-radius: 12px;
@@ -188,4 +192,182 @@ h3 { font-size: 18px; margin: 0 0 6px; }
   .table.market td { border: 0; padding: 4px 8px; }
   .table.market td:first-child { grid-column: 1 / -1; font-weight: 700; }
   .table.market td:last-child { grid-column: 1 / -1; }
+}
+
+/* Homepage visual pass: let the physical objects carry the identity. */
+.home-app { background: #050508; }
+.home-app .page { padding-top: 18px; }
+.home-app .btn-grad { background: var(--gold); color: #171107; }
+.home-app .btn-ghost { border-color: rgba(255,255,255,.22); }
+.home-app .pay-row {
+  margin-top: 30px; padding: 22px 0; border-radius: 0;
+  border: 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  background: transparent;
+}
+.home-app .chain-list-quiet { gap: 4px 16px; color: var(--dim); font-size: 11px; }
+.home-app .chain-list-quiet span:not(:last-child)::after { content: ' ·'; color: #3b3b47; margin-left: 16px; }
+.home-app .trust-row { gap: 0; margin-top: 0; }
+.home-app .trust-card {
+  min-height: 122px; padding: 24px 24px 20px 0; border: 0; border-radius: 0;
+  background: transparent; box-shadow: none; border-right: 1px solid var(--line);
+}
+.home-app .trust-card + .trust-card { padding-left: 24px; }
+.home-app .trust-card:last-child { border-right: 0; }
+.home-app .proof-kicker, .home-app .section-kicker {
+  color: var(--gold); font-size: 10px; letter-spacing: 1.7px; font-weight: 700;
+}
+.home-app .proof-kicker { margin-bottom: 18px; }
+.home-app .trust-card h4 { font-size: 16px; font-weight: 600; }
+.home-app .stats { gap: 24px; margin-top: 26px; }
+.home-app .stat {
+  padding: 18px 0 0; border: 0; border-top: 1px solid var(--line); border-radius: 0;
+  background: transparent;
+}
+.home-app .stat label { color: var(--gold); font-size: 10px; letter-spacing: 1.4px; }
+.home-app .stat b { display: block; margin-top: 4px; font-size: 32px; font-weight: 600; }
+.home-app .section-head { margin-top: 86px; margin-bottom: 32px; align-items: end; }
+.home-app .section-kicker { display: block; margin-bottom: 12px; }
+.home-app .section-head h2 { font-size: clamp(28px, 3.2vw, 42px); }
+.home-app .featured-packs { padding: 10px 0 0; }
+.home-app .pack-meta { width: min(280px, 100%); }
+.home-app .pack-tier-label { color: var(--gold); font-size: 10px; letter-spacing: 1.7px; font-weight: 700; }
+.home-app .pack-meta h3 { margin-top: 9px; font-size: 20px; font-weight: 600; }
+.home-app .btn-quiet { min-height: 38px; padding: 7px 0; color: var(--gold); border: 0; border-bottom: 1px solid rgba(232,193,74,.5); border-radius: 0; }
+.home-app .steps { gap: 28px; }
+.home-app .step-card { padding: 22px 0 0; border: 0; border-top: 1px solid var(--line); border-radius: 0; background: transparent; }
+.home-app .step-card .ico { width: auto; height: auto; margin-bottom: 22px; border-radius: 0; background: transparent; color: var(--gold); justify-content: start; }
+.home-app .step-card h3 { font-size: 20px; font-weight: 600; }
+.home-app .step-num { top: 22px; right: 0; color: var(--gold); }
+.home-app .close-vault { margin-top: 92px; padding: 56px 0 16px; border-top: 1px solid var(--line); }
+.home-app .close-vault .section-kicker { margin-bottom: 16px; }
+.home-app .close-note { max-width: 680px; margin: 22px auto 0; color: var(--muted); font-size: 13px; }
+.home-app .close-flags { display: none; }
+
+@media (max-width: 900px) {
+  .home-app .trust-card, .home-app .trust-card + .trust-card { min-height: 0; padding: 20px 0; border-right: 0; border-bottom: 1px solid var(--line); }
+  .home-app .trust-card:last-child { border-bottom: 0; }
+  .home-app .stats { gap: 0; }
+  .home-app .section-head { margin-top: 64px; align-items: start; flex-direction: column; }
+  .home-app .section-head .btn { align-self: flex-start; }
+  .home-app .close-vault { margin-top: 64px; }
+}
+
+/* Interior product experience: one language, seven different hierarchies. */
+.interior-app .page { padding-top: 52px; }
+.interior-app h1 { max-width: 760px; font-size: clamp(38px, 5.2vw, 64px); letter-spacing: -2px; }
+.interior-app .lead { max-width: 640px; color: #b8b8c6; }
+.interior-app .tag { color: var(--gold); letter-spacing: 1.8px; }
+.interior-app .panel {
+  background: transparent; border: 0; border-top: 1px solid var(--line);
+  border-radius: 0; box-shadow: none; padding: 22px 0;
+}
+.interior-app .btn-grad { background: var(--gold); color: #171107; }
+.interior-app .btn-blue { background: #eee; color: #111; }
+.interior-app .btn-ghost { border-color: rgba(255,255,255,.22); }
+.interior-app .field { border-radius: 4px; background: #0b0b10; }
+
+/* Collection: an archive wall, with the slabs as the main characters. */
+.route-collection .grid-3 { gap: 38px 28px; align-items: start; }
+.route-collection .vault-card { justify-items: start; padding-top: 28px; }
+.route-collection .vault-card .slab-stage { width: 210px; margin: 0 auto; }
+.route-collection .vault-card > div:last-child { margin-top: 18px !important; }
+.route-collection .vault-card strong { font-size: 18px; font-weight: 600; }
+
+/* Battles: a face-off, not three dashboard cards. */
+.route-battles .arena { grid-template-columns: minmax(0, 1fr) minmax(120px, 180px) minmax(0, 1fr); gap: 34px; }
+.route-battles .arena > .panel { padding: 24px 0 0; text-align: left !important; }
+.route-battles .arena > .panel:last-child { text-align: right !important; }
+.route-battles .arena > .panel .slab-stage { margin: 16px auto; }
+.route-battles .arena > .panel:last-child .slab-stage { margin-left: auto; }
+.route-battles .arena-mid { min-height: 160px; align-content: center; }
+.route-battles .arena-mid h2 { font-size: 48px; color: var(--gold); letter-spacing: .06em; }
+.route-battles .chip { border-radius: 3px; }
+.route-battles .chip.is-on { background: transparent; border-color: var(--gold); color: var(--gold); }
+
+/* Marketplace: a quiet trading ledger instead of a table inside a card. */
+.route-marketplace .table.market { margin-top: 34px; }
+.route-marketplace .table.market th { color: var(--gold); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; }
+.route-marketplace .table.market td { padding: 18px 8px; }
+.route-marketplace .table.market tbody tr { transition: background-color .2s ease; }
+.route-marketplace .table.market tbody tr:hover { background: rgba(255,255,255,.025); }
+.route-marketplace .table.market td:first-child { font-size: 16px; font-weight: 600; }
+.route-marketplace .table.market .btn { min-height: 38px; padding: 8px 12px; }
+.route-marketplace .table.market .field-sm { border-radius: 3px; }
+.pack-detail .badge { background: transparent; border: 0; border-bottom: 1px solid rgba(232,193,74,.55); border-radius: 0; color: var(--gold); padding: 0 0 4px; letter-spacing: 1.5px; text-transform: uppercase; }
+
+/* Trading: two objects, one exchange line. */
+.route-trading .grid-2 { gap: 56px; margin-top: 36px !important; }
+.route-trading .grid-2 > .panel { min-height: 390px; padding-top: 24px; }
+.route-trading .grid-2 > .panel h3 { font-size: 22px; font-weight: 600; }
+.route-trading .grid-2 > .panel .slab-stage { width: 190px; margin: 28px auto 0; }
+.route-trading .cta-row { border-top: 1px solid var(--line); padding-top: 22px; }
+
+/* Lending: paired ledgers, with the cards appearing only where they matter. */
+.route-lending .grid-2 { gap: 56px; margin-top: 34px !important; }
+.route-lending .grid-2 > .panel { padding-top: 24px; }
+.route-lending .grid-2 > .panel h3 { font-size: 22px; font-weight: 600; margin-bottom: 12px; }
+.route-lending .loan-row { padding: 18px 0; }
+.route-lending .loan-row strong { font-size: 16px; font-weight: 600; }
+
+/* Leaderboard: deliberate empty space, not a fake ranking widget. */
+.route-leaderboard .empty-board { margin-top: 54px; min-height: 300px; display: grid; place-content: center; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.route-leaderboard .empty-board h3 { font-size: 28px; font-weight: 600; }
+.route-leaderboard .empty-board .muted { max-width: 440px; }
+
+/* Trust: provenance index with readable rhythm rather than equal cards. */
+.route-trust .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 44px; margin-top: 38px !important; }
+.route-trust .grid-3 > .panel { min-height: 142px; padding: 24px 0; }
+.route-trust .grid-3 > .panel h4 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+
+@media (max-width: 900px) {
+  .interior-app .page { padding-top: 34px; }
+  .interior-app h1 { font-size: clamp(36px, 10vw, 48px); letter-spacing: -1.5px; }
+  .route-battles .arena { grid-template-columns: 1fr; gap: 20px; }
+  .route-battles .arena > .panel, .route-battles .arena > .panel:last-child { text-align: center !important; }
+  .route-battles .arena > .panel .slab-stage, .route-battles .arena > .panel:last-child .slab-stage { margin: 16px auto; }
+  .route-battles .arena > .panel:first-child { order: 1; }
+  .route-battles .arena-mid { min-height: 120px; order: 2; }
+  .route-battles .arena > .panel:last-child { order: 3; }
+  .route-collection .vault-card .slab-stage, .route-battles .arena > .panel .slab-stage { width: 170px; }
+  .route-trading .grid-2, .route-lending .grid-2 { gap: 26px; }
+  .route-trading .grid-2 > .panel { min-height: 0; }
+  .route-trust .grid-3 { grid-template-columns: 1fr; gap: 0; }
+  .route-trust .grid-3 > .panel { min-height: 0; }
+}
+
+/* Mobile product staging: the object gets the first read, then the decision. */
+@media (max-width: 900px) {
+  .home-app .page { padding-top: 12px; }
+  .home-app .hero { gap: 18px; }
+  .home-app .hero-copy { padding-top: 8px; }
+  .home-app .hero-copy .lead { font-size: 16px; }
+  .home-app .hero-copy .cta-row { margin-top: 22px; }
+  .home-app .vault { padding: 10px 0 26px; gap: 8px; }
+  .home-app .hero-mini, .home-app .hero-mini.pro, .home-app .hero-mini.master { width: 84px !important; flex-basis: 84px; }
+  .home-app .hero-mini .pack-3d { width: 84px !important; }
+  .home-app .hero-card-wrap { flex-basis: 150px; width: 150px; }
+  .home-app .section-head { margin-top: 58px; }
+  .home-app .featured-packs { padding-top: 2px; }
+
+  .pack-detail { display: flex; flex-direction: column; align-items: stretch; gap: 28px; }
+  .pack-detail > .pack-stage { order: 1; padding: 4px 0 0; }
+  .pack-detail > div:last-child { order: 2; }
+  .pack-detail .pack-3d { width: min(76vw, 292px); }
+  .pack-detail h1 { font-size: clamp(34px, 10vw, 46px); }
+  .pack-detail .lead { font-size: 16px; }
+  .pack-detail .odds { max-width: none; margin: 22px 0; }
+  .pack-detail > div:last-child > .btn { width: 100%; justify-content: center; }
+
+  .interior-app .table.market { min-width: 0; }
+  .interior-app .page { padding-bottom: 56px; }
+  .route-leaderboard .empty-board { margin-top: 38px; min-height: 260px; padding-inline: 18px; }
+  .route-trust .grid-3 > .panel { padding: 22px 0; }
+}
+
+@media (max-width: 390px) {
+  .home-app .hero-mini, .home-app .hero-mini.pro, .home-app .hero-mini.master { width: 78px !important; flex-basis: 78px; }
+  .home-app .hero-mini .pack-3d { width: 78px !important; }
+  .home-app .hero-card-wrap { flex-basis: 142px; width: 142px; }
+  .pack-detail .pack-3d { width: min(74vw, 280px); }
+  .btn { padding-inline: 14px; }
 }

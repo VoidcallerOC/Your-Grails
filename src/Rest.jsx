@@ -336,7 +336,7 @@ export function Trust() {
     <>
       <span className="tag">Provenance</span>
       <h1>Trust layer</h1>
-      <p className="lead">The product stays the same. This presentation layer shows how the rails should feel.</p>
+      <p className="lead">The physical card is the proof. These rails keep every pull legible, verifiable, and yours.</p>
       <div className="grid-3" style={{ marginTop: 20 }}>
         {TRUST_POINTS.map((t) => (
           <div className="panel" key={t.title}>

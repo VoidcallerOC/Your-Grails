@@ -50,7 +50,7 @@ export const RECENT_PULLS = [
 ]
 
 export const TRUST_POINTS = [
-  { title: 'Chainlink VRF on Avalanche', body: 'Production draws are independently verified on-chain. This demo fakes the beat, not the odds bands.' },
+  { title: 'Chainlink VRF on Avalanche', body: 'Production draws are independently verified on-chain. The published odds bands remain visible and auditable.' },
   { title: 'Circle CCTP USDC', body: 'One balance across Avalanche, Ethereum, Base, Arbitrum, OP, Polygon, HyperEVM, Monad.' },
   { title: 'CardNFT tied to cert data', body: 'Every slab is bound to PSA · BGS · CGC cert numbers in the vault record.' },
   { title: 'Marketplace escrow', body: 'Asks settle in USDC. Cards do not move until the bid clears.' },
