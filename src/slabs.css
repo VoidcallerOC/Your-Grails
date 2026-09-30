@@ -91,3 +91,28 @@
 @media (max-width: 800px) {
   .detail-slab-art .slab-stage, .detail-slab-art .slab-stage.is-lg { width: min(132px, 100%); }
 }
+
+/* Slabs without a photo yet: a real-proportioned case with a label, never invented card art. */
+.slab-plain { width: 158px; }
+.slab-plain.is-lg { width: 200px; }
+.slab-plain-case {
+  border-radius: 8px; padding: 6px; background: linear-gradient(145deg, rgba(255,255,255,.16), rgba(255,255,255,.03) 28%, #090a10 76%);
+  box-shadow: 0 0 0 1px rgba(255,255,255,.16), 0 16px 18px -8px rgba(0,0,0,.6);
+}
+.slab-plain-label {
+  display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 7px 8px;
+  background: #ece6d6; color: #15120a; border-radius: 3px 3px 0 0; border-bottom: 2px solid #b8242b;
+}
+.slab-plain-label div { min-width: 0; display: grid; gap: 1px; line-height: 1.2; }
+.slab-plain-label strong { font-size: 11px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.slab-plain-label span { font-size: 9px; color: #5a5446; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.slab-plain-label b { display: grid; justify-items: center; font-size: 9px; letter-spacing: .4px; line-height: 1; }
+.slab-plain-label b i { font-style: normal; font-size: 17px; font-weight: 800; margin-top: 2px; }
+.slab-plain-body {
+  aspect-ratio: 5 / 6.4; display: grid; place-items: center; background: #14151c;
+  border-radius: 0 0 3px 3px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.07);
+}
+.slab-plain-body span { font-size: 10px; color: var(--dim); }
+.footer-links { gap: 18px; }
+.footer-links a:hover { color: var(--text); }
+@media (max-width: 900px) { .slab-plain, .slab-plain.is-lg { width: 150px; } }

@@ -10,10 +10,7 @@ const LINKS = [
   ['/packs', 'Packs'],
   ['/battles', 'Battles'],
   ['/marketplace', 'Marketplace'],
-  ['/trading', 'Trading'],
-  ['/lending', 'Lending'],
   ['/collection', 'Collection'],
-  ['/leaderboard', 'Leaderboard'],
 ]
 const INTERIOR_PATHS = ['/collection', '/battles', '/marketplace', '/trading', '/lending', '/leaderboard', '/trust']
 
@@ -57,7 +54,7 @@ export function Layout({ children }) {
           {live ? (
             <Link to="/collection" className="btn btn-ghost">{session.name}</Link>
           ) : (
-            <button className="btn btn-blue" onClick={connect}>Connect</button>
+            <button className="btn btn-blue" onClick={connect}>Sign in</button>
           )}
           <button
             type="button"
@@ -74,11 +71,13 @@ export function Layout({ children }) {
       <main className="page"><div className="wrap">{children}</div></main>
       <footer className="footer">
         <div className="wrap footer-inner">
-          <div>Vaulted collectibles · PSA · BGS · CGC · 90% buyback.</div>
-          <div className="row">
-            <Link to="/trust">Trust</Link>
-            <span>USDC · Circle CCTP</span>
-          </div>
+          <div>Graded collectibles · PSA · BGS · CGC · 90% buyback within 5 days.</div>
+          <nav className="row footer-links" aria-label="More">
+            <Link to="/trading">Trading</Link>
+            <Link to="/lending">Lending</Link>
+            <Link to="/leaderboard">Leaderboard</Link>
+            <Link to="/trust">How it's protected</Link>
+          </nav>
         </div>
       </footer>
       {toast && <div className="toast" role="status">{toast.msg}</div>}

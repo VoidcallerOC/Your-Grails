@@ -152,16 +152,18 @@ html, body { overflow-x: hidden; }
 .home-app .hero-copy { animation: none; }
 .home-app .hero h1 { font-size: clamp(44px, 5vw, 66px); line-height: .98; letter-spacing: -1.8px; }
 .home-app .vault {
-  min-height: 420px; grid-template-columns: minmax(96px, 1fr) 220px minmax(96px, 1fr); grid-template-areas: "pro grail master";
-  gap: 6px; padding: 24px 18px; overflow: hidden; border: 1px solid rgba(255,255,255,.1); border-radius: 4px; background: #100f0c;
+  min-height: 460px; grid-template-columns: minmax(90px, 1fr) minmax(230px, 290px) minmax(90px, 1fr); grid-template-areas: "pro grail master";
+  gap: 0; padding: 24px 0; overflow: visible;
   isolation: isolate; perspective: 1100px;
 }
 .home-app .vault .atmos, .home-app .vault .haze, .home-app .vault .orbits, .home-app .vault .orbits.rev, .home-app .vault-floor { display: none; }
-.home-app .hero-mini, .home-app .hero-mini.pro, .home-app .hero-mini.master { width: min(158px, 100%); margin: 0; animation: none; }
+.home-app .hero-mini, .home-app .hero-mini.pro, .home-app .hero-mini.master { width: min(128px, 100%); margin: 0; animation: none; align-self: end; margin-bottom: 36px; z-index: 3; }
+.home-app .hero-mini.pro { margin-right: -8px; }
+.home-app .hero-mini.master { margin-left: -8px; }
 .home-app .hero-mini.pro { justify-self: end; }
 .home-app .hero-mini.master { justify-self: start; }
 .home-app .hero-mini .pack-3d { width: 100%; }
-.home-app .hero-card-wrap { width: min(202px, 44%); animation: none; }
+.home-app .hero-card-wrap { width: 100%; animation: none; z-index: 5; }
 .home-app .hero-card-wrap .slab-stage { width: 100%; }
 .home-app .grail-meta { gap: 6px; margin-top: 10px; }
 .home-app .grade-chip, .home-app .value-chip { padding: 5px 7px; font-size: 10px; }

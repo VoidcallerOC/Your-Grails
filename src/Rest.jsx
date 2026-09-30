@@ -37,10 +37,9 @@ export function Collection() {
   const total = owned.reduce((n, c) => n + Number(c.value), 0)
   return (
     <>
-      <span className="tag">My Grails</span>
-      <h1>Your vault</h1>
+      <h1>Your collection</h1>
       <p className="muted">{owned.length} slab{owned.length === 1 ? '' : 's'} · ${money(total)} market · ${money(usdc)} USDC</p>
-      {!owned.length && <div className="panel" style={{ marginTop: 20 }}>No slabs yet. Rip a pack to seed the vault.</div>}
+      {!owned.length && <div className="panel" style={{ marginTop: 20 }}>No slabs yet. Open a pack to start your collection.</div>}
       <div className="grid-3" style={{ marginTop: 24 }}>
         {owned.map((c) => (
           <div key={c.id} className="panel vault-card">
@@ -48,7 +47,7 @@ export function Collection() {
             <div style={{ width: '100%', marginTop: 12 }}>
               <strong>{c.name}</strong>
               <p className="muted">{c.company} {c.grade} · ${money(c.value)}{c.pledged ? ' · pledged' : ''}</p>
-              <button className="btn btn-ghost" style={{ marginTop: 10 }} onClick={() => navigate({ to: '/card/$id', params: { id: c.id } })}>Inspect slab</button>
+              <button className="btn btn-ghost" style={{ marginTop: 10 }} onClick={() => navigate({ to: '/card/$id', params: { id: c.id } })}>View details</button>
             </div>
           </div>
         ))}
@@ -86,7 +85,7 @@ export function CardPage({ id }) {
             disabled={!buybackOpen}
             onClick={() => { sellBack(card.id); navigate({ to: '/collection' }) }}
           >
-            Sell back 90%
+            Sell back for 90%
           </button>
           <button
             className="btn btn-ghost"
@@ -98,7 +97,7 @@ export function CardPage({ id }) {
         </div>
         {inVault && !card.pledged && (
           <div className="list-box">
-            <label htmlFor="ask">List on marketplace</label>
+            <label htmlFor="ask">List on the marketplace</label>
             <div className="row">
               <input id="ask" className="field" type="number" min="1" value={ask} onChange={(e) => setAsk(e.target.value)} />
               <button className="btn btn-ghost" onClick={() => { listCard(card.id, ask); navigate({ to: '/marketplace' }) }}>List</button>
@@ -126,10 +125,9 @@ export function Battles() {
   const done = battle.status === 'result'
   return (
     <>
-      <span className="tag">Arena</span>
-      <h1>Player vs player</h1>
-      <p className="lead">Stake a slab. Higher published value is favored — upsets happen. Winner takes the other card.</p>
-      {!owned.length && <p className="notice">No pulls yet — you're staking a house Magikarp. Rip a pack to risk your own grail.</p>}
+      <h1>Battle</h1>
+      <p className="lead">Put your slab up against the house. The higher-value card is favored, but upsets happen. Win and you keep the other card; lose and it's gone.</p>
+      {!owned.length && <p className="notice">You haven't opened a pack yet, so you're playing with a house card. Open a pack to battle with one of your own.</p>}
       {playable.length > 1 && (
         <div className="row" style={{ margin: '16px 0' }}>
           {playable.map((c) => (
@@ -145,7 +143,7 @@ export function Battles() {
       )}
       <div className={`grid-3 arena ${locking ? 'is-lock' : ''} ${done ? 'is-done' : ''}`} style={{ alignItems: 'center', marginTop: 28 }}>
         <div className={`panel ${done && battle.winner === 'you' ? 'is-win' : ''}`} style={{ textAlign: 'center' }}>
-          <div className="tag">You</div>
+          <div className="tag">Your slab</div>
           <div style={{ display: 'grid', placeItems: 'center', margin: '12px 0' }}><Slab card={battle.you || you} /></div>
           <strong>${money((battle.you || you).value)}</strong>
         </div>
@@ -153,8 +151,8 @@ export function Battles() {
           <h2>VS</h2>
           {done ? (
             <>
-              <p className="price">{battle.winner === 'you' ? 'You take the slab' : 'They take the slab'}</p>
-              <button className="btn btn-ghost" onClick={resetBattle}>Run it back</button>
+              <p className="price">{battle.winner === 'you' ? 'You win the slab' : 'House wins the slab'}</p>
+              <button className="btn btn-ghost" onClick={resetBattle}>Battle again</button>
             </>
           ) : (
             <button
@@ -162,12 +160,12 @@ export function Battles() {
               disabled={locking}
               onClick={() => { if (!session) connect(); else lockBattle() }}
             >
-              {locking ? 'Locking…' : session ? 'Lock battle' : 'Connect to lock'}
+              {locking ? 'Battling…' : session ? 'Start battle' : 'Sign in to battle'}
             </button>
           )}
         </div>
         <div className={`panel ${done && battle.winner === 'them' ? 'is-win' : ''}`} style={{ textAlign: 'center' }}>
-          <div className="tag">YG Battle Bot</div>
+          <div className="tag">House slab</div>
           <div style={{ display: 'grid', placeItems: 'center', margin: '12px 0' }}><Slab card={them} /></div>
           <strong>${money(them.value)}</strong>
         </div>
@@ -196,13 +194,12 @@ export function Marketplace() {
   const rows = listings.length ? listings : LISTINGS
   return (
     <>
-      <span className="tag">Collectible market</span>
       <h1>Marketplace</h1>
-      <p className="lead">Live asks from the vault. Demo escrow — USDC leaves your session when a bid clears.</p>
-      {!session && <button className="btn btn-blue" style={{ marginBottom: 16 }} onClick={connect}>Connect to trade</button>}
+      <p className="lead">Graded slabs listed by other collectors. Your payment is held until the sale completes.</p>
+      {!session && <button className="btn btn-blue" style={{ marginBottom: 16 }} onClick={connect}>Sign in to buy</button>}
       <table className="table market">
         <thead>
-          <tr><th>Card</th><th>Grade</th><th>Value</th><th>Ask</th><th>Seller</th><th></th></tr>
+          <tr><th>Card</th><th>Grade</th><th>Market value</th><th>Price</th><th>Seller</th><th></th></tr>
         </thead>
         <tbody>
           {rows.map((l) => {
@@ -214,7 +211,7 @@ export function Marketplace() {
                 <td>${money(c.value)}</td>
                 <td className="price">${money(l.price)}</td>
                 <td className="muted">{l.seller}</td>
-                <td>{session ? <OfferBox listing={l} /> : <span className="muted">Connect</span>}</td>
+                <td>{session ? <OfferBox listing={l} /> : <span className="muted">Sign in to buy</span>}</td>
               </tr>
             )
           })}
@@ -237,12 +234,11 @@ export function Trading() {
   const theirCard = listing ? (listing.card || resolveCard(listing.cardId)) : null
   return (
     <>
-      <span className="tag">Peer trade</span>
       <h1>Trading</h1>
-      <p className="lead">One-for-one against an open ask. No fabricated tape — only the listings sitting in this demo.</p>
+      <p className="lead">Swap one of your slabs for one that's listed. Only real listings in this demo appear here.</p>
       {!owned.length || !listings.length ? (
         <div className="panel" style={{ marginTop: 20 }}>
-          <p className="muted">{!owned.length ? 'Rip a pack so you have something to offer.' : 'No open asks to trade into.'}</p>
+          <p className="muted">{!owned.length ? 'Open a pack so you have something to offer.' : 'No open asks to trade into.'}</p>
         </div>
       ) : (
         <div className="grid-2" style={{ marginTop: 24, alignItems: 'start' }}>
@@ -282,13 +278,12 @@ export function Lending() {
   const free = owned.filter((c) => !c.pledged)
   return (
     <>
-      <span className="tag">Card-backed</span>
       <h1>Lending</h1>
-      <p className="lead">Borrow 50% LTV against a vaulted slab. Demo rate is a flat 4% to unlock.</p>
+      <p className="lead">Borrow up to 50% of a slab's value and keep the card. Demo rate is a flat 4%.</p>
       <div className="grid-2" style={{ marginTop: 20 }}>
         <div className="panel">
           <h3>Borrow</h3>
-          {!free.length && <p className="muted">No unpledged slabs. Rip a pack first.</p>}
+          {!free.length && <p className="muted">No slabs available. Open a pack first.</p>}
           {free.map((c) => (
             <div className="loan-row" key={c.id}>
               <div>
@@ -320,7 +315,6 @@ export function Lending() {
 export function Leaderboard() {
   return (
     <>
-      <span className="tag">Season</span>
       <h1>Leaderboard</h1>
       <p className="lead">Empty on purpose. This demo does not invent a season tape.</p>
       <div className="panel empty-board">
@@ -334,9 +328,8 @@ export function Leaderboard() {
 export function Trust() {
   return (
     <>
-      <span className="tag">Provenance</span>
-      <h1>Trust layer</h1>
-      <p className="lead">The physical card is the proof. These rails keep every pull legible, verifiable, and yours.</p>
+      <h1>How it's protected</h1>
+      <p className="lead">The physical card is the proof. Here is how every pull is verified, stored and paid out.</p>
       <div className="grid-3" style={{ marginTop: 20 }}>
         {TRUST_POINTS.map((t) => (
           <div className="panel" key={t.title}>

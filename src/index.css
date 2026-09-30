@@ -275,10 +275,9 @@ h3 { font-size: 18px; margin: 0 0 6px; }
 
 /* Battles: a face-off, not three dashboard cards. */
 .route-battles .arena { grid-template-columns: minmax(0, 1fr) minmax(120px, 180px) minmax(0, 1fr); gap: 34px; }
-.route-battles .arena > .panel { padding: 24px 0 0; text-align: left !important; }
-.route-battles .arena > .panel:last-child { text-align: right !important; }
+.route-battles .arena > .panel { padding: 24px 0 0; text-align: center !important; }
+.route-battles .arena > .panel > strong { font-size: 22px; font-variant-numeric: tabular-nums; }
 .route-battles .arena > .panel .slab-stage { margin: 16px auto; }
-.route-battles .arena > .panel:last-child .slab-stage { margin-left: auto; }
 .route-battles .arena-mid { min-height: 160px; align-content: center; }
 .route-battles .arena-mid h2 { font-size: 48px; color: var(--gold); letter-spacing: .06em; }
 .route-battles .chip { border-radius: 3px; }

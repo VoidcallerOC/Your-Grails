@@ -36,7 +36,7 @@ export const useVault = create(persist((set, get) => ({
       return
     }
     set({ session: { name: 'Vault 0xYG' }, usdc: 5000 })
-    get().notify('Demo vault connected · 5,000 USDC credited')
+    get().notify('Signed in · 5,000 demo USDC added')
   },
 
   addUsdc: (amount = 2500) => {
@@ -47,7 +47,7 @@ export const useVault = create(persist((set, get) => ({
   startRip: (pack) => {
     const s = get()
     if (!s.session) {
-      get().notify('Connect a demo vault first')
+      get().notify('Sign in first')
       return false
     }
     if (s.usdc < pack.price) {
@@ -107,7 +107,7 @@ export const useVault = create(persist((set, get) => ({
     const s = get()
     const listing = s.listings.find((l) => l.id === listingId)
     if (!listing) return
-    if (!s.session) { get().notify('Connect a demo vault first'); return }
+    if (!s.session) { get().notify('Sign in first'); return }
     if (s.usdc < listing.price) { get().notify('Not enough USDC'); return }
     const base = listing.card || resolveCard(listing.cardId)
     const card = {
