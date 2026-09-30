@@ -28,7 +28,7 @@ Live site: https://yourgrails.com
 
 - Wordmark: YOURGRAILS / RIP · BATTLE · GRAIL
 - Nav: Packs, Battles, Marketplace, Trading, Lending, Collection, Leaderboard
-- Hero: Rip packs. Battle players. Own the grail.
+- Hero: Rip packs. Battle the house. Own the grail. (Live-site line is "Battle players"; battles in this demo are against the house.)
 - Tiers: Pokemon Pro Pack ($50) and Pokemon Master Pack ($100)
 - Trust: fair random draw, graded & vaulted PSA·BGS·CGC, 90% buyback
 - USDC + Circle CCTP multi-chain

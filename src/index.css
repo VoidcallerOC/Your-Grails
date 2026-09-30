@@ -255,7 +255,7 @@ h3 { font-size: 18px; margin: 0 0 6px; }
 }
 
 /* Interior product experience: one language, seven different hierarchies. */
-.interior-app .page { padding-top: 52px; }
+.interior-app .page { padding-top: 40px; }
 .interior-app h1 { max-width: 760px; font-size: clamp(46px, 5.2vw, 78px); letter-spacing: .005em; }
 .interior-app .lead { max-width: 640px; color: #b8b8c6; }
 .interior-app .tag { color: var(--gold); letter-spacing: 1.8px; }

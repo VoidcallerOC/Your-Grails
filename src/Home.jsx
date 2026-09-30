@@ -83,19 +83,6 @@ export function Slab({ card, large, pose, still }) {
   )
 }
 
-// Flat, light-weight slab for lists (no 3D loop). Real photo when one exists; otherwise a label-only plate.
-export function SlabThumb({ card, className = '' }) {
-  if (card?.photo) {
-    return <img className={`thumb ${className}`} src={card.photo} alt={`${card.name} ${card.company} ${card.grade}`} loading="lazy" />
-  }
-  return (
-    <span className={`thumb thumb-plain ${className}`} role="img" aria-label={`${card.name}, ${card.company} ${card.grade}`}>
-      <i>{card.company}</i>
-      <b>{card.grade}</b>
-    </span>
-  )
-}
-
 export function Home() {
   const navigate = useNavigate()
   const session = useVault((s) => s.session)
@@ -109,7 +96,7 @@ export function Home() {
     <>
       <section className="hero">
         <div className="hero-copy">
-          <h1>Rip packs.<br />Battle players.<br /><em>Own the grail.</em></h1>
+          <h1>Rip packs.<br />Battle the house.<br /><em>Own the grail.</em></h1>
           <p className="lead">Every pack holds a real graded card. Open one, keep it, battle with it, trade it, or sell it back for 90% within five days.</p>
           <div className="cta-row">
             <button className="btn btn-grad" onClick={start}>Open a pack</button>

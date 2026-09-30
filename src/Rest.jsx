@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from './nav'
 import { LISTINGS, TRUST_POINTS, VAULT, daysLeft, money, resolveCard } from './data'
-import { Slab, SlabThumb } from './Home'
+import { Slab } from './Home'
 import { RipScene } from './RipScene'
 import { useVault } from './store'
 
@@ -216,7 +216,7 @@ function OfferBox({ listing }) {
           <span aria-hidden="true">$</span>
           <input type="number" min="1" value={bid} onChange={(e) => setBid(e.target.value)} aria-label={`Offer amount for ${listing.id}`} />
         </label>
-        <button className="btn btn-ghost" onClick={() => offerListing(listing.id, bid)}>Make offer</button>
+        <button className="btn btn-ghost" onClick={() => offerListing(listing.id, bid)}>Offer</button>
       </div>
     </div>
   )
@@ -229,27 +229,39 @@ export function Marketplace() {
   const rows = listings.length ? listings : LISTINGS
   return (
     <>
-      <h1>Marketplace</h1>
-      <p className="lead">Graded slabs listed by other collectors. Your payment is held until the sale completes.</p>
-      {!session && <button className="btn btn-blue" onClick={connect}>Sign in to buy</button>}
-      <ul className="market-list">
+      <header className="market-head">
+        <div>
+          <h1>Marketplace</h1>
+          <p>Graded slabs from other collectors. Payment is held until the sale completes.</p>
+        </div>
+        <div className="market-head-end">
+          <span className="market-count">{rows.length} slab{rows.length === 1 ? '' : 's'} listed</span>
+          {!session && <button className="btn btn-blue" onClick={connect}>Sign in to buy</button>}
+        </div>
+      </header>
+      <ul className="market-grid">
         {rows.map((l) => {
           const c = l.card || resolveCard(l.cardId)
           const pct = c.value ? ((l.price - c.value) / c.value) * 100 : 0
           return (
-            <li className="market-row" key={l.id}>
-              <SlabThumb card={c} />
-              <div className="market-id">
-                <strong>{c.name}</strong>
-                <span className="market-set">{c.set}</span>
-                <span className="market-seller">{c.rarity} · listed by {l.seller}</span>
+            <li className="listing" key={l.id}>
+              <div className="listing-stage"><Slab card={c} still /></div>
+              <div className="listing-body">
+                <div className="listing-head">
+                  <div className="listing-id">
+                    <strong>{c.name}</strong>
+                    <span>{c.set}</span>
+                    <span className="listing-meta">{c.rarity}{c.cert ? ` · #${c.cert}` : ''}</span>
+                  </div>
+                  <span className="listing-grade"><i>{c.company}</i><b>{c.grade}</b></span>
+                </div>
+                <div className={`listing-price ${pct < -0.05 ? 'is-under' : ''}`}>
+                  <strong>${money(l.price)}</strong>
+                  <span>{Math.abs(pct) < 0.05 ? 'At market value' : `${Math.abs(pct).toFixed(1)}% ${pct > 0 ? 'over' : 'under'} market · $${money(c.value)}`}</span>
+                </div>
+                {session && <OfferBox listing={l} />}
+                <span className="listing-seller">Listed by {l.seller}</span>
               </div>
-              <span className="market-grade"><i>{c.company}</i><b>{c.grade}</b></span>
-              <div className="market-price">
-                <strong>${money(l.price)}</strong>
-                <span>{Math.abs(pct) < 0.05 ? 'At market value' : `${Math.abs(pct).toFixed(1)}% ${pct > 0 ? 'over' : 'under'} market ($${money(c.value)})`}</span>
-              </div>
-              {session && <OfferBox listing={l} />}
             </li>
           )
         })}
