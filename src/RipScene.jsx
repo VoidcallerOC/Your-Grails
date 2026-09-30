@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import { useEffect, useRef, useState } from 'react'
+import { Suspense, lazy, useEffect, useRef, useState } from 'react'
 import { useNavigate } from './nav'
-import { PackGL } from './PackGL'
+const PackGL = lazy(() => import('./PackGL').then((m) => ({ default: m.PackGL })))
 import { money } from './data'
 import { useVault } from './store'
 
@@ -145,7 +145,9 @@ export function RipScene({ tier = 'PRO', card, children }) {
     <div className={`rip-stage is-${key} ${epic ? 'is-epic' : ''}`} data-beat={beat} aria-live="polite">
       {!showCard && (
         <div className="rip-pack is-gl">
-          <PackGL src={ART[key]} tier={key} mode="rip" ripBeat={beat} slabSrc={card?.photo} />
+          <Suspense fallback={null}>
+            <PackGL src={ART[key]} tier={key} mode="rip" ripBeat={beat} slabSrc={card?.photo} />
+          </Suspense>
         </div>
       )}
       {showCard && <div className="rip-final">{children}</div>}
@@ -164,12 +166,12 @@ export function RipScene({ tier = 'PRO', card, children }) {
         )}
         {beat === 'reveal' && card && (
           <>
-            <div className="tag">{epic ? 'Grail pull' : 'Vaulted to you'}</div>
+            <div className="tag">{epic ? 'Grail pull' : 'Added to your collection'}</div>
             <h2>{card.name}</h2>
             <p>{card.company} {card.grade} · {card.rarity} · ${money(card.value)}</p>
             <p className="reveal-cert muted">{card.set}{card.cert ? ` · cert ${card.cert}` : ''}</p>
             <div className="cta-row" style={{ justifyContent: 'center' }}>
-              <button className="btn btn-gold" onClick={() => navigate({ to: '/collection' })}>View in vault</button>
+              <button className="btn btn-gold" onClick={() => navigate({ to: '/collection' })}>View in collection</button>
               <button className="btn btn-ghost" onClick={() => navigate({ to: '/packs' })}>Rip another</button>
             </div>
           </>

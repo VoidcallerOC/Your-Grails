@@ -2,7 +2,7 @@
 // @ts-nocheck
 export const PACKS = [
   { id: 'pro', name: 'Pokemon Pro Pack', tier: 'PRO', price: 50, ev: 51.84, hot: false, blurb: 'The working collector pack. Real graded cards, fair random draw, 90% buyback window.' },
-  { id: 'master', name: 'Pokemon Master Pack', tier: 'MASTER', price: 100, ev: 103.75, hot: true, blurb: 'Higher expected pull value. Same vaulted PSA / BGS / CGC cards. Same 5-day buyback.' },
+  { id: 'master', name: 'Pokemon Master Pack', tier: 'MASTER', price: 100, ev: 103.75, hot: true, blurb: 'The higher-priced tier. Same graded PSA / BGS / CGC cards. Same 5-day buyback.' },
 ]
 
 export const ODDS = [

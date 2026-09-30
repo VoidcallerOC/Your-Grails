@@ -25,18 +25,19 @@ function VaultStage({ children }) {
   return <div className="vault" ref={ref} onMouseMove={onMove} onMouseLeave={onLeave}>{children}</div>
 }
 
-export function Slab({ card, large, pose }) {
+export function Slab({ card, large, pose, still }) {
   const ref = useRef(null)
   const [hot, setHot] = useState(false)
   const live = useLive3D(ref, pose === 'hero'
     ? { yaw: -4, pitch: 3, yawAmp: 1.1, pitchAmp: 0.6, period: 7.8, bob: 5.8, bobAmp: 1.2, phase: 0.8 }
     : pose === 'emerge'
       ? { yaw: 6, pitch: 7, yawAmp: 0.8, pitchAmp: 0.5, period: 7.2, bob: 5.2, bobAmp: 0.9, phase: 0.4 }
-      : { yaw: -8, pitch: 5, yawAmp: 1.4, pitchAmp: 0.7, period: 7.4, bob: 5.4, bobAmp: 1.1, phase: 0.9 }
+      : { yaw: -8, pitch: 5, yawAmp: 1.4, pitchAmp: 0.7, period: 7.4, bob: 5.4, bobAmp: 1.1, phase: 0.9 },
+    { still }
   )
   if (card?.photo) {
     return (
-      <div className={`slab-stage ${large ? 'is-lg' : ''} ${pose === 'hero' ? 'is-hero' : ''} ${pose === 'emerge' ? 'is-emerge' : ''}`}>
+      <div className={`slab-stage ${still ? 'slab-still' : ''} ${large ? 'is-lg' : ''} ${pose === 'hero' ? 'is-hero' : ''} ${pose === 'emerge' ? 'is-emerge' : ''}`}>
         <span className="obj-shadow" aria-hidden="true" />
         <div
           className={`slab-3d ${large ? 'is-lg' : ''} ${hot ? 'is-hot' : ''}`}
@@ -65,16 +66,33 @@ export function Slab({ card, large, pose }) {
     )
   }
   return (
-    <div className={`slab-stage slab-plain ${large ? 'is-lg' : ''}`}>
+    <div className={`slab-stage slab-plain ${still ? 'slab-still' : ''} ${large ? 'is-lg' : ''}`}>
       <span className="obj-shadow" aria-hidden="true" />
       <div className="slab-plain-case" role="img" aria-label={`${card.name}, ${card.company} ${card.grade}. Photo not yet available.`}>
         <div className="slab-plain-label">
           <div><strong>{card.name}</strong><span>{card.set}</span></div>
-          <b>{card.company}<i>{card.grade}</i></b>
+          <em>{card.cert ? `#${card.cert}` : card.rarity}</em>
         </div>
-        <div className="slab-plain-body"><span>Photo coming soon</span></div>
+        <div className="slab-plain-body">
+          <span className="slab-plain-co">{card.company}</span>
+          <b>{card.grade}</b>
+          <span className="slab-plain-note">Photo pending</span>
+        </div>
       </div>
     </div>
+  )
+}
+
+// Flat, light-weight slab for lists (no 3D loop). Real photo when one exists; otherwise a label-only plate.
+export function SlabThumb({ card, className = '' }) {
+  if (card?.photo) {
+    return <img className={`thumb ${className}`} src={card.photo} alt={`${card.name} ${card.company} ${card.grade}`} loading="lazy" />
+  }
+  return (
+    <span className={`thumb thumb-plain ${className}`} role="img" aria-label={`${card.name}, ${card.company} ${card.grade}`}>
+      <i>{card.company}</i>
+      <b>{card.grade}</b>
+    </span>
   )
 }
 
@@ -160,13 +178,6 @@ export function Home() {
         </div>
       </div>
 
-      <section className="close-vault">
-        <h2>Ready when you are.</h2>
-        <div className="cta-row">
-          <button className="btn btn-grad" onClick={() => navigate({ to: '/packs/$id', params: { id: PACKS[0].id } })}>Open a Pro Pack</button>
-          <button className="btn btn-ghost" onClick={() => navigate({ to: '/packs/$id', params: { id: PACKS[1].id } })}>Open a Master Pack</button>
-        </div>
-      </section>
     </>
   )
 }
@@ -219,9 +230,8 @@ export function PackDetail({ id }) {
         <p className="lead">{pack.blurb}</p>
         <div className="detail-value-row">
           <div><span className="detail-label">PACK PRICE</span><strong className="price">${pack.price.toFixed(2)} <small>USDC</small></strong></div>
-          <div><span className="detail-label">EXPECTED PULL VALUE</span><strong>${pack.ev.toFixed(2)}</strong></div>
+          <div><span className="detail-label">BUYBACK</span><strong>90% · 5 days</strong></div>
         </div>
-        <p className="muted detail-buyback">5-day 90% buyback window</p>
         <div className="odds" aria-label="Published odds">
           {ODDS.map((o) => (
             <div className="odds-row" key={o.label}>
