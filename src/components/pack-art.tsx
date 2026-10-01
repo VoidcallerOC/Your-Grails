@@ -23,7 +23,23 @@ export function PackArt({ tier, name, eager = false }: { tier: string; name: str
  * with the extruded pouch, floating and following the pointer. The printed face keeps the artwork's exact pixels
  * (see src/lib/pack-gl.js). Reduced motion or no WebGL keeps the flat art. Rendering pauses while off-screen.
  */
-export function LivePack({ tier, name, eager = false, phase = 0 }: { tier: string; name: string; eager?: boolean; phase?: number }) {
+export function LivePack({
+  tier,
+  name,
+  eager = false,
+  phase = 0,
+  amp = 1,
+  minWidth = 0,
+}: {
+  tier: string;
+  name: string;
+  eager?: boolean;
+  phase?: number;
+  /** Float strength: 1 on the packs pages, lower where the pack sits beside other content. */
+  amp?: number;
+  /** Only go live at or above this viewport width (px); narrower screens keep the flat art. */
+  minWidth?: number;
+}) {
   const src = packArtSrc(tier);
   const boxRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -34,7 +50,7 @@ export function LivePack({ tier, name, eager = false, phase = 0 }: { tier: strin
     if (!src) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const probe = document.createElement("canvas");
-    if (reduce || !(probe.getContext("webgl2") || probe.getContext("webgl"))) return;
+    if (reduce || window.innerWidth < minWidth || !(probe.getContext("webgl2") || probe.getContext("webgl"))) return;
     let raf = 0;
     let onScreen = true;
     let engine: { frame(t: number): void; setPointer(p: unknown): void; dispose(): void } | null = null;
@@ -45,7 +61,7 @@ export function LivePack({ tier, name, eager = false, phase = 0 }: { tier: strin
       .then(({ createPackEngine }) => {
         const canvas = canvasRef.current;
         if (cancelled || !canvas) return;
-        engine = createPackEngine(canvas, { src, tier: tier.toLowerCase(), mode: "idle", phase });
+        engine = createPackEngine(canvas, { src, tier: tier.toLowerCase(), mode: "idle", phase, amp });
         setLive(true);
         const loop = (t: number) => {
           if (onScreen) {
@@ -63,7 +79,7 @@ export function LivePack({ tier, name, eager = false, phase = 0 }: { tier: strin
       cancelAnimationFrame(raf);
       engine?.dispose();
     };
-  }, [src, tier, phase]);
+  }, [src, tier, phase, amp, minWidth]);
 
   const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
     const r = e.currentTarget.getBoundingClientRect();

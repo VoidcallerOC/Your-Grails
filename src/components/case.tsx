@@ -81,7 +81,7 @@ function LabelRow({ l, on, onPull }: { l: Listing; on: boolean; onPull: () => vo
         onMouseEnter={onPull}
         onFocus={onPull}
         aria-label={`${c.title}, ${c.grader ?? "grade"} ${c.grade ?? ""}, ${usd(l.priceUsd)}`}
-        className={`group grid grid-cols-[48px_minmax(0,1fr)] items-stretch gap-3 py-1.5 lg:grid-cols-[minmax(0,1fr)_150px] lg:gap-5 ${on ? "lg:translate-x-1" : ""} transition-transform`}
+        className={`group grid grid-cols-[48px_minmax(0,1fr)] items-stretch gap-3 py-1.5 lg:grid-cols-[minmax(0,1fr)_150px] lg:gap-5 ${on ? "lg:-translate-x-1" : ""} transition-transform`}
       >
         {/* phones have no hover tray, so the slab sits beside its label */}
         <span className="lg:hidden">
@@ -162,18 +162,19 @@ function Tray({ l }: { l: Listing }) {
   );
 }
 
-/** The case: labels down the glass on the left, the pulled slab in the tray on the right (desktop). */
+/** The case: the pulled slab in the tray on the left, labels down the glass on the right (desktop). */
 export function DealerCase({ list }: { list: Listing[] }) {
   const [pulled, setPulled] = useState(list[0]?.id);
   const current = list.find((l) => l.id === pulled) ?? list[0];
   return (
-    <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,4fr)]">
+    // The pulled slab leads (left), labels follow (right): slab first, everywhere. Labels stay first in the DOM for reading order.
+    <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)]">
       <ol className="min-w-0" aria-label="Slabs in the case">
         {list.map((l) => (
           <LabelRow key={l.id} l={l} on={current?.id === l.id} onPull={() => setPulled(l.id)} />
         ))}
       </ol>
-      <aside className="hidden lg:block" aria-label="Pulled slab">
+      <aside className="hidden lg:order-first lg:block" aria-label="Pulled slab">
         <div className="sticky top-40">{current && <Tray l={current} />}</div>
       </aside>
     </div>
