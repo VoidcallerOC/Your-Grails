@@ -403,7 +403,9 @@ export function createPackEngine(canvas, opts) {
 
   const state = {
     ready: false,
-    pose: opts.pose || { yaw: 0, pitch: 6, yawAmp: 6, pitchAmp: 2.4, period: 3.2, bob: 2.4, bobAmp: 5, phase: 0 },
+    // Idle float. Sway repeats every ~7s (2π × period), bob every ~4s (2π × bob); bobAmp × 0.006 is the lift in scene
+    // units (0.072 ≈ 3% of the pack's height). Readable as floating without competing with the page.
+    pose: opts.pose || { yaw: 0, pitch: 6, yawAmp: 9, pitchAmp: 3.2, period: 1.1, bob: 0.65, bobAmp: 12, phase: opts.phase || 0 },
     ptr: { x: 0, y: 0, z: 0 },
     beat: opts.ripBeat || null,
     mode: opts.mode || 'idle',
@@ -425,7 +427,7 @@ export function createPackEngine(canvas, opts) {
     renderer.setSize(w, h, false)
     camera.aspect = w / h
     const packH = state.packH || 2.4
-    const pad = state.mode === 'rip' ? 1.48 : 1.08
+    const pad = state.mode === 'rip' ? 1.48 : 1.22 // idle leaves headroom for the float and pointer tilt
     const dist = (packH * pad / 2) / Math.tan((camera.fov * Math.PI) / 360)
     camera.position.set(0, 0.04, dist)
     camera.lookAt(0, 0, 0)
