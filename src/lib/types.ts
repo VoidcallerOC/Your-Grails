@@ -157,4 +157,5 @@ export type Profile = Person & { bio?: string; memberSince?: string };
 export type Collection = { cards: CardSummary[]; totalCards: number | null; totalValueUsd: number | null; pagination: Pagination | null };
 
 /** A part of a page whose data source may fail independently. */
-export type Part<T> = { ok: true; data: T } | { ok: false; error: string };
+/** `status` is the production HTTP status when the API answered (404 = production says it does not exist). */
+export type Part<T> = { ok: true; data: T } | { ok: false; error: string; status?: number };

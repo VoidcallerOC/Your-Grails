@@ -3,7 +3,7 @@
  * Handlers run only on the server. The browser receives normalized, trimmed data.
  */
 import { createServerFn } from "@tanstack/react-start";
-import { ygGet } from "@/server/yg-api";
+import { ygGet, YgApiError } from "@/server/yg-api";
 import {
   isAddress,
   toBattleRow,
@@ -28,7 +28,7 @@ async function part<T>(fn: () => Promise<T>): Promise<Part<T>> {
   try {
     return { ok: true, data: await fn() };
   } catch (err) {
-    return { ok: false, error: err instanceof Error ? err.message : "Request failed" };
+    return { ok: false, error: err instanceof Error ? err.message : "Request failed", status: err instanceof YgApiError ? err.status : undefined };
   }
 }
 

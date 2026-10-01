@@ -152,15 +152,6 @@ function NavProgress() {
   );
 }
 
-/** Shown in the outlet when a route takes longer than the pending threshold. */
-export function RoutePending() {
-  return (
-    <div className="wrap py-16" role="status">
-      <p className="label">Loading from YourGrails…</p>
-    </div>
-  );
-}
-
 export function Shell({ children }: { children: ReactNode }) {
   return (
     <>

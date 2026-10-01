@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SectionHead } from "@/components/blocks";
 import { PageHead } from "@/components/chrome";
 import { PersonLink } from "@/components/person";
-import { BlockedAction, PartView } from "@/components/states";
+import { BlockedAction, EmptyPanel, PartView } from "@/components/states";
 import { getBattlesOverview } from "@/lib/api";
 import { count, usd } from "@/lib/format";
 
@@ -45,7 +45,9 @@ function Battles() {
             transactions: both openings, the bonus pack, and any buybacks.
           </p>
           <PartView part={packs} what="Battle packs">
-            {(list) => (
+            {(list) => list.length === 0 ? (
+              <p className="mt-8 text-sm text-muted">No packs are on sale right now, so no battles can be started.</p>
+            ) : (
               <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {list.map((p) => (
                   <BlockedAction key={p.id} label={`Start a ${p.name} battle · ${usd(p.priceUsd)}`} does="Creates a battle for this pack. Another collector or the YG Battle Bot can join." />
@@ -69,7 +71,9 @@ function Battles() {
           <div className="mt-8">
             <SectionHead title="Most wins" action={{ to: "/leaderboard", label: "Leaderboard" }} />
             <PartView part={top} what="Battle standings">
-              {(rows) => (
+              {(rows) => rows.length === 0 ? (
+                <EmptyPanel>No battles fought yet.</EmptyPanel>
+              ) : (
                 <ol className="border-b border-line">
                   {rows.map((r, i) => (
                     <li key={r.address} className="ledger-row grid-cols-[32px_minmax(0,1fr)_auto]">

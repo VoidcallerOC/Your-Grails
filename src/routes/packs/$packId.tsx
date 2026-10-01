@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { OddsTable, PullsList, SectionHead } from "@/components/blocks";
 import { packAvailability } from "@/lib/packs";
 import { PackStage } from "@/components/pack-art";
@@ -8,7 +8,12 @@ import { getPack } from "@/lib/api";
 import { dateShort, usd } from "@/lib/format";
 
 export const Route = createFileRoute("/packs/$packId")({
-  loader: ({ params }) => getPack({ data: { packId: params.packId } }),
+  loader: async ({ params }) => {
+    const data = await getPack({ data: { packId: params.packId } });
+    // Production answers 404 "Pack not found" for unknown ids (observed 2026-10-01).
+    if (!data.pack.ok && data.pack.status === 404) throw notFound();
+    return data;
+  },
   head: ({ loaderData }) => ({
     meta: [{ title: `${loaderData?.pack.ok ? loaderData.pack.data.name : "Pack"} · YourGrails` }],
   }),

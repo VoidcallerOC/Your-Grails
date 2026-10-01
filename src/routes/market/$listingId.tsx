@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { GradeMark, SlabPhoto } from "@/components/slab";
 import { BlockedAction, PartView } from "@/components/states";
 import { getListing } from "@/lib/api";
@@ -6,7 +6,13 @@ import { contractUrl, txUrl } from "@/lib/contracts";
 import { cardLine, count, dateShort, shortAddress, usd } from "@/lib/format";
 
 export const Route = createFileRoute("/market/$listingId")({
-  loader: ({ params }) => getListing({ data: { listingId: params.listingId } }),
+  loader: async ({ params }) => {
+    if (!/^[0-9a-fA-F]{24}$|^\d{1,9}$/.test(params.listingId)) throw notFound();
+    const data = await getListing({ data: { listingId: params.listingId } });
+    // Production answers 404 "Listing not found" for unknown ids (observed 2026-10-01).
+    if (!data.listing.ok && data.listing.status === 404) throw notFound();
+    return data;
+  },
   head: ({ loaderData }) => ({
     meta: [{ title: `${loaderData?.listing.ok ? loaderData.listing.data.card.title : "Listing"} · YourGrails` }],
   }),
