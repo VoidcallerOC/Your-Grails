@@ -118,7 +118,7 @@ function Market() {
                 <div className="mb-8 flex items-baseline justify-between gap-4">
                   <p className="text-sm text-paper-dim" aria-live="polite">
                     {pagination ? `${count(pagination.total)} ${pagination.total === 1 ? "listing" : "listings"}` : `${list.length} listings`}
-                    {filtered ? " match your filters" : " active"}
+                    {filtered ? ((pagination?.total ?? list.length) === 1 ? " matches your filters" : " match your filters") : " active"}
                   </p>
                   {filtered && <Link to="/market" search={{ page: 1 }} className="text-sm text-paper-dim underline underline-offset-4 hover:text-paper">Clear filters</Link>}
                 </div>

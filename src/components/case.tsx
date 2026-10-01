@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { count, shortAddress, usd } from "@/lib/format";
 import { compartmentParam, gradeCompartments, isCompartment } from "@/lib/grades";
 import type { Facet, Listing } from "@/lib/types";
@@ -28,16 +28,24 @@ const exact = { explicitUndefined: true };
 
 export function GradeCompartments({ grades, current, base }: { grades: Facet[]; current?: string; base: Record<string, unknown> }) {
   const compartments = gradeCompartments(grades);
+  const strip = useRef<HTMLElement>(null);
+  // Phones scroll the strip sideways: bring the chosen compartment into view so the choice is visible.
+  useEffect(() => {
+    const nav = strip.current, on = nav?.querySelector<HTMLElement>('[aria-current="page"]');
+    if (!nav || !on || nav.scrollWidth <= nav.clientWidth) return;
+    const r = on.getBoundingClientRect(), n = nav.getBoundingClientRect();
+    if (r.left < n.left || r.right > n.right) nav.scrollLeft += r.left - n.left - 16;
+  }, [current]);
   if (!compartments.length) return null;
   const cell = (on: boolean) =>
     `flex min-w-[92px] shrink-0 flex-col justify-between border px-4 py-3 text-left transition-colors ${on ? "border-gold bg-gold/10" : "border-line bg-velvet hover:border-line-strong"}`;
   return (
-    <nav aria-label="Case compartments by grade" className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+    <nav ref={strip} aria-label="Case compartments by grade" className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
       <ul className="flex gap-2">
         <li>
           <Link to="/market" search={{ ...base, grade: undefined, page: 1 }} activeOptions={exact} aria-current={!current ? "page" : undefined} className={cell(!current)}>
-            <span className="font-display text-sm font-semibold text-paper-dim">All grades</span>
-            <span className="mt-3 text-xs text-muted">Every slab</span>
+            <span className="whitespace-nowrap font-display text-sm font-semibold text-paper-dim">All grades</span>
+            <span className="mt-3 whitespace-nowrap text-xs text-muted">Every slab</span>
           </Link>
         </li>
         {compartments.map((c) => {
@@ -48,7 +56,7 @@ export function GradeCompartments({ grades, current, base }: { grades: Facet[]; 
                 <span className="font-display text-sm font-semibold text-paper-dim">Grade</span>
                 <span className="mt-1 flex items-baseline gap-2">
                   <span className={`shout text-4xl leading-none ${on ? "text-gold" : "text-paper"}`}>{c.grade}</span>
-                  {c.count > 0 && <span className="text-xs text-muted">{count(c.count)} listed</span>}
+                  {c.count > 0 && <span className="whitespace-nowrap text-xs text-muted">{count(c.count)} listed</span>}
                 </span>
               </Link>
             </li>
