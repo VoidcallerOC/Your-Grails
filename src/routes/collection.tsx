@@ -22,14 +22,26 @@ function CollectionPage() {
   };
   return (
     <>
-      <PageHead kicker="Collection" title="Your slabs">
+      <PageHead eyebrow="Your vault" title="Your slabs">
         Your collection lists every card token in your wallet, one slab per token: grade, cert, value, buyback window and what you can
         do with it. It needs you signed in.
       </PageHead>
-      <div className="wrap grid grid-cols-1 gap-10 lg:grid-cols-2">
-        <BlockedAction label="Sign in to see your collection" does="Connects your wallet and loads your cards. From here you can sell back, list, lend, trade or battle." />
-        <form onSubmit={submit} className="panel p-4" noValidate>
-          <label htmlFor="who" className="label mb-2 block">Look up any collector</label>
+      <div className="wrap grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
+        {/* The empty case waiting for your slabs. */}
+        <section className="panel relative overflow-hidden px-6 pb-8 pt-10 sm:px-10">
+          <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(520px 260px at 50% 0%, rgba(212,168,75,0.13), transparent 70%)" }} aria-hidden="true" />
+          <div className="relative grid grid-cols-3 gap-4 sm:gap-8" aria-hidden="true">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="shelf pb-px">
+                <div className="mx-auto aspect-[5/8] w-[78%] border border-dashed border-line-strong/70" />
+              </div>
+            ))}
+          </div>
+          <BlockedAction tone="primary" className="relative mx-auto mt-10 max-w-sm" label="Sign in to see your collection" does="Connects your wallet and loads your cards. From here you can sell back, list, lend, trade or battle." />
+        </section>
+        <form onSubmit={submit} className="self-start" noValidate>
+          <h2 className="shout text-3xl">Look up any collector</h2>
+          <label htmlFor="who" className="label mb-3 mt-2 block">Username or wallet address</label>
           <div className="flex gap-2">
             <input
               id="who"

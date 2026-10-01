@@ -3,7 +3,7 @@
  * Handlers run only on the server. The browser receives normalized, trimmed data.
  */
 import { createServerFn } from "@tanstack/react-start";
-import { ygGet } from "@/server/yg-api";
+import { ygGet, YgApiError } from "@/server/yg-api";
 import {
   isAddress,
   toBattleRow,
@@ -28,7 +28,7 @@ async function part<T>(fn: () => Promise<T>): Promise<Part<T>> {
   try {
     return { ok: true, data: await fn() };
   } catch (err) {
-    return { ok: false, error: err instanceof Error ? err.message : "Request failed" };
+    return { ok: false, error: err instanceof Error ? err.message : "Request failed", status: err instanceof YgApiError ? err.status : undefined };
   }
 }
 
@@ -83,7 +83,7 @@ export function sanitizeListingQuery(d: ListingQuery): ListingQuery {
     page: Number.isInteger(page) && page > 0 && page < 1000 ? page : 1,
     query: clean(d.query),
     gradingCompany: clean(d.gradingCompany, 8),
-    grade: clean(d.grade, 8),
+    grade: clean(d.grade, 40),
     set: clean(d.set, 120),
     priceMin: money(d.priceMin),
     priceMax: money(d.priceMax),

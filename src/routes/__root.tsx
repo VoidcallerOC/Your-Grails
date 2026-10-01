@@ -11,17 +11,17 @@ export const Route = createRootRoute({
       { name: "description", content: "Open sealed packs of real PSA, BGS and CGC graded cards. Keep them in the vault, list them, battle with them or sell them back." },
       // Preview build: keep it out of search until it replaces production.
       { name: "robots", content: "noindex, nofollow" },
-      { name: "theme-color", content: "#0d0c0b" },
+      { name: "theme-color", content: "#0a0908" },
     ],
     links: [
-      { rel: "icon", type: "image/png", href: "/brand/logo.png" },
+      { rel: "icon", type: "image/svg+xml", href: "/brand/monogram.svg" },
       { rel: "stylesheet", href: appCss },
     ],
   }),
   notFoundComponent: () => (
     <div className="wrap py-20">
-      <p className="label mb-3">404</p>
-      <h1 className="display text-5xl">Nothing in this slot.</h1>
+      <p className="eyebrow mb-3">404</p>
+      <h1 className="shout text-5xl sm:text-7xl">Nothing in this slot.</h1>
       <p className="mt-6">
         <Link to="/" className="link">
           Back to YourGrails

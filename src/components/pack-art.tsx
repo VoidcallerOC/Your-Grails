@@ -19,12 +19,13 @@ export function PackArt({ tier, name, eager = false }: { tier: string; name: str
 }
 
 /**
- * Pack detail stage. Server-renders the flat art. In the browser, Three.js loads on demand (pack detail only)
- * and adds depth and tilt. The printed face keeps the artwork's exact pixels (see src/lib/pack-gl.js).
- * Reduced motion or no WebGL keeps the flat art.
+ * The pack as a rendered 3D object. Server-renders the flat art; in the browser, Three.js loads on demand and replaces it
+ * with the extruded pouch, floating and following the pointer. The printed face keeps the artwork's exact pixels
+ * (see src/lib/pack-gl.js). Reduced motion or no WebGL keeps the flat art. Rendering pauses while off-screen.
  */
-export function PackStage({ tier, name }: { tier: string; name: string }) {
+export function LivePack({ tier, name, eager = false, phase = 0 }: { tier: string; name: string; eager?: boolean; phase?: number }) {
   const src = packArtSrc(tier);
+  const boxRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const ptr = useRef({ x: 0, y: 0, z: 0 });
   const [live, setLive] = useState(false);
@@ -35,17 +36,22 @@ export function PackStage({ tier, name }: { tier: string; name: string }) {
     const probe = document.createElement("canvas");
     if (reduce || !(probe.getContext("webgl2") || probe.getContext("webgl"))) return;
     let raf = 0;
+    let onScreen = true;
     let engine: { frame(t: number): void; setPointer(p: unknown): void; dispose(): void } | null = null;
     let cancelled = false;
+    const io = new IntersectionObserver(([e]) => (onScreen = e.isIntersecting));
+    if (boxRef.current) io.observe(boxRef.current);
     import("@/lib/pack-gl")
       .then(({ createPackEngine }) => {
         const canvas = canvasRef.current;
         if (cancelled || !canvas) return;
-        engine = createPackEngine(canvas, { src, tier: tier.toLowerCase(), mode: "idle" });
+        engine = createPackEngine(canvas, { src, tier: tier.toLowerCase(), mode: "idle", phase });
         setLive(true);
         const loop = (t: number) => {
-          engine?.setPointer(ptr.current);
-          engine?.frame(t);
+          if (onScreen) {
+            engine?.setPointer(ptr.current);
+            engine?.frame(t);
+          }
           raf = requestAnimationFrame(loop);
         };
         raf = requestAnimationFrame(loop);
@@ -53,10 +59,11 @@ export function PackStage({ tier, name }: { tier: string; name: string }) {
       .catch(() => setLive(false));
     return () => {
       cancelled = true;
+      io.disconnect();
       cancelAnimationFrame(raf);
       engine?.dispose();
     };
-  }, [src, tier]);
+  }, [src, tier, phase]);
 
   const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
     const r = e.currentTarget.getBoundingClientRect();
@@ -65,14 +72,25 @@ export function PackStage({ tier, name }: { tier: string; name: string }) {
 
   return (
     <div
-      className="relative mx-auto aspect-[2/3] w-full max-w-[420px]"
+      ref={boxRef}
+      data-live={live || undefined}
+      className="relative aspect-[2/3] w-full"
       onPointerMove={onMove}
       onPointerLeave={() => (ptr.current = { x: 0, y: 0, z: 0 })}
     >
       <div className={live ? "invisible" : ""}>
-        <PackArt tier={tier} name={name} eager />
+        <PackArt tier={tier} name={name} eager={eager} />
       </div>
       <canvas ref={canvasRef} className={`absolute inset-0 h-full w-full ${live ? "" : "hidden"}`} aria-hidden="true" />
+    </div>
+  );
+}
+
+/** Pack detail stage: the live pack at its largest. */
+export function PackStage({ tier, name }: { tier: string; name: string }) {
+  return (
+    <div className="mx-auto w-full max-w-[420px]">
+      <LivePack tier={tier} name={name} eager />
     </div>
   );
 }
