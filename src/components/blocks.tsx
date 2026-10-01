@@ -74,7 +74,7 @@ export function PackCard({ pack, eager = false }: { pack: Pack; eager?: boolean 
           {pack.buybackEnabled && pack.buybackPercentage !== null && (
             <>
               <dt className="text-muted">Instant buyback</dt>
-              <dd className="text-right font-mono">{pack.buybackPercentage}% for 5 days</dd>
+              <dd className="text-right font-mono">{pack.buybackPercentage}% of market value</dd>
             </>
           )}
         </dl>

@@ -52,7 +52,8 @@ Public, no auth:
 `GET /packs` ✓ · `/packs/featured` · `/packs/:id` · `/packs/recent-pulls?tier&packId&category&limit` ✓ ·
 `/packs/unrevealed/:id` · `/packs/nft/:id` · `/activity/recent` · `/activity/stats` ✓ ·
 `/listings?page&limit&query&sort&seller&bidder&gradingCompany&tcg&grade&set&priceMin&priceMax&valueMin&valueMax` ✓ ·
-`/listings/facets` ✓ · `/listings/:listingId?bidder` · `/cards/:id` · `/users/by-username/:username` ✓ ·
+`/listings/facets` ✓ · `/listings/:listingId?bidder` ✓ · `/cards/:id` · `/users/by-username/:username` ✓ ·
+`/users/:address/profile` ✓ (production's `/u/address/[address]` page, chunk `167f51632b7b20f2.js`: if `data.username` is set it redirects to `/u/<username>`, otherwise it renders the address profile; observed 2026-10-01 for `0x4051…9016` → `lamehillbilly` and `0x6651…e55a` → `username: null`) ·
 `/users/:address/collection?page&limit&sync&search&gradingCompany&sort` · `/users/:address/activity?limit&page` ·
 `/leaderboard?limit&sort=wins|bestWinStreak` · `/leaderboard/points?limit&address` ✓ ·
 `/leaderboard/races/august-2026?limit&address` ✓ · `/trades/discovery/cards?…` · `/trades/direct-offers?…` ·

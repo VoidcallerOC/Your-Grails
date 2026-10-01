@@ -153,9 +153,14 @@ export const getProfile = createServerFn({ method: "GET" })
       profile = await part(() => ygGet<Raw>(`/users/by-username/${encodeURIComponent(data.username!)}`).then(toProfile));
       if (profile.ok && profile.data) address = profile.data.address;
     }
-    const collection = address
-      ? await part(() => ygGet<Raw>(`/users/${address}/collection`, { page: data.page }).then(toCollection))
-      : ({ ok: false, error: "No wallet address for this profile." } as const);
+    const [byAddress, collection] = await Promise.all([
+      // Same source production's /u/address page uses (verified 2026-10-01): resolves an address to its profile.
+      !data.username && address ? part(() => ygGet<Raw>(`/users/${address}/profile`).then(toProfile)) : null,
+      address
+        ? part(() => ygGet<Raw>(`/users/${address}/collection`, { page: data.page }).then(toCollection))
+        : ({ ok: false, error: "No wallet address for this profile." } as const),
+    ]);
+    if (byAddress) profile = byAddress;
     return { profile, address: address ?? null, collection };
   });
 

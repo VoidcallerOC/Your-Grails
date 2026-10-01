@@ -113,3 +113,16 @@
 @utility btn-quiet {
   @apply btn border-line-strong text-paper hover:border-paper-dim;
 }
+
+/* Navigation progress: indeterminate sweep. Static (full width) under reduced motion. */
+.nav-progress {
+  width: 40%;
+  animation: nav-sweep 1.1s ease-in-out infinite;
+}
+@keyframes nav-sweep {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(260%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-progress { width: 100%; animation: none; }
+}

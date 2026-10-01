@@ -42,7 +42,7 @@ function PackPage() {
                     {p.buybackEnabled && p.buybackPercentage !== null && (
                       <>
                         <dt className="text-muted">Instant buyback</dt>
-                        <dd className="text-right font-mono">{p.buybackPercentage}% · 5 days</dd>
+                        <dd className="text-right font-mono">{p.buybackPercentage}% of market value</dd>
                       </>
                     )}
                   </dl>

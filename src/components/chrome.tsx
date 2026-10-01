@@ -137,9 +137,34 @@ export function SiteFooter() {
   );
 }
 
+/** Thin bar while a route loader is fetching from production. Announced once to screen readers. */
+function NavProgress() {
+  const loading = useRouterState({ select: (s) => s.isLoading });
+  return (
+    <div aria-live="polite" className="fixed inset-x-0 top-0 z-50 h-0.5">
+      {loading && (
+        <>
+          <span className="sr-only">Loading</span>
+          <div className="nav-progress h-full bg-brass" />
+        </>
+      )}
+    </div>
+  );
+}
+
+/** Shown in the outlet when a route takes longer than the pending threshold. */
+export function RoutePending() {
+  return (
+    <div className="wrap py-16" role="status">
+      <p className="label">Loading from YourGrails…</p>
+    </div>
+  );
+}
+
 export function Shell({ children }: { children: ReactNode }) {
   return (
     <>
+      <NavProgress />
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-paper focus:px-3 focus:py-2 focus:text-ink">
         Skip to content
       </a>
