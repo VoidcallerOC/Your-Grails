@@ -1,0 +1,115 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter/wght.css";
+@import "@fontsource/barlow-condensed/600.css";
+@import "@fontsource/barlow-condensed/700.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+
+/*
+ * Your Grails design system.
+ * Identity: the graded slab and the collector's catalog. Hairline rules, label typography,
+ * small radii, real photography doing the work. No glass, no gradient blobs, no pill soup.
+ */
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Barlow Condensed", "Inter Variable", ui-sans-serif, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --color-ink: #0d0c0b;
+  --color-vault: #151412;
+  --color-shelf: #1c1b18;
+  --color-line: #2c2a26;
+  --color-line-strong: #423f39;
+  --color-paper: #efe9dd;
+  --color-paper-dim: #cfc7b8;
+  --color-muted: #9a9387;
+  --color-brass: #c9a24a;
+  --color-brass-dim: #8f7333;
+  --color-pro: #8b7cf6;
+  --color-ok: #4fae74;
+  --color-warn: #d9a33a;
+  --color-err: #e0675f;
+
+  --radius-slab: 3px;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-ink text-paper font-sans antialiased;
+    font-feature-settings: "tnum" 1;
+    min-height: 100dvh;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brass);
+    outline-offset: 2px;
+  }
+  a {
+    @apply text-inherit no-underline;
+  }
+  img {
+    @apply max-w-full;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .wrap {
+    @apply mx-auto w-full max-w-[1240px] px-4 sm:px-6;
+  }
+  .display {
+    @apply font-display font-bold leading-[0.95] tracking-tight;
+  }
+  .label {
+    @apply font-mono text-[11px] uppercase tracking-[0.08em] text-muted;
+  }
+  .rule {
+    @apply border-t border-line;
+  }
+  .link {
+    @apply underline decoration-line-strong underline-offset-4 hover:decoration-brass;
+  }
+
+  /* The slab: a photographed graded card sits in a neutral case with a cert strip beneath. */
+  .slab {
+    @apply relative flex aspect-[5/8] items-center justify-center overflow-hidden rounded-[var(--radius-slab)] border border-line bg-shelf;
+  }
+  .slab img {
+    @apply h-full w-full object-contain;
+  }
+  .cert-strip {
+    @apply flex items-center justify-between gap-2 border-t border-line px-2.5 py-1.5 font-mono text-[11px] text-paper-dim;
+  }
+
+  .panel {
+    @apply rounded-[var(--radius-slab)] border border-line bg-vault;
+  }
+  .field {
+    @apply min-h-11 w-full rounded-[var(--radius-slab)] border border-line-strong bg-ink px-3 text-sm text-paper placeholder:text-muted;
+  }
+  .table-row {
+    @apply grid items-center gap-3 border-t border-line px-3 py-3;
+  }
+}
+
+/* Buttons: rectangular, label-weight. Utilities so they compose with other utilities. */
+@utility btn {
+  @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-[var(--radius-slab)] border px-4 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+}
+@utility btn-primary {
+  @apply btn border-brass bg-brass text-ink hover:bg-[#d8b25c];
+}
+@utility btn-quiet {
+  @apply btn border-line-strong text-paper hover:border-paper-dim;
+}
