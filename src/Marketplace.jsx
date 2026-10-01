@@ -2,7 +2,7 @@
 // @ts-nocheck
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Slab } from './Home'
-import { INTEGRATIONS, SNAPSHOT } from './marketplace-data'
+import { INTEGRATIONS, DEMO_DATA } from './marketplace-data'
 import { useVault } from './store'
 
 // Prices keep their cents (the shared money() helper drops trailing zeros: 25.10 -> 25.1).
@@ -152,7 +152,7 @@ export function Marketplace() {
   const [open, setOpen] = useState({})
   const gridTop = useRef(null)
   const mine = useVault((s) => s.listings).filter((l) => l.card && l.seller === 'Vault 0xYG')
-  const all = SNAPSHOT.listings
+  const all = DEMO_DATA.listings
   const update = (patch) => setF((cur) => ({ ...cur, page: 1, ...patch }))
   const goto = (page) => { setF((cur) => ({ ...cur, page })) }
   const rows = useMemo(() => sortRows(applyFilters(all, f), f.sort), [all, f])
@@ -179,32 +179,32 @@ export function Marketplace() {
             <p>Buy instantly at the asking price, or make a funded offer the seller can accept. Listings are escrowed on-chain with 0% buyer fees.</p>
           </header>
           <p className="demo-banner" role="note">
-            <b>Demo preview.</b> A snapshot of the live marketplace, possibly out of date. Nothing here connects to a wallet, escrow or backend; Buy, Cash offer, Trade, Deposit and Withdraw don't execute.
+            <b>Demo preview with synthetic data.</b> The cards, sellers, prices and offers below are invented for this demo, not real inventory. Nothing here connects to a wallet, escrow or backend; Buy, Cash offer, Trade, Deposit and Withdraw don't execute.
           </p>
         </div>
         <OfferWallet />
       </div>
       <dl className="mkt-stats">
-        <div><dt>Active listings</dt><dd>{SNAPSHOT.loaded && !SNAPSHOT.error ? listed.length : '—'}</dd></div>
+        <div><dt>Active listings</dt><dd>{DEMO_DATA.loaded && !DEMO_DATA.error ? listed.length : '—'}</dd></div>
         <div><dt>Floor</dt><dd>{floor != null ? `$${money(floor)}` : '—'}</dd></div>
-        <div><dt>Open offers</dt><dd>{SNAPSHOT.loaded && !SNAPSHOT.error ? offers : '—'}</dd></div>
+        <div><dt>Open offers</dt><dd>{DEMO_DATA.loaded && !DEMO_DATA.error ? offers : '—'}</dd></div>
       </dl>
 
-      {!SNAPSHOT.loaded && (
+      {!DEMO_DATA.loaded && (
         <div className="mkt-empty" role="status">
-          <strong>Marketplace snapshot not loaded.</strong>
-          <p>Add <code>marketplace-reference.csv</code> to <code>src/data/</code> and rebuild. No listings are shown until the real snapshot is present, and none are invented.</p>
+          <strong>Demo listings not loaded.</strong>
+          <p>Add <code>marketplace-demo.csv</code> to <code>src/data/</code> and rebuild (see <code>src/data/README.md</code>). No listings are shown without it.</p>
         </div>
       )}
-      {SNAPSHOT.error && (
+      {DEMO_DATA.error && (
         <div className="mkt-empty" role="alert">
-          <strong>The snapshot CSV could not be read.</strong>
-          <p>{SNAPSHOT.error}</p>
-          {SNAPSHOT.headers.length > 0 && <p>Columns found: {SNAPSHOT.headers.join(', ')}</p>}
+          <strong>The demo listings CSV could not be read.</strong>
+          <p>{DEMO_DATA.error}</p>
+          {DEMO_DATA.headers.length > 0 && <p>Columns found: {DEMO_DATA.headers.join(', ')}</p>}
         </div>
       )}
 
-      {SNAPSHOT.loaded && !SNAPSHOT.error && (
+      {DEMO_DATA.loaded && !DEMO_DATA.error && (
         <>
           <div className="mkt-controls" role="search">
             <label className="ctl ctl-search">
@@ -254,12 +254,12 @@ export function Marketplace() {
           <div className="mkt-count" ref={gridTop} aria-live="polite">
             <span>{rows.length === 0 ? 'No matching listings' : `Showing ${(page - 1) * PAGE_SIZE + 1}–${Math.min(page * PAGE_SIZE, rows.length)} of ${rows.length}`}</span>
             {dirty && <button type="button" className="link-btn" onClick={() => setF(NO_FILTERS)}>Clear all</button>}
-            {SNAPSHOT.skipped > 0 && <span className="mkt-skip">{SNAPSHOT.skipped} CSV row{SNAPSHOT.skipped === 1 ? '' : 's'} skipped (missing name or price)</span>}
+            {DEMO_DATA.skipped > 0 && <span className="mkt-skip">{DEMO_DATA.skipped} CSV row{DEMO_DATA.skipped === 1 ? '' : 's'} skipped (missing name or price)</span>}
           </div>
 
           {rows.length === 0 && (
             <p className="mkt-none">
-              {f.state === 'unlisted' && !all.some((l) => !l.listed) ? 'This snapshot only contains listed cards.' : 'Nothing matches those filters.'}
+              {f.state === 'unlisted' && !all.some((l) => !l.listed) ? 'The demo data only contains listed cards.' : 'Nothing matches those filters.'}
             </p>
           )}
           <ul className="market-grid">
@@ -283,7 +283,7 @@ export function Marketplace() {
       {mine.length > 0 && (
         <section className="mine" aria-label="Your demo listings">
           <h2>Listed from your demo collection</h2>
-          <p className="muted">Only visible to you in this demo. These are not part of the snapshot.</p>
+          <p className="muted">Only visible to you in this demo. These are not part of the demo listings.</p>
           <ul>
             {mine.map((l) => (
               <li key={l.id}><strong>{l.card.name}</strong><span>{l.card.company} {l.card.grade}</span><b>${money(l.price)}</b></li>

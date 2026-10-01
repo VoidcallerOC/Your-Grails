@@ -89,7 +89,7 @@
 }
 @media (prefers-reduced-motion: reduce) { .arena-side, .slab-still .slab-3d, .slab-still .slab-plain-case { transition: none; } }
 
-/* ---- Marketplace page (snapshot-driven, demo-only actions) ---- */
+/* ---- Marketplace page (synthetic demo data, demo-only actions) ---- */
 .mkt-head h1 { margin: 0 0 var(--s2); font-size: clamp(34px, 4.2vw, 54px); }
 .mkt-head p { margin: 0; max-width: 660px; color: var(--muted); font-size: 15px; }
 .demo-banner { margin: var(--s3) 0 0; padding: 8px 0 8px var(--s3); border-left: 2px solid var(--gold); font-size: 13px; color: var(--muted); max-width: 900px; }
@@ -99,10 +99,10 @@
 .mkt-stats div { display: flex; align-items: baseline; gap: var(--s2); }
 .mkt-stats dt { order: 2; font-size: 13px; color: var(--muted); }
 .mkt-stats dd { margin: 0; font: 700 34px/1 var(--font-display); font-variant-numeric: tabular-nums; }
-.wallet { padding-left: var(--s4); border-left: 1px solid var(--line-strong); }
+.wallet { position: relative; padding-left: var(--s4); border-left: 1px solid var(--line-strong); }
 .wallet summary { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1) var(--s2); list-style: none; cursor: pointer; min-height: 44px; }
 .wallet summary::-webkit-details-marker { display: none; }
-.wallet summary::after { content: '▾'; margin-left: auto; color: var(--muted); font-size: 12px; transition: transform .15s; }
+.wallet summary::after { content: '▾'; position: absolute; top: 14px; right: 0; color: var(--muted); font-size: 12px; transition: transform .15s; }
 .wallet[open] summary::after { transform: rotate(180deg); }
 .wallet-title { font: 600 20px var(--font-display); letter-spacing: .06em; text-transform: uppercase; }
 .wallet-tag { font: 500 10px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(232,193,74,.5); padding: 1px 6px; border-radius: var(--r-1); }

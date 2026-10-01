@@ -1,24 +1,27 @@
-// Marketplace snapshot loader.
-// Source: src/data/marketplace-reference.csv, a snapshot of the live marketplace. Prices and offers may be out of date.
-// Nothing here talks to a backend. If the CSV is missing or unreadable the page says so; it never invents listings.
+// Marketplace demo-data loader.
+// Source: src/data/marketplace-demo.csv, 48 SYNTHETIC listings invented for this demo (fictional cards, sets and sellers).
+// They are not real inventory, prices, offers or accounts. Nothing here talks to a backend.
+// If the CSV is missing or unreadable the page says so; it never invents listings at runtime.
 
-const FILES = import.meta.glob('./data/marketplace-reference.csv', { query: '?raw', import: 'default', eager: true })
+const FILES = import.meta.glob('./data/marketplace-demo.csv', { query: '?raw', import: 'default', eager: true })
 
 // Column aliases, matched after lowercasing and stripping non-alphanumerics.
 const ALIASES = {
+  listingId: ['listingid', 'id', 'listingnumber'],
   name: ['name', 'cardname', 'card', 'title', 'listing'],
   company: ['gradingcompany', 'company', 'grader', 'gradedby', 'gradingco'],
   grade: ['grade', 'gradevalue', 'gradenumber'],
   set: ['set', 'setname', 'cardset', 'series'],
   number: ['cardnumber', 'number', 'cardno', 'no', 'cardnum'],
   setNumber: ['setandnumber', 'setnumber', 'setcardnumber', 'setandcardnumber'],
-  seller: ['seller', 'sellerdisplayed', 'sellername', 'listedby', 'owner'],
-  ask: ['askingprice', 'ask', 'price', 'askprice', 'listprice', 'askingpriceusdc', 'priceusdc'],
+  seller: ['seller', 'sellerdisplay', 'sellerdisplayed', 'sellername', 'listedby', 'owner'],
+  ask: ['askingprice', 'ask', 'price', 'askprice', 'listprice', 'askusdc', 'askingpriceusdc', 'priceusdc'],
   fair: ['fairvalue', 'fair', 'fairprice', 'fairvalueusdc', 'marketvalue'],
   topOffer: ['topoffer', 'highestoffer', 'bestoffer', 'topofferusdc'],
   offerCount: ['offercount', 'offers', 'numoffers', 'openoffers', 'offercnt'],
   actions: ['actions', 'availableactions', 'action'],
   url: ['listingurl', 'url', 'link', 'listinglink'],
+  image: ['imageurl', 'image', 'photourl', 'photo'],
   status: ['status', 'state', 'listingstate', 'listed'],
 }
 const norm = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '')
@@ -77,7 +80,7 @@ function safeUrl(raw) {
 }
 
 // Turns CSV text into normalized listings. Never throws; returns { listings, error, skipped, headers }.
-export function buildSnapshot(text) {
+export function buildListings(text) {
   if (!text || !String(text).trim()) return { listings: [], error: null, skipped: 0, headers: [], loaded: false }
   const table = parseCsv(text)
   if (table.length < 2) return { listings: [], error: 'The CSV has a header row but no listings.', skipped: 0, headers: table[0] || [], loaded: true }
@@ -104,6 +107,8 @@ export function buildSnapshot(text) {
     let grade = cell(r, 'grade')
     const combined = grade.match(/^([A-Za-z]{2,4})\s*([\d.]+)$/)
     if (combined) { if (!company) company = combined[1].toUpperCase(); grade = combined[2] }
+    // Show whole grades without a trailing .0 ("9.0" -> "9"); half grades like 8.5 are kept.
+    grade = grade.replace(/^(\d+)\.0+$/, '$1')
     let set = cell(r, 'set')
     let number = cell(r, 'number').replace(/^#\s*/, '')
     const both = cell(r, 'setNumber')
@@ -116,7 +121,8 @@ export function buildSnapshot(text) {
     const offerCount = Number.parseInt(cell(r, 'offerCount').replace(/[^\d]/g, ''), 10)
     const actions = splitActions(cell(r, 'actions'))
     listings.push({
-      id: `snap-${n}`,
+      id: `snap-${cell(r, 'listingId') || n}`,
+      listingId: cell(r, 'listingId'),
       name,
       company,
       grade,
@@ -127,18 +133,19 @@ export function buildSnapshot(text) {
       fair: money(cell(r, 'fair')),
       topOffer: money(cell(r, 'topOffer')),
       offerCount: Number.isFinite(offerCount) ? offerCount : null,
-      // No actions column (or none recognised) means the snapshot did not say; show all three affordances.
+      // No actions column (or none recognised) means the data did not say; show all three affordances.
       actions: actions.length ? actions : ['buy', 'trade', 'offer'],
       url: safeUrl(cell(r, 'url')),
       listed,
-      // Photos are never guessed: a slab photo belongs to one certified card and the CSV has no cert number.
-      photo: null,
+      // A photo is used only if the CSV supplies a valid image URL. Nothing is guessed, and project slab photos
+      // are not matched by name: each belongs to one certified card and the CSV has no cert number.
+      photo: safeUrl(cell(r, 'image')),
     })
   })
   return { listings, error: null, skipped, headers, loaded: true }
 }
 
-export const SNAPSHOT = buildSnapshot(Object.values(FILES)[0])
+export const DEMO_DATA = buildListings(Object.values(FILES)[0])
 
 // What each unsupported action would need before it could be real. Shown in the demo notices.
 export const INTEGRATIONS = {
