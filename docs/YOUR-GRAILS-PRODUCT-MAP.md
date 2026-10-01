@@ -26,9 +26,9 @@ authenticated experience and the production backend API were **not** observed (s
 | Access gate | `/packs`, `/packs/[id]`, `/battles`, `/redeem` (and likely all app routes) show **"Invite Only Launch — Unlock the vault"**: connect wallet, then redeem a single-use referral code | VERIFIED (public view) |
 | User images | `https://tcg-gacha-images.s3.amazonaws.com/uploads/<uuid>.<ext>` (avatars; card images likely the same bucket) | VERIFIED for avatars; UNVERIFIED for cards |
 | Site images | `/packs/yg-pro-pack-hero-20260608.webp`, `/packs/yg-master-pack-hero-20260608.webp`, `/images/charizard.png`, `/images/usdc.png`, `/images/chains/*.{jpg,png}` (incl. `solana.png`), `/uploads/<uuid>.png` | VERIFIED |
-| Pack IDs | `6988fbbe8c8b9a609c4bf5eb` (Pro), `698e4bafc03946126c163331` (Master). 24-hex, consistent with MongoDB ObjectIds. | IDs VERIFIED; DB type is an inference, UNVERIFIED |
-| Backend API | Docs: "The backend indexes events and keeps the app state readable." Host, routes, auth scheme are not known. | **UNVERIFIED** |
-| Auth / wallet provider | Docs: "supported wallet or embedded wallet"; Terms: "or use a wallet provisioned through the Service". Provider (Privy / Dynamic / thirdweb / etc.) not identified. | **UNVERIFIED** |
+| Pack IDs | `698e4bafc03946126c163331` (Pro, `onchainPackId 0`), `6988fbbe8c8b9a609c4bf5eb` (Master, `onchainPackId 1`). Corrected 2026-10-01 from `GET /api/packs`; the first audit had them swapped. | VERIFIED |
+| Backend API | `https://api.yourgrails.com/api`. See `YOUR-GRAILS-ARCHITECTURE.md`. | **VERIFIED** (responses observed 2026-10-01) |
+| Auth / wallet provider | Privy (wallet login) on wagmi + viem. See `YOUR-GRAILS-ARCHITECTURE.md`. | VERIFIED (bundle code) |
 | Chain | Avalanche C-Chain mainnet (43114). Contracts verified there. Docs also reference Fuji testnet faucet and Ethereum Sepolia CCTP routes. | VERIFIED (mainnet contracts) |
 | Randomness | Chainlink VRF (GachaPacks `rawFulfillRandomWords`, `requestReveal`, `retryReveal`) | VERIFIED (ABI) |
 | Cross-chain | Circle CCTP into `CctpPackBuyerReceiver.receiveAndBuy` (packs, multi-pack, battle create/join, optional AVAX gas stipend) | VERIFIED (ABI) |
