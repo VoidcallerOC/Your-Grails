@@ -10,7 +10,7 @@ export const Route = createFileRoute("/support")({
 function Support() {
   return (
     <>
-      <PageHead kicker="Support" title="Get it fixed">
+      <PageHead title="Get it fixed">
         Pack purchases, reveals, battles, marketplace, buybacks, account access, bugs or feedback.
       </PageHead>
       <div className="wrap grid grid-cols-1 max-w-4xl gap-6 md:grid-cols-2">

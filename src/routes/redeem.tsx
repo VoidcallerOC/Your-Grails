@@ -9,7 +9,7 @@ export const Route = createFileRoute("/redeem")({
 function Redeem() {
   return (
     <>
-      <PageHead kicker="Redemption · coming soon" title="Ship the slab home">
+      <PageHead note="Coming soon" title="Ship the slab home">
         Physical redemption isn't open yet. YourGrails lists it as coming after the beta.
       </PageHead>
       <div className="wrap max-w-3xl">
@@ -21,7 +21,7 @@ function Redeem() {
             "You pay. The card's token is burned. This can't be undone.",
             "The slab leaves the vault, is inspected, packed, insured and shipped with tracking.",
           ].map((s, i) => (
-            <li key={s} className="grid grid-cols-[32px_minmax(0,1fr)] border-b border-line py-3"><span className="font-mono text-brass">{i + 1}</span>{s}</li>
+            <li key={s} className="grid grid-cols-[32px_minmax(0,1fr)] border-b border-line py-3"><span className="tabular-nums text-muted">{i + 1}.</span>{s}</li>
           ))}
         </ol>
         <p className="mt-6 text-sm text-paper-dim">

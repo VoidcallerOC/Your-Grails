@@ -37,7 +37,7 @@ export function SiteHeader() {
                   className={`block px-3 py-2 text-sm ${isActive(path, href) ? "text-paper" : "text-muted hover:text-paper"}`}
                 >
                   {label}
-                  {isActive(path, href) && <span className="mt-0.5 block h-px bg-brass" aria-hidden="true" />}
+                  {isActive(path, href) && <span className="mt-0.5 block h-px bg-paper-dim" aria-hidden="true" />}
                 </Link>
               </li>
             ))}
@@ -70,7 +70,7 @@ export function SiteHeader() {
               </li>
             ))}
             <li>
-              <Link to="/account" className="flex min-h-12 items-center text-base text-brass">
+              <Link to="/account" className="flex min-h-12 items-center text-base text-paper">
                 Sign in
               </Link>
             </li>
@@ -114,7 +114,7 @@ export function SiteFooter() {
         </div>
         {FOOTER.map(([title, links]) => (
           <div key={title}>
-            <h2 className="label mb-3">{title}</h2>
+            <h2 className="mb-3 text-sm font-semibold text-paper">{title}</h2>
             <ul className="space-y-2 text-sm">
               {links.map(([href, label]) => (
                 <li key={href}>
@@ -167,12 +167,15 @@ export function Shell({ children }: { children: ReactNode }) {
   );
 }
 
-export function PageHead({ kicker, title, children }: { kicker?: string; title: string; children?: ReactNode }) {
+/** Page title. `note` is a short status beside the title (e.g. "Coming soon"), not a decorative kicker. */
+export function PageHead({ note, title, children }: { note?: string; title: string; children?: ReactNode }) {
   return (
-    <div className="wrap pb-8 pt-10 sm:pt-14">
-      {kicker && <p className="label mb-3">{kicker}</p>}
-      <h1 className="display text-5xl sm:text-6xl">{title}</h1>
-      {children && <div className="mt-4 max-w-2xl text-paper-dim">{children}</div>}
+    <div className="wrap pb-8 pt-10 sm:pt-12">
+      <h1 className="display text-3xl sm:text-4xl">
+        {title}
+        {note && <span className="ml-3 inline-block translate-y-[-0.2em] rounded-full bg-raised px-2.5 py-1 align-middle text-xs font-medium tracking-normal text-paper-dim">{note}</span>}
+      </h1>
+      {children && <div className="mt-3 max-w-2xl text-[15px] leading-relaxed text-paper-dim">{children}</div>}
     </div>
   );
 }

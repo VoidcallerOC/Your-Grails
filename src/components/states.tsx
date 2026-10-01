@@ -5,7 +5,7 @@ import type { Part } from "@/lib/types";
 
 export function ErrorPanel({ what, error }: { what: string; error: string }) {
   return (
-    <div role="status" className="panel flex gap-3 p-4 text-sm">
+    <div role="status" className="flex gap-3 rounded-[var(--radius-slab)] border border-line p-4 text-sm">
       <TriangleAlert className="mt-0.5 shrink-0 text-warn" size={18} aria-hidden="true" />
       <div>
         <p className="font-semibold text-paper">{what} could not be loaded from YourGrails.</p>
@@ -16,7 +16,7 @@ export function ErrorPanel({ what, error }: { what: string; error: string }) {
 }
 
 export function EmptyPanel({ children }: { children: ReactNode }) {
-  return <div className="panel p-6 text-center text-sm text-muted">{children}</div>;
+  return <div className="rounded-[var(--radius-slab)] border border-dashed border-line px-6 py-10 text-center text-sm text-muted">{children}</div>;
 }
 
 /** Renders a data part, or an honest error when that source failed. */
@@ -24,7 +24,7 @@ export function PartView<T>({ part, what, children, heading }: { part: Part<T>; 
   if (!part.ok)
     return (
       <>
-        {heading && <h1 className="display mb-4 text-4xl">{heading}</h1>}
+        {heading && <h1 className="display mb-4 text-3xl">{heading}</h1>}
         <ErrorPanel what={what} error={part.error} />
       </>
     );
@@ -37,8 +37,8 @@ export function PartView<T>({ part, what, children, heading }: { part: Part<T>; 
  */
 export function BlockedAction({ label, does, className = "" }: { label: string; does: string; className?: string }) {
   return (
-    <div className={`panel p-4 ${className}`}>
-      <button type="button" className="btn-primary w-full" disabled aria-describedby={`why-${label.replace(/\W+/g, "-")}`}>
+    <div className={className}>
+      <button type="button" className="btn-quiet w-full disabled:opacity-70" disabled aria-describedby={`why-${label.replace(/\W+/g, "-")}`}>
         <Lock size={15} aria-hidden="true" /> {label}
       </button>
       <p id={`why-${label.replace(/\W+/g, "-")}`} className="mt-3 text-xs leading-relaxed text-muted">

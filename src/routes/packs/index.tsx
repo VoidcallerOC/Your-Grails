@@ -14,7 +14,7 @@ function PacksPage() {
   const { packs } = Route.useLoaderData();
   return (
     <>
-      <PageHead kicker="Packs" title="Sealed packs, graded cards">
+      <PageHead title="Sealed packs, graded cards">
         Each pack opens into one real graded card from that pack's pool. Odds and expected value are recalculated from the cards in
         the pool, so they move as cards are pulled and restocked.
       </PageHead>

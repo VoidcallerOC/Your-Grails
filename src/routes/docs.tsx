@@ -35,21 +35,21 @@ const SECTIONS: [string, string[]][] = [
 function Docs() {
   return (
     <>
-      <PageHead kicker="How it works" title="The short version">
+      <PageHead title="The short version">
         What happens under the hood, in plain English. For the full current guide, see{" "}
         <a className="link" href="https://yourgrails.com/docs" rel="noopener noreferrer">yourgrails.com/docs</a>.
       </PageHead>
       <div className="wrap max-w-4xl space-y-10">
         {SECTIONS.map(([title, paras]) => (
           <section key={title}>
-            <h2 className="display text-3xl">{title}</h2>
+            <h2 className="display text-2xl">{title}</h2>
             <div className="mt-3 space-y-3 text-paper-dim">
               {paras.map((p) => <p key={p}>{p}</p>)}
             </div>
           </section>
         ))}
         <section>
-          <h2 className="display text-3xl">Contracts</h2>
+          <h2 className="display text-2xl">Contracts</h2>
           <p className="mt-3 text-sm text-paper-dim">
             Avalanche C-Chain (43114). "Source verified" means the explorer shows verified source code for that address as of 1 Oct 2026.
           </p>
@@ -67,7 +67,7 @@ function Docs() {
                   <tr key={c.address} className="border-t border-line align-top">
                     <th scope="row" className="py-2 pr-4 text-left font-semibold">
                       {c.name}
-                      <span className={`block text-[11px] font-normal ${c.verified ? "text-ok" : "text-muted"}`}>{c.verified ? "Source verified" : "Not checked"}</span>
+                      <span className={`block text-xs font-normal ${c.verified ? "text-ok" : "text-muted"}`}>{c.verified ? "Source verified" : "Not checked"}</span>
                     </th>
                     <td className="py-2 pr-4 text-paper-dim">{c.role}</td>
                     <td className="py-2 font-mono text-xs"><a className="link break-all" href={contractUrl(c.address)} target="_blank" rel="noopener noreferrer">{c.address}</a></td>

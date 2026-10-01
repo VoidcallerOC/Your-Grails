@@ -24,7 +24,7 @@ function Battles() {
   const { stats, top, packs } = Route.useLoaderData();
   return (
     <>
-      <PageHead kicker="Pack battles" title="Open head to head">
+      <PageHead title="Open head to head">
         Two collectors open the same pack at the same time. Both keep what they pull. The bigger pull wins a bonus pack.
       </PageHead>
       <div className="wrap grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
@@ -32,7 +32,7 @@ function Battles() {
           <ol className="border-t border-line">
             {RULES.map(([t, d], i) => (
               <li key={t} className="grid grid-cols-[40px_minmax(0,1fr)] gap-3 border-b border-line py-5">
-                <span className="font-mono text-sm text-brass">0{i + 1}</span>
+                <span className="text-sm tabular-nums text-muted">{i + 1}.</span>
                 <div>
                   <h2 className="font-semibold">{t}</h2>
                   <p className="mt-1 text-sm text-paper-dim">{d}</p>
@@ -63,8 +63,8 @@ function Battles() {
           <PartView part={stats} what="Battle figures">
             {(s) => (
               <dl className="grid grid-cols-2 border-y border-line">
-                <div className="border-r border-line py-4 pr-4"><dt className="label">Battles fought</dt><dd className="mt-1 font-mono text-2xl">{count(s.completedBattles)}</dd></div>
-                <div className="py-4 pl-4"><dt className="label">Live right now</dt><dd className="mt-1 font-mono text-2xl">{count(s.liveBattles)}</dd></div>
+                <div className="border-r border-line py-4 pr-4"><dt className="label">Battles fought</dt><dd className="money mt-1 text-2xl">{count(s.completedBattles)}</dd></div>
+                <div className="py-4 pl-4"><dt className="label">Live right now</dt><dd className="money mt-1 text-2xl">{count(s.liveBattles)}</dd></div>
               </dl>
             )}
           </PartView>
@@ -77,9 +77,9 @@ function Battles() {
                 <ol className="border-b border-line">
                   {rows.map((r, i) => (
                     <li key={r.address} className="ledger-row grid-cols-[32px_minmax(0,1fr)_auto]">
-                      <span className="font-mono text-xs text-muted">#{i + 1}</span>
+                      <span className="text-xs tabular-nums text-muted">{i + 1}</span>
                       <PersonLink person={r} size={32} />
-                      <span className="font-mono text-sm">{r.wins}W · {r.losses}L</span>
+                      <span className="text-sm tabular-nums">{r.wins}W · {r.losses}L</span>
                     </li>
                   ))}
                 </ol>

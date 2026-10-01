@@ -38,7 +38,7 @@ function RaceView({ cats, selected, sort }: { cats: RaceCategory[]; selected?: s
             to="/leaderboard"
             search={{ tab: "race", sort, category: c.key }}
             aria-current={c.key === cat.key ? "true" : undefined}
-            className={`btn min-h-10 text-xs ${c.key === cat.key ? "border-brass text-paper" : "border-line text-muted hover:text-paper"}`}
+            className={`btn min-h-10 text-xs ${c.key === cat.key ? "border-line-strong bg-raised text-paper" : "border-line text-muted hover:text-paper"}`}
           >
             {c.shortTitle} · {c.totalParticipants}
           </Link>
@@ -54,11 +54,11 @@ function RaceView({ cats, selected, sort }: { cats: RaceCategory[]; selected?: s
       <ol className="mt-4 border-b border-line">
         {cat.entries.map((e) => (
           <li key={e.address} className="ledger-row grid-cols-[48px_minmax(0,1fr)_auto]">
-            <span className="font-mono text-sm text-muted">#{e.rank}</span>
+            <span className="text-sm tabular-nums text-muted">{e.rank}</span>
             <PersonLink person={e} />
             <span className="text-right">
-              <span className="font-mono text-lg">{count(metric(e, cat.key))}</span> <span className="text-xs text-muted">{cat.metricLabel}</span>
-              <span className="block text-[11px] text-muted">{e.battleWins}W · {e.battleLosses}L · {e.battleDraws}D</span>
+              <span className="money text-lg">{count(metric(e, cat.key))}</span> <span className="text-xs text-muted">{cat.metricLabel}</span>
+              <span className="block text-xs text-muted">{e.battleWins}W · {e.battleLosses}L · {e.battleDraws}D</span>
             </span>
           </li>
         ))}
@@ -74,7 +74,7 @@ function Board() {
   const search = Route.useSearch();
   return (
     <>
-      <PageHead kicker="Rankings" title="Leaderboard">
+      <PageHead title="Leaderboard">
         Points can be earned from paid pack opens, battles, coupon pulls and repaid loans, under rules YourGrails sets. Battle records count completed battles only.
       </PageHead>
       <div className="wrap">
@@ -85,7 +85,7 @@ function Board() {
               to="/leaderboard"
               search={{ tab: t, sort: "wins" }}
               aria-current={search.tab === t ? "page" : undefined}
-              className={`-mb-px min-h-12 border-b-2 px-4 py-3 text-sm font-semibold ${search.tab === t ? "border-brass text-paper" : "border-transparent text-muted hover:text-paper"}`}
+              className={`-mb-px min-h-12 border-b-2 px-4 py-3 text-sm font-semibold ${search.tab === t ? "border-paper text-paper" : "border-transparent text-muted hover:text-paper"}`}
             >
               {label}
             </Link>
@@ -114,9 +114,9 @@ function Board() {
                 <ol className="border-b border-line">
                   {rows.map((r) => (
                     <li key={r.address} className="ledger-row grid-cols-[48px_minmax(0,1fr)_auto]">
-                      <span className="font-mono text-sm text-muted">#{r.rank}</span>
+                      <span className="text-sm tabular-nums text-muted">{r.rank}</span>
                       <PersonLink person={r} />
-                      <span className="font-mono">{count(r.lifetimePointsEarned)} <span className="text-xs text-muted">pts</span></span>
+                      <span className="money">{count(r.lifetimePointsEarned)} <span className="text-xs text-muted">pts</span></span>
                     </li>
                   ))}
                 </ol>
@@ -132,7 +132,7 @@ function Board() {
             <div className="mb-4 flex gap-2">
               {(["wins", "bestWinStreak"] as const).map((s) => (
                 <Link key={s} to="/leaderboard" search={{ tab: "battles", sort: s }} aria-current={search.sort === s ? "true" : undefined}
-                  className={`btn min-h-10 text-xs ${search.sort === s ? "border-brass text-paper" : "border-line text-muted"}`}>
+                  className={`btn min-h-10 text-xs ${search.sort === s ? "border-line-strong bg-raised text-paper" : "border-line text-muted"}`}>
                   {s === "wins" ? "Most wins" : "Best streak"}
                 </Link>
               ))}
@@ -143,11 +143,11 @@ function Board() {
                   <ol className="border-b border-line">
                     {rows.map((r, i) => (
                       <li key={r.address} className="ledger-row grid-cols-[48px_minmax(0,1fr)_auto]">
-                        <span className="font-mono text-sm text-muted">#{i + 1}</span>
+                        <span className="text-sm tabular-nums text-muted">{i + 1}</span>
                         <PersonLink person={r} />
-                        <span className="text-right font-mono text-sm">
+                        <span className="text-right text-sm tabular-nums">
                           {r.wins}W · {r.losses}L{r.draws ? ` · ${r.draws}D` : ""}
-                          <span className="block text-[11px] text-muted">best streak {r.bestWinStreak}</span>
+                          <span className="block text-xs text-muted">best streak {r.bestWinStreak}</span>
                         </span>
                       </li>
                     ))}

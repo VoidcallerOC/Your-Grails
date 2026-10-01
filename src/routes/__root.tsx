@@ -21,7 +21,7 @@ export const Route = createRootRoute({
   notFoundComponent: () => (
     <div className="wrap py-20">
       <p className="label mb-3">404</p>
-      <h1 className="display text-5xl">Nothing in this slot.</h1>
+      <h1 className="display text-3xl sm:text-4xl">Nothing in this slot.</h1>
       <p className="mt-6">
         <Link to="/" className="link">
           Back to YourGrails

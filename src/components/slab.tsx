@@ -19,7 +19,7 @@ export function SlabPhoto({ card, eager = false, sizes }: { card: CardSummary; e
           sizes={sizes}
         />
       ) : (
-        <span className="label px-4 text-center">Photo not provided</span>
+        <span className="px-4 text-center text-sm text-muted">Photo not provided</span>
       )}
     </div>
   );
@@ -27,10 +27,13 @@ export function SlabPhoto({ card, eager = false, sizes }: { card: CardSummary; e
 
 export function GradeMark({ card }: { card: Pick<CardSummary, "grader" | "grade"> }) {
   if (!card.grader && !card.grade) return null;
-  return <span className="font-mono text-[11px] font-medium text-paper">{gradeLabel(card)}</span>;
+  return <span className="font-medium text-paper">{gradeLabel(card)}</span>;
 }
 
-/** Catalog entry: slab photo, cert strip, title, set line and value. */
+/**
+ * Catalog entry: the slab photo leads, then name and amount on one scannable line,
+ * then grade, set and cert as quiet metadata.
+ */
 export function CardTile({
   card,
   href,
@@ -44,28 +47,32 @@ export function CardTile({
   priceLabel?: string;
   footer?: ReactNode;
 }) {
+  const amount = usd(price === undefined ? card.valueUsd : price);
+  const grade = card.grader || card.grade ? gradeLabel(card) : "";
   const body = (
     <>
-      <SlabPhoto card={card} sizes="(min-width: 1024px) 260px, 45vw" />
-      <div className="cert-strip">
-        <GradeMark card={card} />
-        {card.cert && <span className="truncate">Cert {card.cert}</span>}
+      <div className="transition-transform duration-200 group-hover:-translate-y-1">
+        <SlabPhoto card={card} sizes="(min-width: 1024px) 290px, 45vw" />
       </div>
-      <div className="px-2.5 pb-3 pt-1">
-        <h3 className="truncate text-sm font-semibold text-paper">{card.title}</h3>
-        <p className="truncate text-xs text-muted">{cardLine(card) || " "}</p>
-        <div className="mt-2 flex items-baseline justify-between gap-2">
-          <span className="label">{priceLabel}</span>
-          <span className="font-mono text-sm text-paper">{usd(price === undefined ? card.valueUsd : price)}</span>
+      <div className="px-0.5 pt-3">
+        <div className="flex flex-col gap-0.5 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
+          <h3 className="line-clamp-2 text-[15px] font-medium leading-snug text-paper">{card.title}</h3>
+          <p className="shrink-0 leading-snug sm:text-right">
+            <span className="sr-only">{priceLabel}: </span>
+            <span className="money text-[15px]">{amount}</span>
+            {priceLabel !== "Price" && <span className="ml-1 text-xs text-muted sm:ml-0 sm:block" aria-hidden="true">value</span>}
+          </p>
         </div>
+        <p className="mt-1 truncate text-[13px] text-paper-dim">{[grade, cardLine(card)].filter(Boolean).join(" · ") || " "}</p>
+        {card.cert && <p className="truncate text-xs text-muted">Cert {card.cert}</p>}
         {footer}
       </div>
     </>
   );
   return (
-    <article className="panel overflow-hidden transition-colors hover:border-line-strong">
+    <article className="group">
       {href ? (
-        <Link to={href} className="block">
+        <Link to={href} className="block rounded-[var(--radius-slab)]">
           {body}
         </Link>
       ) : (
@@ -76,5 +83,5 @@ export function CardTile({
 }
 
 export function CardGrid({ children }: { children: ReactNode }) {
-  return <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">{children}</div>;
+  return <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-4">{children}</div>;
 }

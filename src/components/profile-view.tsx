@@ -14,12 +14,12 @@ export function ProfileView({ profile, address, collection }: { profile: Part<Pr
     <>
       {!profile.ok && (
         <div className="wrap pt-10">
-          <h1 className="display mb-4 text-4xl">Collector</h1>
+          <h1 className="display mb-4 text-3xl">Collector</h1>
           <ErrorPanel what="This profile" error={profile.error} />
         </div>
       )}
       {person && (
-        <PageHead kicker="Collector" title={personName(person)}>
+        <PageHead title={personName(person)}>
           <div className="flex items-center gap-4">
             <Avatar person={person} size={56} />
             <div className="text-sm">
@@ -35,13 +35,13 @@ export function ProfileView({ profile, address, collection }: { profile: Part<Pr
           {(c) => (
             <>
               <dl className="mb-6 flex gap-10 border-y border-line py-4">
-                <div><dt className="label">Cards</dt><dd className="font-mono text-xl">{count(c.totalCards ?? c.cards.length)}</dd></div>
-                <div><dt className="label">Collection value</dt><dd className="font-mono text-xl">{usd(c.totalValueUsd)}</dd></div>
+                <div><dt className="label">Cards</dt><dd className="money text-xl">{count(c.totalCards ?? c.cards.length)}</dd></div>
+                <div><dt className="label">Collection value</dt><dd className="money text-xl">{usd(c.totalValueUsd)}</dd></div>
               </dl>
               {c.cards.length ? (
                 <CardGrid>
                   {c.cards.map((card) => (
-                    <CardTile key={card.token?.tokenId ?? card.id} card={card} footer={card.status === "listed" ? <p className="mt-1 text-[11px] text-brass">Listed for sale</p> : null} />
+                    <CardTile key={card.token?.tokenId ?? card.id} card={card} footer={card.status === "listed" ? <p className="mt-1 text-xs text-paper-dim">Listed for sale</p> : null} />
                   ))}
                 </CardGrid>
               ) : (

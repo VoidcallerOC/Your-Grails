@@ -22,7 +22,7 @@ function CollectionPage() {
   };
   return (
     <>
-      <PageHead kicker="Collection" title="Your slabs">
+      <PageHead title="Your slabs">
         Your collection lists every card token in your wallet, one slab per token: grade, cert, value, buyback window and what you can
         do with it. It needs you signed in.
       </PageHead>

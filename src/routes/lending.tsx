@@ -20,7 +20,7 @@ const STEPS: [string, string][] = [
 function Lending() {
   return (
     <>
-      <PageHead kicker="Lending" title="Borrow against your slabs">
+      <PageHead title="Borrow against your slabs">
         Collectors lend USDC to collectors, secured by graded cards in the vault. YourGrails does not lend; it runs the contract and
         the appraisals.
       </PageHead>
@@ -28,7 +28,7 @@ function Lending() {
         <ol className="border-t border-line">
           {STEPS.map(([t, d], i) => (
             <li key={t} className="grid grid-cols-[40px_minmax(0,1fr)] gap-3 border-b border-line py-5">
-              <span className="font-mono text-sm text-brass">0{i + 1}</span>
+              <span className="text-sm tabular-nums text-muted">{i + 1}.</span>
               <div>
                 <h2 className="font-semibold">{t}</h2>
                 <p className="mt-1 text-sm text-paper-dim">{d}</p>

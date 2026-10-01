@@ -51,21 +51,21 @@ function ListingPage() {
               </div>
               <div>
                 <p className="label"><GradeMark card={c} />{c.rarity ? ` · ${c.rarity}` : ""}</p>
-                <h1 className="display mt-2 text-5xl">{c.title}</h1>
+                <h1 className="display mt-1 text-3xl sm:text-4xl">{c.title}</h1>
                 <p className="mt-2 text-paper-dim">{cardLine(c)}</p>
 
                 <div className="mt-6 flex flex-wrap items-end gap-x-10 gap-y-3 border-y border-line py-4">
                   <div>
                     <p className="label">Price</p>
-                    <p className="font-mono text-3xl">{usd(l.priceUsd)} <span className="text-sm text-muted">USDC</span></p>
+                    <p className="money text-3xl">{usd(l.priceUsd)} <span className="text-sm font-normal text-muted">USDC</span></p>
                   </div>
                   <div>
                     <p className="label">Market value</p>
-                    <p className="font-mono text-xl text-paper-dim">{usd(c.valueUsd)}</p>
+                    <p className="text-xl tabular-nums text-paper-dim">{usd(c.valueUsd)}</p>
                   </div>
                   <div>
                     <p className="label">Offers</p>
-                    <p className="font-mono text-xl text-paper-dim">{l.bidCount}</p>
+                    <p className="text-xl tabular-nums text-paper-dim">{l.bidCount}</p>
                   </div>
                 </div>
                 {!active && <p className="mt-3 text-sm text-warn">This listing is {l.status}. It can't be bought.</p>}
@@ -84,7 +84,7 @@ function ListingPage() {
                       {c.cert ?? "—"}
                       {c.certUrl && <> · <a className="link" href={c.certUrl} target="_blank" rel="noopener noreferrer">Verify with PSA</a></>}
                     </dd>
-                    {c.popAtGrade !== undefined && (<><dt className="text-muted">Population at this grade</dt><dd className="font-mono">{count(c.popAtGrade)}{c.popHigher !== undefined ? ` · ${count(c.popHigher)} higher` : ""}</dd></>)}
+                    {c.popAtGrade !== undefined && (<><dt className="text-muted">Population at this grade</dt><dd className="tabular-nums">{count(c.popAtGrade)}{c.popHigher !== undefined ? ` · ${count(c.popHigher)} higher` : ""}</dd></>)}
                     {c.token && (
                       <>
                         <dt className="text-muted">Token</dt>

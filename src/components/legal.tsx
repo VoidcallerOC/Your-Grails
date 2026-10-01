@@ -7,7 +7,7 @@ import { PageHead } from "@/components/chrome";
 export function LegalPointer({ title, href, note }: { title: string; href: string; note?: string }) {
   return (
     <>
-      <PageHead kicker="Legal" title={title} />
+      <PageHead title={title} />
       <div className="wrap max-w-3xl space-y-4 text-paper-dim">
         <p>
           The current, binding version is published by YourGrails LLC at{" "}

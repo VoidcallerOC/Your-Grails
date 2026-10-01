@@ -21,7 +21,7 @@ function Trading() {
   const search = Route.useSearch();
   return (
     <>
-      <PageHead kicker="Trading" title="Trade card for card">
+      <PageHead title="Trade card for card">
         Find a card in someone's collection and offer one of yours for it. The owner accepts or declines. Cards move only if they accept.
       </PageHead>
       <div className="wrap">
@@ -43,7 +43,7 @@ function Trading() {
                       card={card}
                       footer={
                         owner?.username ? (
-                          <p className="mt-1 truncate text-[11px] text-muted">
+                          <p className="mt-1 truncate text-xs text-muted">
                             Owner <Link to="/u/$username" params={{ username: owner.username }} search={{ page: 1 }} className="link">{owner.username}</Link>
                           </p>
                         ) : null
@@ -57,7 +57,7 @@ function Trading() {
               {pagination && pagination.totalPages > 1 && (
                 <nav aria-label="Pages" className="mt-8 flex items-center justify-between border-t border-line pt-4 text-sm">
                   {pagination.hasPrev ? <Link to="/trading" search={{ ...search, page: pagination.page - 1 }} className="btn-quiet">← Previous</Link> : <span />}
-                  <span className="font-mono text-muted">Page {pagination.page} of {pagination.totalPages}</span>
+                  <span className="text-muted">Page {pagination.page} of {pagination.totalPages}</span>
                   {pagination.hasNext ? <Link to="/trading" search={{ ...search, page: pagination.page + 1 }} className="btn-quiet">Next →</Link> : <span />}
                 </nav>
               )}
