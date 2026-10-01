@@ -114,7 +114,7 @@ export function OddsTable({ odds, caption }: { odds: OddsTier[]; caption?: strin
 }
 
 /** The sealed pack, standing on a lit pedestal in its own colour. Exact artwork pixels, no filters. */
-export function PackPedestal({ tier, name, eager = false, live = false, phase = 0, className = "" }: { tier: string; name: string; eager?: boolean; live?: boolean; phase?: number; className?: string }) {
+export function PackPedestal({ tier, name, eager = false, live = false, phase = 0, amp = 1, minWidth = 0, className = "" }: { tier: string; name: string; eager?: boolean; live?: boolean; phase?: number; amp?: number; minWidth?: number; className?: string }) {
   const src = packArtSrc(tier);
   const rgb = glow(tier);
   return (
@@ -123,7 +123,7 @@ export function PackPedestal({ tier, name, eager = false, live = false, phase = 
       <div className="pointer-events-none absolute bottom-0 left-[18%] right-[18%] h-[6%]" style={{ background: "radial-gradient(closest-side, rgba(0,0,0,0.9), transparent)" }} aria-hidden="true" />
       {src && live ? (
         <div className="relative z-10 w-full">
-          <LivePack tier={tier} name={name} eager={eager} phase={phase} />
+          <LivePack tier={tier} name={name} eager={eager} phase={phase} amp={amp} minWidth={minWidth} />
         </div>
       ) : src ? (
         <img src={src} alt={`${name} pack`} width={600} height={900} loading={eager ? "eager" : "lazy"} decoding="async" className="relative z-10 aspect-[2/3] w-full object-contain drop-shadow-[0_24px_30px_rgba(0,0,0,0.6)]" />
@@ -135,13 +135,13 @@ export function PackPedestal({ tier, name, eager = false, live = false, phase = 
 }
 
 /** A pack presented as a product: the object, the price, what's inside, and the best cards in it. */
-export function PackCard({ pack, eager = false, flip = false, compact = false, live = false, phase = 0 }: { pack: Pack; eager?: boolean; flip?: boolean; compact?: boolean; live?: boolean; phase?: number }) {
+export function PackCard({ pack, eager = false, flip = false, compact = false, live = false, phase = 0, amp = 1, minWidth = 0 }: { pack: Pack; eager?: boolean; flip?: boolean; compact?: boolean; live?: boolean; phase?: number; amp?: number; minWidth?: number }) {
   const avail = packAvailability(pack);
   const chase = pack.chase.filter((c) => c.images.slab || c.images.front).slice(0, compact ? 3 : 4);
   return (
     <article className={`grid grid-cols-1 items-center gap-8 ${compact ? "sm:grid-cols-[200px_minmax(0,1fr)]" : "lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-14"}`}>
       <Link to="/packs/$packId" params={{ packId: pack.id }} className={`mx-auto block w-56 sm:w-64 ${compact ? "sm:w-full" : "lg:w-full lg:max-w-[400px]"} ${flip ? "lg:order-2" : ""}`}>
-        <PackPedestal tier={pack.tier} name={pack.name} eager={eager} live={live} phase={phase} />
+        <PackPedestal tier={pack.tier} name={pack.name} eager={eager} live={live} phase={phase} amp={amp} minWidth={minWidth} />
       </Link>
       <div>
         <p className="eyebrow first-letter:uppercase" style={{ color: `rgb(${glow(pack.tier)})` }}>

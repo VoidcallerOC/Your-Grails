@@ -131,9 +131,10 @@ function Home() {
           {(list) => list.length === 0 ? (
             <p className="text-muted">No packs are on sale right now.</p>
           ) : (
+            // Desktop: the packs float, at half the strength of the packs page, so they sit quietly beside the copy.
             <div className="grid grid-cols-1 gap-16 lg:grid-cols-2 lg:gap-12">
               {list.map((p, i) => (
-                <PackCard key={p.id} pack={p} eager={i === 0} compact />
+                <PackCard key={p.id} pack={p} eager={i === 0} compact live amp={0.5} minWidth={1024} phase={i * 1.9} />
               ))}
             </div>
           )}
