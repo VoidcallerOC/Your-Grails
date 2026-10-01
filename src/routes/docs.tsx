@@ -39,7 +39,7 @@ function Docs() {
         What happens under the hood, in plain English. For the full current guide, see{" "}
         <a className="link" href="https://yourgrails.com/docs" rel="noopener noreferrer">yourgrails.com/docs</a>.
       </PageHead>
-      <div className="wrap max-w-4xl space-y-10">
+      <div className="wrap space-y-10 [&>*]:max-w-4xl">
         {SECTIONS.map(([title, paras]) => (
           <section key={title}>
             <h2 className="display text-2xl">{title}</h2>

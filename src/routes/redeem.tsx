@@ -12,8 +12,8 @@ function Redeem() {
       <PageHead note="Coming soon" title="Ship the slab home">
         Physical redemption isn't open yet. YourGrails lists it as coming after the beta.
       </PageHead>
-      <div className="wrap max-w-3xl">
-        <h2 className="label mb-3">How it is planned to work</h2>
+      <div className="wrap [&>*]:max-w-3xl">
+        <h2 className="mb-3 text-base font-semibold">How it is planned to work</h2>
         <ol className="border-t border-line text-sm text-paper-dim">
           {[
             "Request shipment of a card you hold.",

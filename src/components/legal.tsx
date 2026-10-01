@@ -8,7 +8,7 @@ export function LegalPointer({ title, href, note }: { title: string; href: strin
   return (
     <>
       <PageHead title={title} />
-      <div className="wrap max-w-3xl space-y-4 text-paper-dim">
+      <div className="wrap space-y-4 text-paper-dim [&>*]:max-w-3xl">
         <p>
           The current, binding version is published by YourGrails LLC at{" "}
           <a className="link" href={href} rel="noopener noreferrer">{href.replace("https://", "")}</a>.

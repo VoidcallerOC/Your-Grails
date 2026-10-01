@@ -34,16 +34,19 @@ export function ProfileView({ profile, address, collection }: { profile: Part<Pr
         <PartView part={collection} what="This collection">
           {(c) => (
             <>
-              <dl className="mb-6 flex gap-10 border-y border-line py-4">
+              <dl className="mb-2 flex gap-10">
                 <div><dt className="label">Cards</dt><dd className="money text-xl">{count(c.totalCards ?? c.cards.length)}</dd></div>
                 <div><dt className="label">Collection value</dt><dd className="money text-xl">{usd(c.totalValueUsd)}</dd></div>
               </dl>
               {c.cards.length ? (
+                <>
+                <p className="label mb-6">Market value shown on each card.</p>
                 <CardGrid>
                   {c.cards.map((card) => (
                     <CardTile key={card.token?.tokenId ?? card.id} card={card} footer={card.status === "listed" ? <p className="mt-1 text-xs text-paper-dim">Listed for sale</p> : null} />
                   ))}
                 </CardGrid>
+                </>
               ) : (
                 <EmptyPanel>No cards in this collection.</EmptyPanel>
               )}

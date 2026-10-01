@@ -34,7 +34,7 @@ function Trading() {
         <PartView part={discovery} what="Cards open to trade">
           {({ cards, pagination }) => (
             <>
-              <p className="mb-4 text-sm text-muted">{pagination ? `${count(pagination.total)} cards open to trade offers` : ""}</p>
+              <p className="mb-6 text-sm text-paper-dim">{pagination ? `${count(pagination.total)} cards open to trade offers · market value shown on each card` : "Market value shown on each card"}</p>
               {cards.length ? (
                 <CardGrid>
                   {cards.map(({ card, owner }) => (
@@ -55,7 +55,7 @@ function Trading() {
                 <EmptyPanel>No cards match.</EmptyPanel>
               )}
               {pagination && pagination.totalPages > 1 && (
-                <nav aria-label="Pages" className="mt-8 flex items-center justify-between border-t border-line pt-4 text-sm">
+                <nav aria-label="Pages" className="mt-12 flex items-center justify-between text-sm">
                   {pagination.hasPrev ? <Link to="/trading" search={{ ...search, page: pagination.page - 1 }} className="btn-quiet">← Previous</Link> : <span />}
                   <span className="text-muted">Page {pagination.page} of {pagination.totalPages}</span>
                   {pagination.hasNext ? <Link to="/trading" search={{ ...search, page: pagination.page + 1 }} className="btn-quiet">Next →</Link> : <span />}

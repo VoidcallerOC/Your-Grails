@@ -115,10 +115,14 @@ export function PullsList({ pulls, now }: { pulls: Pull[]; now: number }) {
   );
 }
 
-export function SectionHead({ title, action }: { title: string; action?: { to: string; label: string } }) {
+/** `note` is one short line that applies to everything in the section (e.g. what the amounts are). */
+export function SectionHead({ title, note, action }: { title: string; note?: string; action?: { to: string; label: string } }) {
   return (
     <div className="mb-5 flex items-baseline justify-between gap-4">
-      <h2 className="display text-xl sm:text-2xl">{title}</h2>
+      <div>
+        <h2 className="display text-xl sm:text-2xl">{title}</h2>
+        {note && <p className="label mt-1">{note}</p>}
+      </div>
       {action && (
         <Link to={action.to} className="shrink-0 text-sm font-medium text-paper-dim hover:text-paper">
           {action.label} →

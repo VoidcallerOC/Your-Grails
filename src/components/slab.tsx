@@ -60,7 +60,6 @@ export function CardTile({
           <p className="shrink-0 leading-snug sm:text-right">
             <span className="sr-only">{priceLabel}: </span>
             <span className="money text-[15px]">{amount}</span>
-            {priceLabel !== "Price" && <span className="ml-1 text-xs text-muted sm:ml-0 sm:block" aria-hidden="true">value</span>}
           </p>
         </div>
         <p className="mt-1 truncate text-[13px] text-paper-dim">{[grade, cardLine(card)].filter(Boolean).join(" · ") || " "}</p>

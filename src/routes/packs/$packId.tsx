@@ -64,7 +64,7 @@ function PackPage() {
               </div>
               {p.chase.length > 0 && (
                 <section className="mt-16">
-                  <SectionHead title="Chase cards" />
+                  <SectionHead title="Chase cards" note="Market value shown on each card." />
                   <CardGrid>
                     {p.chase.map((c) => (
                       <CardTile key={c.id} card={c} />

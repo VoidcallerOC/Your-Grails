@@ -105,8 +105,8 @@ const FOOTER: [string, [string, string][]][] = [
 export function SiteFooter() {
   return (
     <footer className="mt-24 border-t border-line">
-      <div className="wrap grid grid-cols-1 gap-10 py-12 md:grid-cols-[minmax(0,1.4fr)_repeat(3,minmax(0,1fr))]">
-        <div className="max-w-sm">
+      <div className="wrap grid grid-cols-3 gap-x-6 gap-y-10 py-12 md:grid-cols-[minmax(0,1.4fr)_repeat(3,minmax(0,1fr))]">
+        <div className="col-span-3 max-w-sm md:col-span-1">
           <img src="/brand/logo.png" alt="YourGrails" width={96} height={96} className="h-16 w-auto" loading="lazy" />
           <p className="mt-4 text-sm text-muted">
             Sealed packs of real graded cards. Every pull is a PSA, BGS or CGC slab held in the vault and owned by you.

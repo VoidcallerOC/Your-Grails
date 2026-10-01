@@ -13,7 +13,7 @@ function Account() {
         YourGrails is invite-only right now. In production you connect a wallet (your own, or one made for you at sign-in) and redeem a
         one-time referral code. Collectors unlock their own codes as they open packs and battle.
       </PageHead>
-      <div className="wrap max-w-3xl space-y-6 text-paper-dim">
+      <div className="wrap space-y-6 text-paper-dim [&>*]:max-w-3xl">
         <section className="panel p-5">
           <h2 className="font-semibold text-paper">Why sign-in is off in this build</h2>
           <p className="mt-2 text-sm">

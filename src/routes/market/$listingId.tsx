@@ -76,32 +76,32 @@ function ListingPage() {
                 </div>
 
                 <section className="mt-10 max-w-xl">
-                  <h2 className="label mb-3">The slab</h2>
+                  <h2 className="mb-3 text-base font-semibold">The slab</h2>
                   <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-6 gap-y-2 text-sm">
                     <dt className="text-muted">Grader</dt><dd>{c.grader ?? "—"} {c.grade}</dd>
                     <dt className="text-muted">Cert number</dt>
-                    <dd className="font-mono">
-                      {c.cert ?? "—"}
+                    <dd>
+                      <span className="font-mono text-[13px]">{c.cert ?? "—"}</span>
                       {c.certUrl && <> · <a className="link" href={c.certUrl} target="_blank" rel="noopener noreferrer">Verify with PSA</a></>}
                     </dd>
                     {c.popAtGrade !== undefined && (<><dt className="text-muted">Population at this grade</dt><dd className="tabular-nums">{count(c.popAtGrade)}{c.popHigher !== undefined ? ` · ${count(c.popHigher)} higher` : ""}</dd></>)}
                     {c.token && (
                       <>
                         <dt className="text-muted">Token</dt>
-                        <dd className="font-mono break-all">
-                          #{c.token.tokenId} · <a className="link" href={contractUrl(c.token.contract)} target="_blank" rel="noopener noreferrer">CardNFT</a>
+                        <dd>
+                          <span className="break-all font-mono text-[13px]">#{c.token.tokenId}</span> · <a className="link" href={contractUrl(c.token.contract)} target="_blank" rel="noopener noreferrer">CardNFT</a>
                         </dd>
                       </>
                     )}
                     <dt className="text-muted">Seller</dt>
-                    <dd><Link to="/u/address/$address" params={{ address: l.seller.toLowerCase() }} search={{ page: 1 }} className="link font-mono">{shortAddress(l.seller)}</Link></dd>
+                    <dd><Link to="/u/address/$address" params={{ address: l.seller.toLowerCase() }} search={{ page: 1 }} className="link font-mono text-[13px]">{shortAddress(l.seller)}</Link></dd>
                     {l.createdAt && (<><dt className="text-muted">Listed</dt><dd>{dateShort(l.createdAt)}{l.txHash && <> · <a className="link" href={txUrl(l.txHash)} target="_blank" rel="noopener noreferrer">transaction</a></>}</dd></>)}
                   </dl>
                 </section>
 
                 {c.comps && c.comps.count > 0 && (
                   <section className="mt-10 max-w-xl">
-                    <h2 className="label mb-3">Recent sales at this grade</h2>
+                    <h2 className="mb-2 text-base font-semibold">Recent sales at this grade</h2>
                     <p className="text-sm text-paper-dim">
                       Median {usd(c.comps.medianUsd)} across the {BASIS[c.comps.basis] ?? `${c.comps.count} sales`}, ranging {usd(c.comps.minUsd)} to {usd(c.comps.maxUsd)}.
                       {c.comps.fetchedAt && <> Data as of {dateShort(c.comps.fetchedAt)}.</>}
