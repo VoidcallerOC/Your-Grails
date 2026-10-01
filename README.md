@@ -54,6 +54,10 @@ no redesign, no faked textures.
   existing Pack3D system, and runtime-verified across hero, featured drops, pack
   rail, pack detail, reveal, and mobile.
 
+## Marketplace (synthetic demo data, demo-only actions)
+
+`/marketplace` renders 48 **synthetic** listings from `src/data/marketplace-demo.csv` (see `src/data/README.md`). The cards, sets, sellers, prices and offers are invented for the demo and are not real inventory or market data. Search, listing-state, PSA/BGS/CGC filters, sorting, extra filters and pagination all work on that data. Buy, Cash offer, Trade, Deposit and Withdraw are **not connected**: they only explain what a real implementation needs (wallet connection, USDC approval and escrow/offer contracts, a listings and offers API, a trade-proposal service). The offer wallet shows no balance. With no CSV the page says the demo listings are not loaded and shows none.
+
 ## Demo vs production
 
 - Connect is a demo vault session

@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react'
 import { Layout } from './Layout'
 import { Home, Packs, PackDetail } from './Home'
 import {
-  Reveal, Collection, CardPage, Battles, Marketplace,
+  Reveal, Collection, CardPage, Battles,
   Trading, Lending, Leaderboard, Trust,
 } from './Rest'
+import { Marketplace } from './Marketplace'
 import { path } from './nav'
 
 export default function App() {

@@ -2,7 +2,7 @@
 // @ts-nocheck
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from './nav'
-import { LISTINGS, TRUST_POINTS, VAULT, daysLeft, money, resolveCard } from './data'
+import { TRUST_POINTS, VAULT, daysLeft, money, resolveCard } from './data'
 import { Slab } from './Home'
 import { RipScene } from './RipScene'
 import { useVault } from './store'
@@ -200,73 +200,6 @@ export function Battles() {
           <div><dt>If you lose</dt><dd>{isOwned ? `${you.name} leaves your collection.` : 'Nothing — this is a demo card.'}</dd></div>
         </dl>
       )}
-    </>
-  )
-}
-
-function OfferBox({ listing }) {
-  const [bid, setBid] = useState(listing.price)
-  const offerListing = useVault((s) => s.offerListing)
-  const buyListing = useVault((s) => s.buyListing)
-  return (
-    <div className="market-actions">
-      <button className="btn btn-grad" onClick={() => buyListing(listing.id)}>Buy for ${money(listing.price)}</button>
-      <div className="offer">
-        <label className="offer-field">
-          <span aria-hidden="true">$</span>
-          <input type="number" min="1" value={bid} onChange={(e) => setBid(e.target.value)} aria-label={`Offer amount for ${listing.id}`} />
-        </label>
-        <button className="btn btn-ghost" onClick={() => offerListing(listing.id, bid)}>Offer</button>
-      </div>
-    </div>
-  )
-}
-
-export function Marketplace() {
-  const listings = useVault((s) => s.listings)
-  const session = useVault((s) => s.session)
-  const connect = useVault((s) => s.connect)
-  const rows = listings.length ? listings : LISTINGS
-  return (
-    <>
-      <header className="market-head">
-        <div>
-          <h1>Marketplace</h1>
-          <p>Graded slabs from other collectors. Payment is held until the sale completes.</p>
-        </div>
-        <div className="market-head-end">
-          <span className="market-count">{rows.length} slab{rows.length === 1 ? '' : 's'} listed</span>
-          {!session && <button className="btn btn-blue" onClick={connect}>Sign in to buy</button>}
-        </div>
-      </header>
-      <ul className="market-grid">
-        {rows.map((l) => {
-          const c = l.card || resolveCard(l.cardId)
-          const pct = c.value ? ((l.price - c.value) / c.value) * 100 : 0
-          return (
-            <li className="listing" key={l.id}>
-              <div className="listing-stage"><Slab card={c} still /></div>
-              <div className="listing-body">
-                <div className="listing-head">
-                  <div className="listing-id">
-                    <strong>{c.name}</strong>
-                    <span>{c.set}</span>
-                    <span className="listing-meta">{c.rarity}{c.cert ? ` · #${c.cert}` : ''}</span>
-                  </div>
-                  <span className="listing-grade"><i>{c.company}</i><b>{c.grade}</b></span>
-                </div>
-                <div className={`listing-price ${pct < -0.05 ? 'is-under' : ''}`}>
-                  <strong>${money(l.price)}</strong>
-                  <span>{Math.abs(pct) < 0.05 ? 'At market value' : `${Math.abs(pct).toFixed(1)}% ${pct > 0 ? 'over' : 'under'} market · $${money(c.value)}`}</span>
-                </div>
-                {session && <OfferBox listing={l} />}
-                <span className="listing-seller">Listed by {l.seller}</span>
-              </div>
-            </li>
-          )
-        })}
-      </ul>
-      {!rows.length && <div className="panel" style={{ marginTop: 16 }}>No slabs are listed. List one from your collection.</div>}
     </>
   )
 }
