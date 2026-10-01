@@ -33,7 +33,7 @@ authenticated wallet session is available. They are not built as replacement imp
 | Buy, offer, offer-balance deposit/withdraw, seller accept, list/cancel (MarketplaceEscrow + `/listings/confirm-*`) | `/market/*` | PRESERVE | PARTIAL (disabled) | UNVERIFIED | Needs wallet session |
 | Instant buyback (voucher API + Buyback contract) | card views | PRESERVE | NOT STARTED | UNVERIFIED | Eligibility comes from production `buybackInfo`. Nitro must not compute it |
 | Leaderboards: race, points, battles | `/leaderboard` | PRESERVE | PARTIAL | Public API: COMPLETE | All three tabs and race categories preview-verified (`5a23bf1`). "Your standing" needs `address`/session: UNVERIFIED |
-| Public profiles and collections (one tile per token) | `/u/*` | PRESERVE | PARTIAL | Public API: COMPLETE | Preview-verified (`/u/griim` 18 cards. `/u/address/0x4051…` 10 cards, $4,413). Address route shows the bare address: no profile-by-address endpoint found (UNVERIFIED). Listings and Activity tabs NOT STARTED |
+| Public profiles and collections (one tile per token) | `/u/*` | PRESERVE | PARTIAL | Public API: COMPLETE | Preview-verified (`/u/griim` 18 cards). `/u/address/:addr` uses production's own `GET /users/:address/profile` (chunk `167f5163…`): `0x4051…` redirects to `/u/lamehillbilly`; `0x6651…` renders the address profile (joined Jun 20, 2026, 5 cards). Unknown username → 404 (`f6e9977`). Listings and Activity tabs NOT STARTED |
 | Trade discovery | `/trading` | PRESERVE | PARTIAL | Public API: COMPLETE | Preview-verified on `5a23bf1` (559 cards, live owners) |
 | Trade offers, accept, cancel (`/trades/direct-offers*`) | `/trading` | PRESERVE | PARTIAL (disabled) | UNVERIFIED | Trade contract address not published: UNVERIFIED |
 | Battles: rules, live counts, top battlers | `/battles` | PRESERVE | PARTIAL | Public API: COMPLETE | Preview-verified on `5a23bf1` (1,005 fought). Rules shown as production states them. Not decided by Nitro |
@@ -88,7 +88,7 @@ Original audit matrix (dispositions) follows.
 | 34 | Lending — My Loans: repay, grace, default claim, extensions, renewal yield | `/lending` | Full lifecycle | Chain (`repayLoan`, `claimDefault`, `proposeExtension`, `acceptExtension`, `claimRenewalYield`…) | Yes | Write | REBUILD | NOT STARTED |
 | 35 | Leaderboard | `/leaderboard` | Monthly race (Battle Wins, Win Streak, Losing Streak, Overall Points), Overall, Battles tabs, podium, full standings, tie-break note | API | No | No | REBUILD (current page is empty placeholder) | NOT STARTED |
 | 36 | Own profile / points / referral codes | `/profile` | Points, unlocked referral codes with copy/share | API | Yes | No | REBUILD | NOT STARTED |
-| 37 | Public profile | `/u/[handle]`, `/u/address/[addr]` | Stats, Collection / Listings / Activity tabs, sort | API | No | Read | REBUILD | NOT STARTED |
+| 37 | Public profile | `/u/[handle]`, `/u/address/[addr]` | Stats, Collection / Listings / Activity tabs, sort | API | No | Read | REBUILD | PARTIAL (header + collection preview-verified; Listings/Activity tabs NOT STARTED) |
 | 38 | Wallet page | path UNVERIFIED | USDC + AVAX balances, copy address, send USDC/AVAX | Chain | Yes | Write | REBUILD | NOT STARTED |
 | 39 | Navbar USDC balance | header | Shown only when connected | Chain (`USDC.balanceOf`) | Yes | Read | REFACTOR (fake chip REMOVE) | NOT STARTED |
 | 40 | Notifications / activity | path UNVERIFIED | Reveals, buybacks, offers, battles, lending, support replies | API | Yes | No | REBUILD | NOT STARTED |
