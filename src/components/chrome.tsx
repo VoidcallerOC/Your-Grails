@@ -37,7 +37,7 @@ function isActive(path: string, href: string) {
 function Wordmark({ className }: { className: string }) {
   return (
     <Link to="/" className="flex shrink-0 items-center" aria-label="YourGrails home">
-      <img src="/brand/wordmark.svg" alt="YourGrails" width={152} height={32} className={`${className} w-auto`} />
+      <img src="/brand/wordmark.svg" alt="YourGrails" width={157} height={32} className={`${className} w-auto`} />
     </Link>
   );
 }
