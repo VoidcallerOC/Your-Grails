@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Lock } from "lucide-react";
 import { tierColor } from "@/lib/packs";
 import { PackCard, PackPedestal, PullTicker, SectionHead, StatsLedger } from "@/components/blocks";
-import { CardTile, GradeTag, ShelfRow, Slab, Tilt } from "@/components/slab";
+import { CardTile, ShelfRow, Tilt } from "@/components/slab";
 import { ErrorPanel, PartView } from "@/components/states";
 import { getHome } from "@/lib/api";
 import { count, usd } from "@/lib/format";
@@ -23,6 +23,26 @@ function topChase(packs: Pack[], n: number): (CardSummary & { packName: string }
 }
 
 /** Three slabs in the window: the most valuable front and centre, the others set back in the light. */
+/**
+ * One slab in the window. Seller photos arrive with different crops and backdrops, so each is set in the same
+ * slab-shaped frame (3:5, the median of production's photos) and its edges sink into a vignette: three photos read
+ * as three objects in one case. The photo itself is shown as supplied; the slab's own label carries its grade.
+ */
+function CaseFrame({ card, hero }: { card: CardSummary; hero: boolean }) {
+  const src = card.images.slab ?? card.images.front ?? card.images.thumb;
+  return (
+    <div className={`relative aspect-[3/5] overflow-hidden bg-velvet ring-1 ${hero ? "ring-gold/35" : "ring-line"} shadow-[0_34px_44px_-22px_rgba(0,0,0,0.9)]`}>
+      {src ? (
+        <img src={src} alt={`${card.title}${card.grader ? `, ${card.grader} ${card.grade ?? ""}` : ""}`} loading="eager" decoding="async" width={300} height={500} className="h-full w-full object-cover" />
+      ) : (
+        <span className="flex h-full items-center justify-center px-3 text-center text-sm text-muted">Photo not provided</span>
+      )}
+      <span className="pointer-events-none absolute inset-0 shadow-[inset_0_0_28px_10px_rgba(10,9,8,0.72)]" aria-hidden="true" />
+      <span className="pointer-events-none absolute inset-0 bg-[linear-gradient(155deg,rgba(255,255,255,0.07),transparent_38%)]" aria-hidden="true" />
+    </div>
+  );
+}
+
 function ShowWindow({ cards }: { cards: (CardSummary & { packName: string })[] }) {
   const order = cards.length === 3 ? [cards[1], cards[0], cards[2]] : cards;
   return (
@@ -33,14 +53,14 @@ function ShowWindow({ cards }: { cards: (CardSummary & { packName: string })[] }
           return (
             <Link key={c.id} to="/packs" className={`group block min-w-0 ${hero ? "z-10" : "translate-y-6 opacity-90 sm:translate-y-10"}`}>
               <Tilt max={hero ? 9 : 6}>
-                <div className="relative">
-                  <Slab card={c} eager sizes="(min-width: 1024px) 260px, 34vw" />
-                  <GradeTag card={c} className="absolute bottom-3 left-0 z-10 hidden sm:inline-flex" />
-                </div>
+                <CaseFrame card={c} hero={hero} />
               </Tilt>
-              <figcaption className="mt-3 text-center sm:text-left">
+              <figcaption className="mt-4 text-center sm:text-left">
                 <span className={`num block leading-none ${hero ? "text-2xl text-gold sm:text-3xl" : "text-lg text-paper sm:text-xl"}`}>{usd(c.valueUsd)}</span>
-                <span className="mt-1 block truncate text-[12px] text-muted sm:text-[13px]">{c.title}</span>
+                <span className="mt-1.5 block truncate text-[12px] text-muted sm:text-[13px]">
+                  {c.grade ? <span className="hidden text-paper-dim sm:inline">{c.grader ?? "Grade"} {c.grade} · </span> : null}
+                  {c.title}
+                </span>
               </figcaption>
             </Link>
           );
