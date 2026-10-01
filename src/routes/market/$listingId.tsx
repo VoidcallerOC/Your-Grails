@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ChevronDown, ShieldCheck } from "lucide-react";
 import { GradeTag, Slab, Tilt } from "@/components/slab";
+import { MarketDelta } from "@/components/experience";
 import { BlockedAction, MobileBuyBar, PartView } from "@/components/states";
 import { getListing } from "@/lib/api";
 import { contractUrl, txUrl } from "@/lib/contracts";
@@ -123,6 +124,7 @@ function ListingPage() {
                     <p className="num mt-1 text-2xl text-paper-dim">{l.bidCount}</p>
                   </div>
                 </div>
+                <div className="mt-2 text-base"><MarketDelta price={l.priceUsd} value={c.valueUsd} /></div>
                 {!active && <p className="mt-4 text-sm text-warn">This listing is {l.status}. It can't be bought.</p>}
 
                 <div className="mt-8 grid max-w-xl grid-cols-1 gap-4 sm:grid-cols-2">

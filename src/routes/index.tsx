@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Lock } from "lucide-react";
+import { tierColor } from "@/lib/packs";
 import { PackCard, PackPedestal, PullTicker, SectionHead, StatsLedger } from "@/components/blocks";
 import { CardTile, GradeTag, ShelfRow, Slab, Tilt } from "@/components/slab";
 import { ErrorPanel, PartView } from "@/components/states";
@@ -61,6 +62,7 @@ function Home() {
   const { stats, packs, pulls, listings, fetchedAt } = Route.useLoaderData();
   const chase = packs.ok ? topChase(packs.data, 3) : [];
   const firstPack = packs.ok ? packs.data[0] : undefined;
+  const latestPull = pulls.ok ? pulls.data.find((p) => p.image) : undefined;
 
   return (
     <>
@@ -160,17 +162,36 @@ function Home() {
         </div>
       </section>
 
+      {/* A slab's journey: the real objects at each step, from sealed pack to your shelf. */}
       <section className="wrap mt-24">
         <SectionHead title="From sealed pack to your shelf" />
-        <ol className="grid grid-cols-1 gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+        <ol className="relative grid grid-cols-2 gap-x-6 gap-y-12 lg:grid-cols-4">
+          <span className="absolute left-[12.5%] right-[12.5%] top-[86px] hidden h-px bg-gradient-to-r from-line-strong via-gold/50 to-line-strong lg:block" aria-hidden="true" />
           {STEPS.map(([t, d], i) => (
-            <li key={t} className="rise border-t border-line pt-5">
-              <span className="shout text-5xl text-line-strong">{i + 1}</span>
-              <h3 className="mt-3 font-display text-xl font-semibold">{t}</h3>
+            <li key={t} className="rise relative">
+              <div className="relative z-10 mx-auto flex h-[172px] items-end justify-center" aria-hidden="true">
+                {i === 0 && firstPack && <div className="w-[104px]"><PackPedestal tier={firstPack.tier} name={firstPack.name} /></div>}
+                {i === 1 && latestPull?.image && (
+                  <div className="relative">
+                    <span className="absolute inset-[-30%] rounded-full" style={{ background: `radial-gradient(closest-side, ${tierColor(latestPull.pullTier)}55, transparent)` }} />
+                    <img src={latestPull.image} alt="" loading="lazy" className="relative h-[150px] w-auto object-contain drop-shadow-[0_14px_18px_rgba(0,0,0,0.6)]" />
+                  </div>
+                )}
+                {i === 2 && latestPull?.image && (
+                  <div className="relative border border-line-strong bg-velvet px-5 pb-4 pt-5">
+                    <img src={latestPull.image} alt="" loading="lazy" className="h-[118px] w-auto object-contain opacity-90" />
+                    <span className="absolute -right-3 -top-3 flex h-8 w-8 items-center justify-center bg-gold text-ink cut-sm"><Lock size={14} /></span>
+                  </div>
+                )}
+                {i === 3 && <span className="shout pb-6 text-7xl text-gold">90%</span>}
+              </div>
+              <p className="mt-5 font-display text-sm font-semibold text-gold">Step {i + 1}</p>
+              <h3 className="mt-1 font-display text-xl font-semibold">{t}</h3>
               <p className="mt-2 text-sm leading-relaxed text-paper-dim">{d}</p>
             </li>
           ))}
         </ol>
+        {latestPull && <p className="label mt-8">Shown with the latest real pull: {latestPull.title}{latestPull.packName ? `, from the ${latestPull.packName}` : ""}.</p>}
       </section>
     </>
   );

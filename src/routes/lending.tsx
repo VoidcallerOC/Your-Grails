@@ -1,6 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHead } from "@/components/chrome";
 import { BlockedAction } from "@/components/states";
+import { CustodyTrack, type Holder } from "@/components/experience";
+
+/** Who holds the slab at each step, per the published loan rules above. */
+const CUSTODY: [Holder, boolean, string?][] = [
+  ["vault", true, "Locked in the lending contract while the request is open."],
+  ["vault", true],
+  ["vault", true, "The USDC goes to the borrower; the slab stays locked."],
+  ["borrower", false, "Released back to the borrower."],
+  ["lender", false, "After grace ends, the lender can claim it."],
+  ["vault", true],
+];
 
 export const Route = createFileRoute("/lending")({
   head: () => ({ meta: [{ title: "Lending · YourGrails" }] }),
@@ -20,7 +31,7 @@ const STEPS: [string, string][] = [
 function Lending() {
   return (
     <>
-      <PageHead eyebrow="Card-backed loans" title="Borrow against your slabs">
+      <PageHead eyebrow="Card-backed loans · follow the slab" title="Borrow against your slabs">
         Collectors lend USDC to collectors, secured by graded cards in the vault. YourGrails does not lend; it runs the contract and
         the appraisals.
       </PageHead>
@@ -34,6 +45,7 @@ function Lending() {
               <div className="pt-2">
                 <h2 className="font-display text-xl font-semibold">{t}</h2>
                 <p className="mt-1.5 max-w-xl text-[15px] leading-relaxed text-paper-dim">{d}</p>
+                <CustodyTrack at={CUSTODY[i][0]} locked={CUSTODY[i][1]} note={CUSTODY[i][2]} />
               </div>
             </li>
           ))}

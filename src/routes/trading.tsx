@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHead } from "@/components/chrome";
-import { CardGrid, CardTile } from "@/components/slab";
+import { CardTile } from "@/components/slab";
 import { BlockedAction, EmptyPanel, PartView } from "@/components/states";
 import { getTradeDiscovery } from "@/lib/api";
 import { count } from "@/lib/format";
 import { Avatar } from "@/components/person";
+import { TradePair } from "@/components/experience";
 
 export const Route = createFileRoute("/trading")({
   validateSearch: (s: Record<string, unknown>) => ({
@@ -40,22 +41,23 @@ function Trading() {
             <>
               <p className="mb-6 text-sm text-paper-dim">{pagination ? `${count(pagination.total)} cards open to trade offers · market value shown on each card` : "Market value shown on each card"}</p>
               {cards.length ? (
-                <CardGrid>
+                <div className="grid grid-cols-1 gap-x-12 gap-y-14 md:grid-cols-2">
                   {cards.map(({ card, owner }) => (
-                    <CardTile
+                    <TradePair
                       key={card.token?.tokenId ?? card.id}
-                      card={card}
-                      footer={
+                      owner={
                         owner?.username ? (
-                          <p className="mt-3 flex items-center gap-2 border-t border-line pt-3 text-xs text-muted">
+                          <p className="mt-4 flex items-center gap-2 text-xs text-muted">
                             <Avatar person={{ address: "", username: owner.username }} size={22} />
                             <span className="truncate">Owner <Link to="/u/$username" params={{ username: owner.username }} search={{ page: 1 }} className="font-semibold text-paper-dim hover:text-gold">{owner.username}</Link></span>
                           </p>
                         ) : null
                       }
-                    />
+                    >
+                      <CardTile card={card} />
+                    </TradePair>
                   ))}
-                </CardGrid>
+                </div>
               ) : (
                 <EmptyPanel>No cards match.</EmptyPanel>
               )}

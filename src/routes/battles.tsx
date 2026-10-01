@@ -93,6 +93,16 @@ function Battles() {
                     <div>
                       <h3 className="font-display text-xl font-semibold italic">{p.name}</h3>
                       <p className="money mt-1 text-2xl">{usd(p.priceUsd)} <span className="font-sans text-xs font-normal text-muted">a side</span></p>
+                      {(() => {
+                        const top = Math.max(0, ...p.chase.map((c) => c.valueUsd ?? 0));
+                        return (
+                          <p className="mt-2 text-[12px] text-muted">
+                            {top > 0 && <>Top chase <span className="num text-gold">{usd(top)}</span></>}
+                            {top > 0 && p.availableInventory !== null && " · "}
+                            {p.availableInventory !== null && <>{count(p.availableInventory)} slabs in the pool</>}
+                          </p>
+                        );
+                      })()}
                     </div>
                     <BlockedAction className="col-span-2" tone="primary" label={`Start a ${p.name} battle · ${usd(p.priceUsd)}`} does="Creates a battle for this pack. Another collector or the YG Battle Bot can join." />
                   </article>

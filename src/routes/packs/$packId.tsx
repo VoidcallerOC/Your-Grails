@@ -2,6 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { OddsTable, PullsList, SectionHead } from "@/components/blocks";
 import { glow, packAvailability } from "@/lib/packs";
 import { PackStage } from "@/components/pack-art";
+import { PoolView, RevealReplay } from "@/components/experience";
 import { CardGrid, CardTile } from "@/components/slab";
 import { BlockedAction, MobileBuyBar, PartView } from "@/components/states";
 import { getPack } from "@/lib/api";
@@ -80,19 +81,33 @@ function PackPage() {
                 </div>
               </section>
 
-              {/* What's inside: the odds ladder. */}
+              {/* What's inside: the actual pool. A pack is one draw from these slabs. */}
               <section className="border-y border-line bg-velvet">
-                <div className="wrap grid grid-cols-1 gap-10 py-14 lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)]">
-                  <div>
-                    <h2 className="shout text-4xl">What's inside</h2>
-                    <p className="mt-4 max-w-sm text-paper-dim">
-                      Every card in the pool sits in a value tier. Your chance of each tier is its share of the pool right now, and it
-                      moves as cards are pulled and restocked.
-                    </p>
+                <div className="wrap py-14">
+                  <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)]">
+                    <div>
+                      <h2 className="shout text-4xl">
+                        {p.odds.reduce((n, o) => n + o.count, 0) > 0 ? <>One draw from these {count(p.odds.reduce((n, o) => n + o.count, 0))} slabs</> : "What's inside"}
+                      </h2>
+                      <p className="mt-4 max-w-sm text-paper-dim">
+                        Every card in the pool sits in a value tier. Your chance of each tier is its share of the pool right now, and it
+                        moves as cards are pulled and restocked.
+                      </p>
+                    </div>
+                    <PoolView odds={p.odds} />
                   </div>
-                  <OddsTable odds={p.odds} caption={`Odds from the current pool${p.oddsCalculatedAt ? ` · ${dateShort(p.oddsCalculatedAt)}` : ""}`} />
+                  <div className="mt-12 lg:ml-[calc(4/11*100%+2.5rem)]">
+                    <OddsTable odds={p.odds} caption={`Odds from the current pool${p.oddsCalculatedAt ? ` · ${dateShort(p.oddsCalculatedAt)}` : ""}`} />
+                  </div>
                 </div>
               </section>
+
+              {/* The reveal, as an event: the latest real pull from this pack, replayed. */}
+              {pulls.ok && pulls.data[0] && (
+                <section className="wrap mt-20">
+                  <RevealReplay pull={pulls.data[0]} tier={p.tier} now={fetchedAt} />
+                </section>
+              )}
 
               {p.chase.length > 0 && (
                 <section className="wrap mt-20">

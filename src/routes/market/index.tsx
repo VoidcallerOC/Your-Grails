@@ -3,6 +3,7 @@ import { Search, SlidersHorizontal } from "lucide-react";
 import { useState } from "react";
 import { PageHead } from "@/components/chrome";
 import { CardGrid, CardTile } from "@/components/slab";
+import { MarketDelta } from "@/components/experience";
 import { EmptyPanel, PartView } from "@/components/states";
 import { getMarket, sanitizeListingQuery, type ListingQuery } from "@/lib/api";
 import { count } from "@/lib/format";
@@ -135,7 +136,10 @@ function Market() {
                         price={l.priceUsd}
                         priceLabel="Price"
                         footer={
-                          l.bidCount > 0 ? <p className="mt-1.5 inline-block bg-gold/15 px-1.5 py-0.5 font-display text-[11.5px] font-semibold text-gold cut-sm">{l.bidCount} {l.bidCount === 1 ? "offer" : "offers"} in</p> : null
+                          <>
+                            <MarketDelta price={l.priceUsd} value={l.card.valueUsd} />
+                            {l.bidCount > 0 && <p className="mt-1.5 inline-block bg-gold/15 px-1.5 py-0.5 font-display text-[11.5px] font-semibold text-gold cut-sm">{l.bidCount} {l.bidCount === 1 ? "offer" : "offers"} in</p>}
+                          </>
                         }
                       />
                     ))}
