@@ -225,7 +225,10 @@
   .tilt {
     transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(var(--lift, 0px));
     transition: transform 0.25s ease-out;
-    transform-style: preserve-3d;
+    /* Flat on purpose: preserve-3d put the slab photo and the stage's glow/shadow on one plane, and while tilted the
+       browser would z-fight them, drawing the shadow over the card at random. Children that need depth (.slab3d)
+       keep their own 3D context. */
+    transform-style: flat;
   }
   @media (prefers-reduced-motion: reduce) {
     .tilt {
