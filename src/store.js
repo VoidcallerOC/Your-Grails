@@ -4,6 +4,12 @@ import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { LISTINGS, VAULT, money, pickCard, resolveCard } from './data'
 
+// One opponent is chosen up front so the slab shown before the battle is the slab you actually fight.
+function houseFor(yours) {
+  const pool = VAULT.filter((c) => c.id !== 'charizard' && c.id !== (yours.originId || yours.id) && c.rarity !== 'Common')
+  return pool[Math.floor(Math.random() * pool.length)] || VAULT[3]
+}
+
 function cloneListings() {
   return LISTINGS.map((l) => ({ ...l }))
 }
@@ -36,7 +42,7 @@ export const useVault = create(persist((set, get) => ({
       return
     }
     set({ session: { name: 'Vault 0xYG' }, usdc: 5000 })
-    get().notify('Demo vault connected · 5,000 USDC credited')
+    get().notify('Signed in · 5,000 demo USDC added')
   },
 
   addUsdc: (amount = 2500) => {
@@ -47,7 +53,7 @@ export const useVault = create(persist((set, get) => ({
   startRip: (pack) => {
     const s = get()
     if (!s.session) {
-      get().notify('Connect a demo vault first')
+      get().notify('Sign in first')
       return false
     }
     if (s.usdc < pack.price) {
@@ -107,7 +113,7 @@ export const useVault = create(persist((set, get) => ({
     const s = get()
     const listing = s.listings.find((l) => l.id === listingId)
     if (!listing) return
-    if (!s.session) { get().notify('Connect a demo vault first'); return }
+    if (!s.session) { get().notify('Sign in first'); return }
     if (s.usdc < listing.price) { get().notify('Not enough USDC'); return }
     const base = listing.card || resolveCard(listing.cardId)
     const card = {
@@ -166,8 +172,7 @@ export const useVault = create(persist((set, get) => ({
     const yours = s.owned.find((c) => c.id === s.selectedBattleId) || s.owned[0] || VAULT.find((c) => c.id === 'magikarp')
     if (!yours) return
     if (yours.pledged) { get().notify('Card is pledged as collateral'); return }
-    const pool = VAULT.filter((c) => c.id !== 'charizard' && c.id !== (yours.originId || yours.id) && c.rarity !== 'Common')
-    const them = pool[Math.floor(Math.random() * pool.length)] || VAULT[3]
+    const them = s.battle.them || houseFor(yours)
     const isOwned = s.owned.some((c) => c.id === yours.id)
     set({ battle: { status: 'lock', you: yours, them, winner: null, isOwned } })
     window.setTimeout(() => {
@@ -198,7 +203,11 @@ export const useVault = create(persist((set, get) => ({
     }, 1600)
   },
 
-  resetBattle: () => set({ battle: { status: 'idle', you: null, them: null, winner: null } }),
+  resetBattle: () => {
+    const s = get()
+    const yours = s.owned.find((c) => c.id === s.selectedBattleId) || s.owned.find((c) => !c.pledged) || VAULT.find((c) => c.id === 'magikarp')
+    set({ battle: { status: 'idle', you: null, them: houseFor(yours), winner: null } })
+  },
 
   borrow: (cardId) => {
     const s = get()

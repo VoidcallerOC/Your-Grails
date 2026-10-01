@@ -2,7 +2,7 @@
 // @ts-nocheck
 export const PACKS = [
   { id: 'pro', name: 'Pokemon Pro Pack', tier: 'PRO', price: 50, ev: 51.84, hot: false, blurb: 'The working collector pack. Real graded cards, fair random draw, 90% buyback window.' },
-  { id: 'master', name: 'Pokemon Master Pack', tier: 'MASTER', price: 100, ev: 103.75, hot: true, blurb: 'Higher expected pull value. Same vaulted PSA / BGS / CGC cards. Same 5-day buyback.' },
+  { id: 'master', name: 'Pokemon Master Pack', tier: 'MASTER', price: 100, ev: 103.75, hot: true, blurb: 'The higher-priced tier. Same graded PSA / BGS / CGC cards. Same 5-day buyback.' },
 ]
 
 export const ODDS = [
@@ -32,22 +32,6 @@ export const LISTINGS = [
 ]
 
 export const CHAINS = ['Avalanche', 'Ethereum', 'Base', 'Arbitrum', 'OP Mainnet', 'Polygon', 'HyperEVM', 'Monad']
-
-export const LIVE_STATS = [
-  { label: 'Chase cards pulled', value: '116', sub: '18 grails · a pack ripped every 49 min' },
-  { label: 'Packs + battle volume', value: '$814K', sub: '12K packs ripped' },
-  { label: 'Top pull this week', value: '$146', sub: 'Fa/Vileplume Gx' },
-  { label: 'Arena & market', value: '1.0K', sub: 'battles · 60 active listings' },
-]
-
-export const RECENT_PULLS = [
-  { name: 'Yveltal', value: 31.69 },
-  { name: 'Charizard', value: 70 },
-  { name: 'Lugia', value: 88 },
-  { name: 'Gardevoir', value: 42 },
-  { name: 'Mewtwo', value: 55 },
-  { name: 'Umbreon', value: 120 },
-]
 
 export const TRUST_POINTS = [
   { title: 'Chainlink VRF on Avalanche', body: 'Production draws are independently verified on-chain. The published odds bands remain visible and auditable.' },

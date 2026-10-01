@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import { useEffect, useRef, useState } from 'react'
+import { Suspense, lazy, useEffect, useRef, useState } from 'react'
 import { PACKS } from './data'
 import { useNavigate } from './nav'
-import { PackGL } from './PackGL'
+// three.js lives in its own chunk; it loads when a pack is first drawn, not on every page.
+const PackGL = lazy(() => import('./PackGL').then((m) => ({ default: m.PackGL })))
 
 const PACK_ART = {
   pro: {
@@ -70,13 +71,14 @@ function packPose(tier, pose) {
     : { yaw: -18, pitch: 7, yawAmp: 1.8, pitchAmp: 0.8, period: 7.0, bob: 5.2, bobAmp: 1.4, phase: 0.2 }
 }
 
-function useLive3D(elRef, opts, { css = true } = {}) {
+function useLive3D(elRef, opts, { css = true, still = false } = {}) {
   const ptr = useRef({ x: 0, y: 0, z: 0, tx: 0, ty: 0, tz: 0 })
   const optsRef = useRef(opts)
   optsRef.current = opts
   const cssRef = useRef(css)
   cssRef.current = css
   useEffect(() => {
+    if (still) return undefined
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (reduce) {
       const o = optsRef.current
@@ -106,7 +108,7 @@ function useLive3D(elRef, opts, { css = true } = {}) {
     }
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
-  }, [elRef])
+  }, [elRef, still])
   return {
     ptr,
     aim: (e, hot) => {
@@ -206,7 +208,9 @@ function Pack3D({ tier, pack, onOpen, decorative, pose }) {
       {!art.ready ? (
         <div className={`pk face face-pending face-${t === 'master' ? 'master' : 'pro'}`} aria-hidden="true" />
       ) : hasArt ? (
-        <PackGL src={art.front} tier={t} pose={packPose(tier, pose)} ptrRef={live.ptr} />
+        <Suspense fallback={<div className="pk face face-pending" aria-hidden="true" />}>
+          <PackGL src={art.front} tier={t} pose={packPose(tier, pose)} ptrRef={live.ptr} />
+        </Suspense>
       ) : (
         <PackFace tier={tier} />
       )}
@@ -245,7 +249,7 @@ function PackRail({ onOpen, featured = false, listing = false }) {
             <p className="muted pack-blurb">{p.blurb}</p>
             <div className="pack-specs">
               <div><span className="detail-label">PRICE</span><strong className="price">${p.price.toFixed(2)} <small>USDC</small></strong></div>
-              <div><span className="detail-label">EXPECTED PULL VALUE</span><strong>${p.ev.toFixed(2)}</strong></div>
+              <div><span className="detail-label">BUYBACK</span><strong>90% · 5 days</strong></div>
             </div>
             <button className="btn btn-pack-link" onClick={() => open(p)}>View pack details <span aria-hidden="true">→</span></button>
           </div>
