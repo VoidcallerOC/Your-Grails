@@ -83,7 +83,7 @@ export function sanitizeListingQuery(d: ListingQuery): ListingQuery {
     page: Number.isInteger(page) && page > 0 && page < 1000 ? page : 1,
     query: clean(d.query),
     gradingCompany: clean(d.gradingCompany, 8),
-    grade: clean(d.grade, 8),
+    grade: clean(d.grade, 40),
     set: clean(d.set, 120),
     priceMin: money(d.priceMin),
     priceMax: money(d.priceMax),

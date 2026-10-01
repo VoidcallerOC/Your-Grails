@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { count, shortAddress, usd } from "@/lib/format";
+import { compartmentParam, gradeCompartments, isCompartment } from "@/lib/grades";
 import type { Facet, Listing } from "@/lib/types";
 import { Slab, Tilt } from "./slab";
 
@@ -18,34 +19,41 @@ function gradeWord(l: Listing): string | undefined {
   return l.card.grader === "PSA" && l.card.grade ? PSA_WORD[String(Number(l.card.grade))] : undefined;
 }
 
-/** Compartments of the case, one per grade, with production's slab counts when it reports them. Choosing one sets the existing grade filter. */
+/**
+ * Compartments of the case, one per grade, with production's slab counts. Each compartment filters by every
+ * production spelling of its grade (see lib/grades), so the count on it is the number of listings it opens.
+ */
+// The router marks a link current when its search is a subset of the URL's; "All grades" (no grade) must not match a graded page.
+const exact = { explicitUndefined: true };
+
 export function GradeCompartments({ grades, current, base }: { grades: Facet[]; current?: string; base: Record<string, unknown> }) {
-  const merged = [...grades.reduce((m, g) => m.set(String(Number(g.value)), (m.get(String(Number(g.value))) ?? 0) + g.count), new Map<string, number>())]
-    .filter(([v]) => v !== "NaN")
-    .sort((a, b) => Number(b[0]) - Number(a[0]));
-  if (!merged.length) return null;
+  const compartments = gradeCompartments(grades);
+  if (!compartments.length) return null;
   const cell = (on: boolean) =>
     `flex min-w-[92px] shrink-0 flex-col justify-between border px-4 py-3 text-left transition-colors ${on ? "border-gold bg-gold/10" : "border-line bg-velvet hover:border-line-strong"}`;
   return (
     <nav aria-label="Case compartments by grade" className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
       <ul className="flex gap-2">
         <li>
-          <Link to="/market" search={{ ...base, grade: undefined, page: 1 }} aria-current={!current ? "true" : undefined} className={cell(!current)}>
+          <Link to="/market" search={{ ...base, grade: undefined, page: 1 }} activeOptions={exact} aria-current={!current ? "page" : undefined} className={cell(!current)}>
             <span className="font-display text-sm font-semibold text-paper-dim">All grades</span>
             <span className="mt-3 text-xs text-muted">Every slab</span>
           </Link>
         </li>
-        {merged.map(([g, c]) => (
-          <li key={g}>
-            <Link to="/market" search={{ ...base, grade: g, page: 1 }} aria-current={current === g ? "true" : undefined} className={cell(current === g)}>
-              <span className="font-display text-sm font-semibold text-paper-dim">Grade</span>
-              <span className="mt-1 flex items-baseline gap-2">
-                <span className={`shout text-4xl leading-none ${current === g ? "text-gold" : "text-paper"}`}>{g}</span>
-                {c > 0 && <span className="text-xs text-muted">{count(c)} {c === 1 ? "slab" : "slabs"}</span>}
-              </span>
-            </Link>
-          </li>
-        ))}
+        {compartments.map((c) => {
+          const on = isCompartment(current, c);
+          return (
+            <li key={c.grade}>
+              <Link to="/market" search={{ ...base, grade: compartmentParam(c), page: 1 }} activeOptions={exact} aria-current={on ? "page" : undefined} className={cell(on)}>
+                <span className="font-display text-sm font-semibold text-paper-dim">Grade</span>
+                <span className="mt-1 flex items-baseline gap-2">
+                  <span className={`shout text-4xl leading-none ${on ? "text-gold" : "text-paper"}`}>{c.grade}</span>
+                  {c.count > 0 && <span className="text-xs text-muted">{count(c.count)} listed</span>}
+                </span>
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </nav>
   );

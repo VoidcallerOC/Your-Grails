@@ -7,16 +7,19 @@ import { EmptyPanel, PartView } from "@/components/states";
 import { getMarket, sanitizeListingQuery, type ListingQuery } from "@/lib/api";
 import { count } from "@/lib/format";
 
+// A hand-typed or shared URL like ?grade=10 or ?query=151 arrives as a number; keep it as the text the filter expects.
+const text = (v: unknown) => (typeof v === "number" ? String(v) : (v as string));
+
 export const Route = createFileRoute("/market/")({
   validateSearch: (s: Record<string, unknown>): ListingQuery =>
     sanitizeListingQuery({
       page: Number(s.page) || 1,
-      query: s.query as string,
-      gradingCompany: s.gradingCompany as string,
-      grade: s.grade as string,
-      set: s.set as string,
-      priceMin: s.priceMin as string,
-      priceMax: s.priceMax as string,
+      query: text(s.query),
+      gradingCompany: text(s.gradingCompany),
+      grade: text(s.grade),
+      set: text(s.set),
+      priceMin: text(s.priceMin),
+      priceMax: text(s.priceMax),
     }),
   loaderDeps: ({ search }) => search,
   loader: ({ deps }) => getMarket({ data: deps }),
