@@ -16,9 +16,9 @@ export function StatsLedger({ stats, fetchedAt }: { stats: SiteStats; fetchedAt:
   ];
   return (
     <section aria-label="Live figures" className="border-y border-line">
-      <dl className="wrap grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
+      <dl className="wrap grid grid-cols-2 gap-x-6 sm:grid-cols-3 lg:grid-cols-6">
         {rows.map(([k, v]) => (
-          <div key={k} className="border-line py-4 pr-4 [&:not(:last-child)]:border-r max-sm:[&:nth-child(2n)]:border-r-0">
+          <div key={k} className="py-4">
             <dt className="label">{k}</dt>
             <dd className="mt-1 font-mono text-xl text-paper">{v}</dd>
           </div>
@@ -59,7 +59,7 @@ export function OddsTable({ odds, caption }: { odds: OddsTier[]; caption?: strin
 export function PackCard({ pack, eager = false }: { pack: Pack; eager?: boolean }) {
   const avail = packAvailability(pack);
   return (
-    <Link to="/packs/$packId" params={{ packId: pack.id }} className="panel group grid gap-4 p-4 transition-colors hover:border-line-strong sm:grid-cols-[180px_1fr]">
+    <Link to="/packs/$packId" params={{ packId: pack.id }} className="panel group grid grid-cols-1 gap-4 p-4 transition-colors hover:border-line-strong sm:grid-cols-[180px_minmax(0,1fr)]">
       <div className="mx-auto w-40 sm:w-full">
         <PackArt tier={pack.tier} name={pack.name} eager={eager} />
       </div>

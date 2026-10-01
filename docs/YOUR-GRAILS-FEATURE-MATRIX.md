@@ -9,6 +9,38 @@ Audit date: 2026-10-01. Evidence and sources: `docs/YOUR-GRAILS-PRODUCT-MAP.md`.
 - **Data source**: `API` = production backend (host UNVERIFIED), `Chain` = Avalanche C-Chain contract reads/writes,
   `Static` = content page.
 
+## Phase 1 implementation status (2026-10-01)
+
+Stack: Forge Nitro (TanStack Start, React 19, Tailwind 4, Nitro on the Vercel preset). Data: `api.yourgrails.com/api` through server functions.
+"Preview-verified" means the page was loaded on the Vercel preview deployment of commit `7a8a6cb` and showed live production data
+(for example 11,911 packs opened, Pro EV $51.83, listing #223 Dark Espeon PSA 8 at $250 with PSA cert 97428182).
+
+| Area | Route(s) | Status | Evidence / what is missing |
+|---|---|---|---|
+| Global nav, footer, preview notice, skip link | all | PARTIAL | Rendered at 390/430/768/1440 with no overflow. Signed-in nav state BLOCKED (auth) |
+| Homepage live figures, chase slabs, packs, recent pulls, listings | `/` | PARTIAL | All sections preview-verified with live data. CTAs lead into blocked purchase flows |
+| Pack list and detail: price, EV, live odds tiers, pool size, refill guardrail, chase cards, pulls per pack | `/packs`, `/packs/$packId` | PARTIAL | Preview-verified (Master: 5 tiers, 325 cards). Buy, open and reveal BLOCKED |
+| 3D pack stage | `/packs/$packId` | PARTIAL | Lazy-loaded on detail only, artwork drawn at exact pixels. Flat art shown when WebGL or motion is unavailable. Not yet runtime-checked on a real GPU |
+| Reveal / multi-pack session | — | BLOCKED | Needs real purchases (VRF fulfilment). The demo `pickCard()` random reveal was removed |
+| Marketplace browse: search, grader, grade, set, price filters, pagination | `/market` | PARTIAL | Preview-verified (CGC filter → 3 listings). Sort not exposed: production sort values UNVERIFIED |
+| Listing detail: price, value, offers count, cert + PSA link, population, token, seller, listing tx, comps | `/market/$listingId` | PARTIAL | Preview-verified on #223. Buy, offer, deposit/withdraw and accept BLOCKED |
+| Leaderboard: monthly race, overall points, battles (wins / best streak) | `/leaderboard` | PARTIAL | Preview-verified (50 battle rows). "Your standing" needs sign-in: BLOCKED |
+| Public profiles + collection (one tile per token) | `/u/$username`, `/u/address/$address` | PARTIAL | Preview-verified (GRiiM, 18 cards, $2,075). Listings and Activity tabs NOT STARTED |
+| Trading: discovery of cards open to offers | `/trading` | PARTIAL | API verified (559 cards). Offers, accept and cancel BLOCKED. Trade contract address UNVERIFIED |
+| Battles: production rules, live counts, top battlers | `/battles` | PARTIAL | Rules restated from docs/Terms §7 (both keep pulls, bonus pack, 21+). Lobby feed UNVERIFIED. Create/join BLOCKED |
+| Lending: production model explained | `/lending` | PARTIAL | P2P model from docs. Every lending endpoint needs a bearer token: BLOCKED. No rates shown (none invented) |
+| Collection (own) | `/collection` | BLOCKED | Needs sign-in. Public lookup by username/address works |
+| Auth / wallet / referral admission | `/account` | BLOCKED | Privy origin allow-list (Architecture §4) |
+| Redemption | `/redeem` | PARTIAL | Shows production's "coming soon" state and the documented plan. Production's own page content is invite-gated: UNVERIFIED |
+| Support | `/support` | PARTIAL | Email from Terms. Ticket endpoints not in the API client found: UNVERIFIED. Ticketing BLOCKED |
+| Docs | `/docs` | PARTIAL | Plain-English summary plus contract table with verification state. Links to the full production guide |
+| Terms, Privacy | `/terms`, `/privacy` | PARTIAL | Point to the binding YourGrails LLC text. Not restated. Owner must supply text for this site |
+| Demo code removal | — | COMPLETE | Removed: fake store/wallet/USDC, `LISTINGS`, `VAULT`, `pickCard`, `marketplace-demo.csv`, demo battle/lending/trade/offer logic, hash router, unverified slab photos |
+| Tests / typecheck / lint / build | — | COMPLETE | 19 unit tests, `tsc`, `eslint` clean, `vite build` OK locally and on Vercel |
+| Mobile / desktop layout | all | PARTIAL | Playwright: no horizontal overflow on 20 routes × 4 widths, one h1 per page, all images have alt. Checked against a local mock API because the sandbox can't reach the live API. Live-data pages on the preview were checked as rendered content, not screenshots. A visual pass with real slab photos is still UNVERIFIED |
+
+Original audit matrix (dispositions) follows.
+
 | # | Feature | Production route | Current production behavior (observed / documented) | Data source | Wallet | Web3 | Disposition | Nitro status |
 |---|---|---|---|---|---|---|---|---|
 | 1 | Global nav + beta banner | all | Packs, Battles, Marketplace, Trading, Lending, Collection, Leaderboard; Connect; beta bug-report banner | Static + API (feedback) | No | No | REFACTOR (nav exists; add Trading/Lending/Leaderboard, real Connect, feedback form) | PARTIAL |

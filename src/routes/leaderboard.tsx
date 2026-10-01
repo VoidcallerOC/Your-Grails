@@ -53,7 +53,7 @@ function RaceView({ cats, selected, sort }: { cats: RaceCategory[]; selected?: s
       </div>
       <ol className="mt-4 border-b border-line">
         {cat.entries.map((e) => (
-          <li key={e.address} className="table-row grid-cols-[48px_1fr_auto]">
+          <li key={e.address} className="ledger-row grid-cols-[48px_minmax(0,1fr)_auto]">
             <span className="font-mono text-sm text-muted">#{e.rank}</span>
             <PersonLink person={e} />
             <span className="text-right">
@@ -113,7 +113,7 @@ function Board() {
               rows.length ? (
                 <ol className="border-b border-line">
                   {rows.map((r) => (
-                    <li key={r.address} className="table-row grid-cols-[48px_1fr_auto]">
+                    <li key={r.address} className="ledger-row grid-cols-[48px_minmax(0,1fr)_auto]">
                       <span className="font-mono text-sm text-muted">#{r.rank}</span>
                       <PersonLink person={r} />
                       <span className="font-mono">{count(r.lifetimePointsEarned)} <span className="text-xs text-muted">pts</span></span>
@@ -142,7 +142,7 @@ function Board() {
                 rows.length ? (
                   <ol className="border-b border-line">
                     {rows.map((r, i) => (
-                      <li key={r.address} className="table-row grid-cols-[48px_1fr_auto]">
+                      <li key={r.address} className="ledger-row grid-cols-[48px_minmax(0,1fr)_auto]">
                         <span className="font-mono text-sm text-muted">#{i + 1}</span>
                         <PersonLink person={r} />
                         <span className="text-right font-mono text-sm">

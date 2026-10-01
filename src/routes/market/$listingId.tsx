@@ -34,7 +34,7 @@ function ListingPage() {
           const c = l.card;
           const active = l.status === "active";
           return (
-            <div className="grid gap-10 lg:grid-cols-[minmax(0,440px)_1fr]">
+            <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,440px)_minmax(0,1fr)]">
               <div>
                 <SlabPhoto card={c} eager sizes="(min-width: 1024px) 440px, 90vw" />
                 {c.images.back && (
@@ -64,14 +64,14 @@ function ListingPage() {
                 </div>
                 {!active && <p className="mt-3 text-sm text-warn">This listing is {l.status}. It can't be bought.</p>}
 
-                <div className="mt-6 grid max-w-xl gap-3 sm:grid-cols-2">
+                <div className="mt-6 grid grid-cols-1 max-w-xl gap-3 sm:grid-cols-2">
                   <BlockedAction label="Buy now" does="Buys the card from escrow in USDC. The token moves to your wallet when the sale settles." />
                   <BlockedAction label="Make an offer" does="Uses your offer balance. Deposit USDC first; the seller decides whether to accept." />
                 </div>
 
                 <section className="mt-10 max-w-xl">
                   <h2 className="label mb-3">The slab</h2>
-                  <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-sm">
+                  <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-6 gap-y-2 text-sm">
                     <dt className="text-muted">Grader</dt><dd>{c.grader ?? "—"} {c.grade}</dd>
                     <dt className="text-muted">Cert number</dt>
                     <dd className="font-mono">

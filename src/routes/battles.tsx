@@ -27,11 +27,11 @@ function Battles() {
       <PageHead kicker="Pack battles" title="Open head to head">
         Two collectors open the same pack at the same time. Both keep what they pull. The bigger pull wins a bonus pack.
       </PageHead>
-      <div className="wrap grid gap-12 lg:grid-cols-[1.4fr_1fr]">
+      <div className="wrap grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
         <div>
           <ol className="border-t border-line">
             {RULES.map(([t, d], i) => (
-              <li key={t} className="grid grid-cols-[40px_1fr] gap-3 border-b border-line py-5">
+              <li key={t} className="grid grid-cols-[40px_minmax(0,1fr)] gap-3 border-b border-line py-5">
                 <span className="font-mono text-sm text-brass">0{i + 1}</span>
                 <div>
                   <h2 className="font-semibold">{t}</h2>
@@ -46,7 +46,7 @@ function Battles() {
           </p>
           <PartView part={packs} what="Battle packs">
             {(list) => (
-              <div className="mt-8 grid gap-3 sm:grid-cols-2">
+              <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {list.map((p) => (
                   <BlockedAction key={p.id} label={`Start a ${p.name} battle · ${usd(p.priceUsd)}`} does="Creates a battle for this pack. Another collector or the YG Battle Bot can join." />
                 ))}
@@ -72,7 +72,7 @@ function Battles() {
               {(rows) => (
                 <ol className="border-b border-line">
                   {rows.map((r, i) => (
-                    <li key={r.address} className="table-row grid-cols-[32px_1fr_auto]">
+                    <li key={r.address} className="ledger-row grid-cols-[32px_minmax(0,1fr)_auto]">
                       <span className="font-mono text-xs text-muted">#{i + 1}</span>
                       <PersonLink person={r} size={32} />
                       <span className="font-mono text-sm">{r.wins}W · {r.losses}L</span>

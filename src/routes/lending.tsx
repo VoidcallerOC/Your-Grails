@@ -24,10 +24,10 @@ function Lending() {
         Collectors lend USDC to collectors, secured by graded cards in the vault. YourGrails does not lend; it runs the contract and
         the appraisals.
       </PageHead>
-      <div className="wrap grid gap-12 lg:grid-cols-[1.4fr_1fr]">
+      <div className="wrap grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
         <ol className="border-t border-line">
           {STEPS.map(([t, d], i) => (
-            <li key={t} className="grid grid-cols-[40px_1fr] gap-3 border-b border-line py-5">
+            <li key={t} className="grid grid-cols-[40px_minmax(0,1fr)] gap-3 border-b border-line py-5">
               <span className="font-mono text-sm text-brass">0{i + 1}</span>
               <div>
                 <h2 className="font-semibold">{t}</h2>

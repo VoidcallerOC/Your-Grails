@@ -22,7 +22,7 @@ function PacksPage() {
         <PartView part={packs} what="Packs">
           {(list) =>
             list.length ? (
-              <div className="grid gap-4 lg:grid-cols-2">
+              <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                 {list.map((p, i) => (
                   <PackCard key={p.id} pack={p} eager={i < 2} />
                 ))}

@@ -3,7 +3,7 @@ import { PackCard, PullsList, SectionHead, StatsLedger } from "@/components/bloc
 import { CardGrid, CardTile, SlabPhoto } from "@/components/slab";
 import { ErrorPanel, PartView } from "@/components/states";
 import { getHome } from "@/lib/api";
-import { usd } from "@/lib/format";
+import { gradeLabel, usd } from "@/lib/format";
 import type { CardSummary, Pack } from "@/lib/types";
 
 export const Route = createFileRoute("/")({
@@ -26,7 +26,7 @@ function Home() {
 
   return (
     <>
-      <section className="wrap grid items-center gap-10 py-10 sm:py-14 lg:grid-cols-[1fr_1.1fr]">
+      <section className="wrap grid grid-cols-1 items-center gap-10 py-10 sm:py-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
         <div>
           <p className="label mb-4">PSA · BGS · CGC graded · vaulted · yours</p>
           <h1 className="display text-6xl sm:text-7xl">
@@ -55,7 +55,7 @@ function Home() {
                   <SlabPhoto card={c} eager sizes="(min-width: 1024px) 200px, 30vw" />
                   <p className="mt-2 truncate text-xs text-paper-dim">{c.title}</p>
                   <p className="font-mono text-xs text-muted">
-                    {c.grader} {c.grade} · {usd(c.valueUsd)}
+                    {gradeLabel(c)} · {usd(c.valueUsd)}
                   </p>
                 </Link>
               ))}
@@ -71,12 +71,12 @@ function Home() {
         {(s) => <StatsLedger stats={s} fetchedAt={fetchedAt} />}
       </PartView>
 
-      <section className="wrap mt-16 grid gap-10 lg:grid-cols-[1.6fr_1fr]">
+      <section className="wrap mt-16 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
         <div>
           <SectionHead kicker="Packs" title="Pick a pack" action={{ to: "/packs", label: "All packs" }} />
           <PartView part={packs} what="Packs">
             {(list) => (
-              <div className="grid gap-4">
+              <div className="grid grid-cols-1 gap-4">
                 {list.map((p, i) => (
                   <PackCard key={p.id} pack={p} eager={i === 0} />
                 ))}
@@ -107,7 +107,7 @@ function Home() {
 
       <section className="wrap mt-20">
         <SectionHead kicker="How it works" title="From sealed pack to your shelf" />
-        <ol className="grid border-t border-line sm:grid-cols-2 lg:grid-cols-4">
+        <ol className="grid grid-cols-1 border-t border-line sm:grid-cols-2 lg:grid-cols-4">
           {[
             ["Buy a pack", "Pay in USDC on Avalanche, or from another chain and we bridge it with Circle CCTP."],
             ["Open it", "A Chainlink VRF draw picks your card from the pack's published pool. The website can't choose it."],

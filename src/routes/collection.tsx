@@ -26,7 +26,7 @@ function CollectionPage() {
         Your collection lists every card token in your wallet, one slab per token: grade, cert, value, buyback window and what you can
         do with it. It needs you signed in.
       </PageHead>
-      <div className="wrap grid gap-10 lg:grid-cols-2">
+      <div className="wrap grid grid-cols-1 gap-10 lg:grid-cols-2">
         <BlockedAction label="Sign in to see your collection" does="Connects your wallet and loads your cards. From here you can sell back, list, lend, trade or battle." />
         <form onSubmit={submit} className="panel p-4" noValidate>
           <label htmlFor="who" className="label mb-2 block">Look up any collector</label>

@@ -13,7 +13,7 @@ function Support() {
       <PageHead kicker="Support" title="Get it fixed">
         Pack purchases, reveals, battles, marketplace, buybacks, account access, bugs or feedback.
       </PageHead>
-      <div className="wrap grid max-w-4xl gap-6 md:grid-cols-2">
+      <div className="wrap grid grid-cols-1 max-w-4xl gap-6 md:grid-cols-2">
         <section className="panel p-5">
           <h2 className="font-semibold">Email</h2>
           <p className="mt-2 text-sm text-paper-dim">

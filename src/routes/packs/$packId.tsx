@@ -27,7 +27,7 @@ function PackPage() {
           const avail = packAvailability(p);
           return (
             <>
-              <div className="grid gap-10 lg:grid-cols-[minmax(0,420px)_1fr]">
+              <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,420px)_minmax(0,1fr)]">
                 <PackStage tier={p.tier} name={p.name} />
                 <div>
                   <p className="label">{p.tier} tier · {p.category}</p>
@@ -46,7 +46,7 @@ function PackPage() {
                       </>
                     )}
                   </dl>
-                  <p className={`mt-3 text-sm ${avail.ok ? "text-ok" : "text-warn"}`}>{avail.text}</p>
+                  <p className={`mt-3 text-sm ${avail.ok ? "text-ok" : "text-warn"}`}>{avail.ok ? "On sale now" : avail.text}</p>
                   <BlockedAction
                     className="mt-6 max-w-md"
                     label={`Buy and open · ${usd(p.priceUsd)}`}

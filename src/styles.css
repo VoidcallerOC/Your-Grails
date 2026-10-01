@@ -98,7 +98,7 @@
   .field {
     @apply min-h-11 w-full rounded-[var(--radius-slab)] border border-line-strong bg-ink px-3 text-sm text-paper placeholder:text-muted;
   }
-  .table-row {
+  .ledger-row {
     @apply grid items-center gap-3 border-t border-line px-3 py-3;
   }
 }

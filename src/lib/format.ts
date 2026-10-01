@@ -62,3 +62,9 @@ export function personName(p: { displayName?: string; username?: string; address
 export function profileHref(p: { username?: string; address: string }): string {
   return p.username ? `/u/${encodeURIComponent(p.username)}` : `/u/address/${p.address}`;
 }
+
+/** "PSA 10", or "Grade 10" when production omits the grading company. */
+export function gradeLabel(c: { grader?: string; grade?: string }): string {
+  if (c.grader) return `${c.grader} ${c.grade ?? ""}`.trim();
+  return c.grade ? `Grade ${c.grade}` : "";
+}

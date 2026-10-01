@@ -105,7 +105,7 @@ const FOOTER: [string, [string, string][]][] = [
 export function SiteFooter() {
   return (
     <footer className="mt-24 border-t border-line">
-      <div className="wrap grid gap-10 py-12 md:grid-cols-[1.4fr_repeat(3,1fr)]">
+      <div className="wrap grid grid-cols-1 gap-10 py-12 md:grid-cols-[minmax(0,1.4fr)_repeat(3,minmax(0,1fr))]">
         <div className="max-w-sm">
           <img src="/brand/logo.png" alt="YourGrails" width={96} height={96} className="h-16 w-auto" loading="lazy" />
           <p className="mt-4 text-sm text-muted">

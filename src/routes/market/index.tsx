@@ -47,7 +47,7 @@ function Market() {
       <PageHead kicker="Marketplace" title="Graded cards for sale">
         Every card listed here is a vaulted slab held in escrow until it sells. Prices are set by sellers in USDC.
       </PageHead>
-      <div className="wrap grid gap-8 lg:grid-cols-[250px_1fr]">
+      <div className="wrap grid grid-cols-1 gap-8 lg:grid-cols-[250px_minmax(0,1fr)]">
         <form onSubmit={onSubmit} className="space-y-4 self-start lg:sticky lg:top-20" aria-label="Filter listings" key={JSON.stringify(search)}>
           <div>
             <label htmlFor="q" className="label mb-1.5 block">Search</label>

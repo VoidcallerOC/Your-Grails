@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import { cardLine, usd } from "@/lib/format";
+import { cardLine, gradeLabel, usd } from "@/lib/format";
 import type { CardSummary } from "@/lib/types";
 
 /** Real photography only. When production has no photo, say so instead of drawing a card. */
@@ -27,11 +27,7 @@ export function SlabPhoto({ card, eager = false, sizes }: { card: CardSummary; e
 
 export function GradeMark({ card }: { card: Pick<CardSummary, "grader" | "grade"> }) {
   if (!card.grader && !card.grade) return null;
-  return (
-    <span className="font-mono text-[11px] font-medium text-paper">
-      {card.grader} {card.grade}
-    </span>
-  );
+  return <span className="font-mono text-[11px] font-medium text-paper">{gradeLabel(card)}</span>;
 }
 
 /** Catalog entry: slab photo, cert strip, title, set line and value. */
