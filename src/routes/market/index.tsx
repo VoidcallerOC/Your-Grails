@@ -2,8 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { useState } from "react";
 import { PageHead } from "@/components/chrome";
-import { CardGrid, CardTile } from "@/components/slab";
-import { MarketDelta } from "@/components/experience";
+import { DealerCase, GradeCompartments } from "@/components/case";
 import { EmptyPanel, PartView } from "@/components/states";
 import { getMarket, sanitizeListingQuery, type ListingQuery } from "@/lib/api";
 import { count } from "@/lib/format";
@@ -31,9 +30,7 @@ function Market() {
   const navigate = useNavigate({ from: "/market/" });
   const graders = facets.ok ? facets.data.graders : [];
   const sets = facets.ok ? facets.data.sets : [];
-  const grades = facets.ok
-    ? [...new Map(facets.data.grades.map((g) => [String(Number(g.value)), g])).keys()].sort((a, b) => Number(b) - Number(a))
-    : [];
+  const grades = facets.ok ? facets.data.grades : [];
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -45,7 +42,7 @@ function Market() {
   };
   const filtered = Boolean(search.query || search.gradingCompany || search.grade || search.set || search.priceMin || search.priceMax);
   // Small screens: filters fold behind a toggle so the cards come first. Open by default when a filter is set.
-  const [showFilters, setShowFilters] = useState(Boolean(search.gradingCompany || search.grade || search.set || search.priceMin || search.priceMax));
+  const [showFilters, setShowFilters] = useState(Boolean(search.gradingCompany || search.set || search.priceMin || search.priceMax));
 
   return (
     <>
@@ -73,22 +70,15 @@ function Market() {
             >
               <SlidersHorizontal size={16} aria-hidden="true" /> Filters
             </button>
-            <div id="market-filters" className={`${showFilters ? "grid" : "hidden"} col-span-2 grid-cols-2 gap-2 lg:col-span-1 lg:grid lg:grid-cols-[minmax(0,0.8fr)_minmax(0,0.7fr)_minmax(0,1.2fr)_minmax(0,1.2fr)_auto]`}>
-              <div>
+            {/* The grade is chosen from the case's compartments below; the form carries it so other filters keep it. */}
+            <input type="hidden" name="grade" value={search.grade ?? ""} />
+            <div id="market-filters" className={`${showFilters ? "grid" : "hidden"} col-span-2 grid-cols-2 gap-2 lg:col-span-1 lg:grid lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.3fr)_minmax(0,1.2fr)_auto]`}>
+              <div className="col-span-2 lg:col-span-1">
                 <label htmlFor="grader" className="sr-only">Grader</label>
                 <select id="grader" name="gradingCompany" className="field" defaultValue={search.gradingCompany ?? ""}>
                   <option value="">Any grader</option>
                   {graders.map((g) => (
                     <option key={g.value} value={g.value}>{g.value} ({g.count})</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label htmlFor="grade" className="sr-only">Grade</label>
-                <select id="grade" name="grade" className="field" defaultValue={search.grade ?? ""}>
-                  <option value="">Any grade</option>
-                  {grades.map((g) => (
-                    <option key={g} value={g}>Grade {g}</option>
                   ))}
                 </select>
               </div>
@@ -114,6 +104,9 @@ function Market() {
       </div>
       </div>
       <div className="wrap pt-6">
+        <div className="mb-8">
+          <GradeCompartments grades={grades} current={search.grade} base={search} />
+        </div>
 
         <section aria-label="Listings">
           <PartView part={listings} what="Listings">
@@ -127,23 +120,7 @@ function Market() {
                   {filtered && <Link to="/market" search={{ page: 1 }} className="text-sm text-paper-dim underline underline-offset-4 hover:text-paper">Clear filters</Link>}
                 </div>
                 {list.length ? (
-                  <CardGrid dense>
-                    {list.map((l) => (
-                      <CardTile
-                        key={l.id}
-                        card={l.card}
-                        href={`/market/${l.listingId ?? l.id}`}
-                        price={l.priceUsd}
-                        priceLabel="Price"
-                        footer={
-                          <>
-                            <MarketDelta price={l.priceUsd} value={l.card.valueUsd} />
-                            {l.bidCount > 0 && <p className="mt-1.5 inline-block bg-gold/15 px-1.5 py-0.5 font-display text-[11.5px] font-semibold text-gold cut-sm">{l.bidCount} {l.bidCount === 1 ? "offer" : "offers"} in</p>}
-                          </>
-                        }
-                      />
-                    ))}
-                  </CardGrid>
+                  <DealerCase key={list.map((l) => l.id).join()} list={list} />
                 ) : (
                   <EmptyPanel>No listings match. Try fewer filters.</EmptyPanel>
                 )}
