@@ -24,21 +24,29 @@ function topChase(packs: Pack[], n: number): (CardSummary & { packName: string }
 
 /** Three slabs in the window: the most valuable front and centre, the others set back in the light. */
 /**
- * One slab in the window. Seller photos arrive with different crops and backdrops, so each is set in the same
- * slab-shaped frame (3:5, the median of production's photos) and its edges sink into a vignette: three photos read
- * as three objects in one case. The photo itself is shown as supplied; the slab's own label carries its grade.
+ * One slab in the window, as the object it is: the real photo is the front face of a clear acrylic block (see .slab3d).
+ * The photo is shown as supplied; the side slabs turn in toward the centre like a dealer's display.
  */
-function CaseFrame({ card, hero }: { card: CardSummary; hero: boolean }) {
+function CaseFrame({ card, yaw }: { card: CardSummary; yaw: number }) {
   const src = card.images.slab ?? card.images.front ?? card.images.thumb;
   return (
-    <div className={`relative aspect-[3/5] overflow-hidden bg-velvet ring-1 ${hero ? "ring-gold/35" : "ring-line"} shadow-[0_34px_44px_-22px_rgba(0,0,0,0.9)]`}>
-      {src ? (
-        <img src={src} alt={`${card.title}${card.grader ? `, ${card.grader} ${card.grade ?? ""}` : ""}`} loading="eager" decoding="async" width={300} height={500} className="h-full w-full object-cover" />
-      ) : (
-        <span className="flex h-full items-center justify-center px-3 text-center text-sm text-muted">Photo not provided</span>
-      )}
-      <span className="pointer-events-none absolute inset-0 shadow-[inset_0_0_28px_10px_rgba(10,9,8,0.72)]" aria-hidden="true" />
-      <span className="pointer-events-none absolute inset-0 bg-[linear-gradient(155deg,rgba(255,255,255,0.07),transparent_38%)]" aria-hidden="true" />
+    <div className="relative [perspective:1100px]">
+      <div className="slab3d-shadow" aria-hidden="true" />
+      <div className="slab3d" style={{ "--yaw": `${yaw}deg` } as React.CSSProperties}>
+        <div className="slab3d-back" aria-hidden="true" />
+        <span className="slab3d-edge l" aria-hidden="true" />
+        <span className="slab3d-edge r" aria-hidden="true" />
+        <span className="slab3d-edge t" aria-hidden="true" />
+        <span className="slab3d-edge b" aria-hidden="true" />
+        <div className="slab3d-face">
+          {src ? (
+            <img src={src} alt={`${card.title}${card.grader ? `, ${card.grader} ${card.grade ?? ""}` : ""}`} loading="eager" decoding="async" width={300} height={500} />
+          ) : (
+            <span className="flex h-full items-center justify-center bg-velvet px-3 text-center text-sm text-muted">Photo not provided</span>
+          )}
+          <span className="slab3d-glare" aria-hidden="true" />
+        </div>
+      </div>
     </div>
   );
 }
@@ -53,7 +61,7 @@ function ShowWindow({ cards }: { cards: (CardSummary & { packName: string })[] }
           return (
             <Link key={c.id} to="/packs" className={`group block min-w-0 ${hero ? "z-10" : "translate-y-6 opacity-90 sm:translate-y-10"}`}>
               <Tilt max={hero ? 9 : 6}>
-                <CaseFrame card={c} hero={hero} />
+                <CaseFrame card={c} yaw={hero ? 0 : i === 0 ? 16 : -16} />
               </Tilt>
               <figcaption className="mt-4 text-center sm:text-left">
                 <span className={`num block leading-none ${hero ? "text-2xl text-gold sm:text-3xl" : "text-lg text-paper sm:text-xl"}`}>{usd(c.valueUsd)}</span>
