@@ -70,7 +70,7 @@ export function Slab({ card, large, pose, still }) {
       <span className="obj-shadow" aria-hidden="true" />
       <div className="slab-plain-case" role="img" aria-label={`${card.name}, ${card.company} ${card.grade}. Photo not yet available.`}>
         <div className="slab-plain-label">
-          <div><strong>{card.name}</strong><span>{card.set}</span></div>
+          <div><strong>{card.name}</strong><span>{[card.set, card.number && `#${card.number}`].filter(Boolean).join(' · ')}</span></div>
           <em>{card.cert ? `#${card.cert}` : card.rarity}</em>
         </div>
         <div className="slab-plain-body">
