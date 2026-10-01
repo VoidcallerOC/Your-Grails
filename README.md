@@ -1,67 +1,56 @@
-# YourGrails — Frontend Redesign Demo
+# Your Grails — Nitro rebuild
 
-Award-caliber presentation layer for [YourGrails](https://yourgrails.com).
+The full Your Grails product rebuilt on the Forge Nitro stack: **TanStack Start, React 19, Tailwind 4, Nitro (Vercel preset)**.
+Production at <https://yourgrails.com> is the source of truth for behavior. This repo is the replacement frontend plus a thin
+server layer. It is **not** the production backend.
 
-**Change the experience, not the product.** Working demo the team can open and feel.
-
-The GitHub repository was README-only before this session. There was no existing application, routes, or integrations to preserve. This app is a branded demo presentation layer. It is **not** connected to YourGrails production wallets, contracts, or APIs.
+- Product map: `docs/YOUR-GRAILS-PRODUCT-MAP.md`
+- Feature matrix and status: `docs/YOUR-GRAILS-FEATURE-MATRIX.md`
+- Production API and architecture: `docs/YOUR-GRAILS-ARCHITECTURE.md`
 
 ## Run
 
 ```bash
-npm install
-npm run dev
+npm ci
+npm run dev        # http://localhost:8080
+npm run check      # typecheck + lint + unit tests + production build
+npm run preview    # serve the production build on :8081
 ```
 
-Production build:
+`YG_API_BASE_URL` (server-only, optional) overrides the API base. It defaults to `https://api.yourgrails.com/api`.
+No secrets are needed for anything this build does.
 
-```bash
-npm run build
-npm run preview
+## How data flows
+
+```
+route loader → createServerFn (src/lib/api.ts, runs on the server)
+             → src/server/yg-api.ts → api.yourgrails.com/api
+             → src/lib/normalize.ts (typed, trimmed) → React
 ```
 
-Standalone (no bundler): open `dist/index.html`.
+- Each page section loads independently. If a source fails, that section says so. Nothing is invented in its place, and there
+  are no fixture fallbacks.
+- Raw API records (comps lists, population tables, PSA and Alt payloads) stay on the server. The browser gets lean typed objects.
+- Contract addresses live in `src/lib/contracts.ts`, with their verification state.
 
-## Brand source of truth
+## What works and what doesn't
 
-Live site: https://yourgrails.com
+Live: homepage figures, packs with odds, EV and refill state, chase cards, recent pulls, marketplace listings with
+search, filters and pages, listing detail (cert, population, comps, token, seller), leaderboards (race, points, battles),
+public profiles and collections, trade discovery, docs, the contract table.
 
-- Wordmark: YOURGRAILS / RIP · BATTLE · GRAIL
-- Nav: Packs, Battles, Marketplace, Trading, Lending, Collection, Leaderboard
-- Hero: Rip packs. Battle the house. Own the grail. (Live-site line is "Battle players"; battles in this demo are against the house.)
-- Tiers: Pokemon Pro Pack ($50) and Pokemon Master Pack ($100)
-- Trust: fair random draw, graded & vaulted PSA·BGS·CGC, 90% buyback
-- USDC + Circle CCTP multi-chain
+Not yet wired: sign-in and every wallet action (buy, open, list, offer, deposit, withdraw, battle, trade, lend, buyback,
+redeem). They render disabled with the reason and never simulate a result.
 
-## Flows
+**Web3 boundary.** The production Web3 layer is authoritative and is **not** rebuilt here: contracts, ABIs, addresses,
+escrow, settlement, wallet infrastructure (Privy on wagmi), transaction semantics and chain config (Avalanche 43114).
+When wallet actions are wired, they must reuse production's existing Privy app, contract interfaces and confirmation
+endpoints. No replacement Web3 code, no second source of truth for ownership, prices, eligibility or outcomes.
+`src/lib/contracts.test.ts` fails if a referenced address drifts. See `docs/YOUR-GRAILS-ARCHITECTURE.md` §0 and §4.
 
-Home → Packs → Pack detail → Rip / reveal → Card → Collection → Battles → Marketplace → Trading → Lending → Leaderboard → Trust
+## Design system
 
-Reveal sequence: anticipation → rip → verification → reveal → identity → value → ownership
-
-## Pack artwork (production assets)
-
-The 3D pack rig (`src/Packs3D.jsx`) powers the hero, featured drops, pack rail,
-pack detail, and reveal from one component. It renders the real production
-artwork in `public/packs/` as the printed surface (see that folder's
-`README.md`), and falls back to the existing vector face if a file is missing —
-no redesign, no faked textures.
-
-- Installed: `public/packs/pro-chase-front.webp` (`PRO · THE CHASE`) and
-  `public/packs/master-vault-front.webp` (`MASTER · THE VAULT`). PNG also accepted.
-- Optional: `*-foil.*` (masked material sheen) and `*-normal.*` (surface relief).
-- **Status: COMPLETE** — the front assets are installed, integrated into the
-  existing Pack3D system, and runtime-verified across hero, featured drops, pack
-  rail, pack detail, reveal, and mobile.
-
-## Marketplace (synthetic demo data, demo-only actions)
-
-`/marketplace` renders 48 **synthetic** listings from `src/data/marketplace-demo.csv` (see `src/data/README.md`). The cards, sets, sellers, prices and offers are invented for the demo and are not real inventory or market data. Search, listing-state, PSA/BGS/CGC filters, sorting, extra filters and pagination all work on that data. Buy, Cash offer, Trade, Deposit and Withdraw are **not connected**: they only explain what a real implementation needs (wallet connection, USDC approval and escrow/offer contracts, a listings and offers API, a trade-proposal service). The offer wallet shows no balance. With no CSV the page says the demo listings are not loaded and shows none.
-
-## Demo vs production
-
-- Connect is a demo vault session
-- Odds use published ToS bands (75 / 20 / 4 / 1)
-- Leaderboard is empty on purpose
-- Homepage published stats are labeled as live-site figures
-- No fabricated extra volume
+`src/styles.css`: graphite base, slab-label paper, brass accent. Barlow Condensed display, Inter body, IBM Plex Mono for
+certs, tokens and money. Hairline rules, 3px radii, real slab photography. The 3D pack (`src/lib/pack-gl.js`) loads only on
+pack detail. It draws the approved art in `public/packs/` at exact pixels, and falls back to the flat image with
+reduced motion or no WebGL.
