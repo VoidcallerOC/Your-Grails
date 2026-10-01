@@ -32,11 +32,11 @@ authenticated wallet session is available. They are not built as replacement imp
 | Listing detail: cert, PSA link, population, token, seller, tx, comps | `/market/$listingId` | PRESERVE | PARTIAL | Public API: COMPLETE | Preview-verified on #223 |
 | Buy, offer, offer-balance deposit/withdraw, seller accept, list/cancel (MarketplaceEscrow + `/listings/confirm-*`) | `/market/*` | PRESERVE | PARTIAL (disabled) | UNVERIFIED | Needs wallet session |
 | Instant buyback (voucher API + Buyback contract) | card views | PRESERVE | NOT STARTED | UNVERIFIED | Eligibility comes from production `buybackInfo`. Nitro must not compute it |
-| Leaderboards: race, points, battles | `/leaderboard` | PRESERVE | PARTIAL | Public API: COMPLETE | Preview-verified (50 rows). "Your standing" needs `address`/session: UNVERIFIED |
-| Public profiles and collections (one tile per token) | `/u/*` | PRESERVE | PARTIAL | Public API: COMPLETE | Preview-verified (GRiiM, 18 cards). Listings and Activity tabs NOT STARTED |
-| Trade discovery | `/trading` | PRESERVE | PARTIAL | Public API: COMPLETE (API observed, 559 cards) | Preview page not yet loaded: UNVERIFIED |
+| Leaderboards: race, points, battles | `/leaderboard` | PRESERVE | PARTIAL | Public API: COMPLETE | All three tabs and race categories preview-verified (`5a23bf1`). "Your standing" needs `address`/session: UNVERIFIED |
+| Public profiles and collections (one tile per token) | `/u/*` | PRESERVE | PARTIAL | Public API: COMPLETE | Preview-verified (`/u/griim` 18 cards. `/u/address/0x4051…` 10 cards, $4,413). Address route shows the bare address: no profile-by-address endpoint found (UNVERIFIED). Listings and Activity tabs NOT STARTED |
+| Trade discovery | `/trading` | PRESERVE | PARTIAL | Public API: COMPLETE | Preview-verified on `5a23bf1` (559 cards, live owners) |
 | Trade offers, accept, cancel (`/trades/direct-offers*`) | `/trading` | PRESERVE | PARTIAL (disabled) | UNVERIFIED | Trade contract address not published: UNVERIFIED |
-| Battles: rules, live counts, top battlers | `/battles` | PRESERVE | PARTIAL | Public API: COMPLETE | Rules shown as production states them. Not decided by Nitro |
+| Battles: rules, live counts, top battlers | `/battles` | PRESERVE | PARTIAL | Public API: COMPLETE | Preview-verified on `5a23bf1` (1,005 fought). Rules shown as production states them. Not decided by Nitro |
 | Battle create/join/bot/reveal (PackBattleV3 + CCTP battle API) | `/battles` | PRESERVE | PARTIAL (disabled) | UNVERIFIED | Lobby feed endpoint UNVERIFIED. 21+ gate is production's |
 | Lending: request, fund, repay, extend, claim (CardLoanMarket + `/lending/*`) | `/lending` | PRESERVE | PARTIAL (explainer + disabled) | UNVERIFIED | Every lending endpoint needs bearer. No terms or rates shown |
 | Own collection | `/collection` | PRESERVE | PARTIAL (signed-out state + public lookup) | UNVERIFIED | Needs session |
