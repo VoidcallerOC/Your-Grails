@@ -39,9 +39,14 @@ Live: homepage figures, packs with odds, EV and refill state, chase cards, recen
 search, filters and pages, listing detail (cert, population, comps, token, seller), leaderboards (race, points, battles),
 public profiles and collections, trade discovery, docs, the contract table.
 
-Off: sign-in and every wallet action (buy, open, list, offer, deposit, withdraw, battle, trade, lend, buyback, redeem). Production
-auth is Privy, and tokens are only issued to origins YourGrails approves. See `docs/YOUR-GRAILS-ARCHITECTURE.md` §4. These
-actions render disabled with the reason. They never simulate a result.
+Not yet wired: sign-in and every wallet action (buy, open, list, offer, deposit, withdraw, battle, trade, lend, buyback,
+redeem). They render disabled with the reason and never simulate a result.
+
+**Web3 boundary.** The production Web3 layer is authoritative and is **not** rebuilt here: contracts, ABIs, addresses,
+escrow, settlement, wallet infrastructure (Privy on wagmi), transaction semantics and chain config (Avalanche 43114).
+When wallet actions are wired, they must reuse production's existing Privy app, contract interfaces and confirmation
+endpoints. No replacement Web3 code, no second source of truth for ownership, prices, eligibility or outcomes.
+`src/lib/contracts.test.ts` fails if a referenced address drifts. See `docs/YOUR-GRAILS-ARCHITECTURE.md` §0 and §4.
 
 ## Design system
 

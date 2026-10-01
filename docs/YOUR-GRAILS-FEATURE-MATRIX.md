@@ -2,7 +2,7 @@
 
 Audit date: 2026-10-01. Evidence and sources: `docs/YOUR-GRAILS-PRODUCT-MAP.md`.
 
-- **Disposition**: REBUILD (build fresh on the new stack against real data), PRESERVE (keep existing rebuild work as is),
+- **Disposition** (Nitro UI only. The Web3 layer is PRESERVE throughout, see Architecture §0): REBUILD (build fresh on the new stack against real data), PRESERVE (keep existing rebuild work as is),
   REFACTOR (keep but rewire/rework), REMOVE (delete once replaced), UNVERIFIED (production behavior not yet observed).
 - **Nitro status**: state of the *new stack* implementation today. No feature is wired to production data yet, so
   nothing is COMPLETE.
@@ -15,29 +15,38 @@ Stack: Forge Nitro (TanStack Start, React 19, Tailwind 4, Nitro on the Vercel pr
 "Preview-verified" means the page was loaded on the Vercel preview deployment of commit `7a8a6cb` and showed live production data
 (for example 11,911 packs opened, Pro EV $51.83, listing #223 Dark Espeon PSA 8 at $250 with PSA cert 97428182).
 
-| Area | Route(s) | Status | Evidence / what is missing |
-|---|---|---|---|
-| Global nav, footer, preview notice, skip link | all | PARTIAL | Rendered at 390/430/768/1440 with no overflow. Signed-in nav state BLOCKED (auth) |
-| Homepage live figures, chase slabs, packs, recent pulls, listings | `/` | PARTIAL | All sections preview-verified with live data. CTAs lead into blocked purchase flows |
-| Pack list and detail: price, EV, live odds tiers, pool size, refill guardrail, chase cards, pulls per pack | `/packs`, `/packs/$packId` | PARTIAL | Preview-verified (Master: 5 tiers, 325 cards). Buy, open and reveal BLOCKED |
-| 3D pack stage | `/packs/$packId` | PARTIAL | Lazy-loaded on detail only, artwork drawn at exact pixels. Flat art shown when WebGL or motion is unavailable. Not yet runtime-checked on a real GPU |
-| Reveal / multi-pack session | — | BLOCKED | Needs real purchases (VRF fulfilment). The demo `pickCard()` random reveal was removed |
-| Marketplace browse: search, grader, grade, set, price filters, pagination | `/market` | PARTIAL | Preview-verified (CGC filter → 3 listings). Sort not exposed: production sort values UNVERIFIED |
-| Listing detail: price, value, offers count, cert + PSA link, population, token, seller, listing tx, comps | `/market/$listingId` | PARTIAL | Preview-verified on #223. Buy, offer, deposit/withdraw and accept BLOCKED |
-| Leaderboard: monthly race, overall points, battles (wins / best streak) | `/leaderboard` | PARTIAL | Preview-verified (50 battle rows). "Your standing" needs sign-in: BLOCKED |
-| Public profiles + collection (one tile per token) | `/u/$username`, `/u/address/$address` | PARTIAL | Preview-verified (GRiiM, 18 cards, $2,075). Listings and Activity tabs NOT STARTED |
-| Trading: discovery of cards open to offers | `/trading` | PARTIAL | API verified (559 cards). Offers, accept and cancel BLOCKED. Trade contract address UNVERIFIED |
-| Battles: production rules, live counts, top battlers | `/battles` | PARTIAL | Rules restated from docs/Terms §7 (both keep pulls, bonus pack, 21+). Lobby feed UNVERIFIED. Create/join BLOCKED |
-| Lending: production model explained | `/lending` | PARTIAL | P2P model from docs. Every lending endpoint needs a bearer token: BLOCKED. No rates shown (none invented) |
-| Collection (own) | `/collection` | BLOCKED | Needs sign-in. Public lookup by username/address works |
-| Auth / wallet / referral admission | `/account` | BLOCKED | Privy origin allow-list (Architecture §4) |
-| Redemption | `/redeem` | PARTIAL | Shows production's "coming soon" state and the documented plan. Production's own page content is invite-gated: UNVERIFIED |
-| Support | `/support` | PARTIAL | Email from Terms. Ticket endpoints not in the API client found: UNVERIFIED. Ticketing BLOCKED |
-| Docs | `/docs` | PARTIAL | Plain-English summary plus contract table with verification state. Links to the full production guide |
-| Terms, Privacy | `/terms`, `/privacy` | PARTIAL | Point to the binding YourGrails LLC text. Not restated. Owner must supply text for this site |
-| Demo code removal | — | COMPLETE | Removed: fake store/wallet/USDC, `LISTINGS`, `VAULT`, `pickCard`, `marketplace-demo.csv`, demo battle/lending/trade/offer logic, hash router, unverified slab photos |
-| Tests / typecheck / lint / build | — | COMPLETE | 19 unit tests, `tsc`, `eslint` clean, `vite build` OK locally and on Vercel |
-| Mobile / desktop layout | all | PARTIAL | Playwright: no horizontal overflow on 20 routes × 4 widths, one h1 per page, all images have alt. Checked against a local mock API because the sandbox can't reach the live API. Live-data pages on the preview were checked as rendered content, not screenshots. A visual pass with real slab photos is still UNVERIFIED |
+Boundary (Architecture §0): the Web3 layer (contracts, ABIs, escrow, settlement, wallet infrastructure, chain) is
+**PRESERVE** in every row. It is never modified here. "Nitro UI" is the rebuilt screen. "Nitro integration" is whether
+Nitro correctly calls production's existing API or contract interface: wallet-dependent integrations are **UNVERIFIED** until an
+authenticated wallet session is available. They are not built as replacement implementations.
+
+| Area | Route(s) | Web3 layer | Nitro UI | Nitro integration | Evidence / what is missing |
+|---|---|---|---|---|---|
+| Nav, footer, preview notice, skip link | all | PRESERVE | PARTIAL | n/a | No overflow at 390/430/768/1440. Signed-in nav state needs auth |
+| Homepage: live figures, chase slabs, packs, recent pulls, listings | `/` | PRESERVE | PARTIAL | Public API: COMPLETE | Preview-verified with live data |
+| Packs: price, EV, live odds tiers, pool, refill guardrail, chase cards, pulls | `/packs`, `/packs/$packId` | PRESERVE | PARTIAL | Public API: COMPLETE | Preview-verified (Master: 5 tiers, 325 cards) |
+| Buy and open pack (GachaPacks via Avalanche or CCTP API) | `/packs/$packId` | PRESERVE | PARTIAL (disabled action states what production does) | UNVERIFIED | Needs Privy session and funded admitted wallet. Must reuse production's `buyPack*`/CCTP prepare→relay→confirm path |
+| Reveal / multi-pack session (VRF) | — | PRESERVE | NOT STARTED | UNVERIFIED | Needs a real purchase. Demo random reveal removed |
+| 3D pack stage | `/packs/$packId` | n/a | PARTIAL | n/a | Lazy, exact-pixel art. Not checked on a real GPU |
+| Marketplace browse, search, filters, pagination | `/market` | PRESERVE | PARTIAL | Public API: COMPLETE | Preview-verified (CGC → 3). Production sort values UNVERIFIED, so not exposed |
+| Listing detail: cert, PSA link, population, token, seller, tx, comps | `/market/$listingId` | PRESERVE | PARTIAL | Public API: COMPLETE | Preview-verified on #223 |
+| Buy, offer, offer-balance deposit/withdraw, seller accept, list/cancel (MarketplaceEscrow + `/listings/confirm-*`) | `/market/*` | PRESERVE | PARTIAL (disabled) | UNVERIFIED | Needs wallet session |
+| Instant buyback (voucher API + Buyback contract) | card views | PRESERVE | NOT STARTED | UNVERIFIED | Eligibility comes from production `buybackInfo`. Nitro must not compute it |
+| Leaderboards: race, points, battles | `/leaderboard` | PRESERVE | PARTIAL | Public API: COMPLETE | Preview-verified (50 rows). "Your standing" needs `address`/session: UNVERIFIED |
+| Public profiles and collections (one tile per token) | `/u/*` | PRESERVE | PARTIAL | Public API: COMPLETE | Preview-verified (GRiiM, 18 cards). Listings and Activity tabs NOT STARTED |
+| Trade discovery | `/trading` | PRESERVE | PARTIAL | Public API: COMPLETE (API observed, 559 cards) | Preview page not yet loaded: UNVERIFIED |
+| Trade offers, accept, cancel (`/trades/direct-offers*`) | `/trading` | PRESERVE | PARTIAL (disabled) | UNVERIFIED | Trade contract address not published: UNVERIFIED |
+| Battles: rules, live counts, top battlers | `/battles` | PRESERVE | PARTIAL | Public API: COMPLETE | Rules shown as production states them. Not decided by Nitro |
+| Battle create/join/bot/reveal (PackBattleV3 + CCTP battle API) | `/battles` | PRESERVE | PARTIAL (disabled) | UNVERIFIED | Lobby feed endpoint UNVERIFIED. 21+ gate is production's |
+| Lending: request, fund, repay, extend, claim (CardLoanMarket + `/lending/*`) | `/lending` | PRESERVE | PARTIAL (explainer + disabled) | UNVERIFIED | Every lending endpoint needs bearer. No terms or rates shown |
+| Own collection | `/collection` | PRESERVE | PARTIAL (signed-out state + public lookup) | UNVERIFIED | Needs session |
+| Sign-in, wallet connect, referral admission (production Privy + `/referrals/*`) | `/account` | PRESERVE | PARTIAL (explainer) | UNVERIFIED | Origin must be added to production's existing Privy app (Architecture §4) |
+| Redemption | `/redeem` | PRESERVE | PARTIAL | n/a | Production marks it "coming soon" |
+| Support | `/support` | PRESERVE | PARTIAL | UNVERIFIED | Ticket endpoints not found in the API client |
+| Docs, Terms, Privacy | `/docs`, `/terms`, `/privacy` | PRESERVE | PARTIAL | n/a | Contract table is display-only. Legal text points to YourGrails LLC's binding versions |
+| Demo-code removal | — | — | COMPLETE | — | Fake wallet, store, listings, CSV and invented battle/lending/trade/offer logic removed |
+| Web3 drift guard | — | PRESERVE | — | COMPLETE | `src/lib/contracts.test.ts` pins every referenced address to production's published list |
+| Tests / typecheck / lint / build | — | — | COMPLETE | — | 21 tests. `tsc`, `eslint` and `vite build` pass locally and on Vercel |
 
 Original audit matrix (dispositions) follows.
 
@@ -103,7 +112,8 @@ Original audit matrix (dispositions) follows.
 
 ## Gate to begin Phase 4 (implementation)
 
-Implementation of any row whose Data source includes `API` is **BLOCKED** until the production API contract is obtained
+Superseded (2026-10-01): the production API is identified (Architecture §1). Rows needing a wallet are UNVERIFIED integrations against the preserved Web3 layer. Originally:
+implementation of any row whose Data source includes `API` was blocked until the production API contract was obtained
 (base URL, auth scheme, endpoints for packs/cards/listings/battles/loans/leaderboard/profiles/support/vouchers). Rows that
 are `Chain`-only (collection ownership, USDC balance, listing/escrow reads, loan state) can be built against the verified
 contracts once the stack decision is made.

@@ -3,6 +3,30 @@
 Date: 2026-10-01. Resolves the two blockers raised in `YOUR-GRAILS-PRODUCT-MAP.md` §7.
 Status vocabulary: COMPLETE | PARTIAL | BLOCKED | UNVERIFIED | NOT STARTED.
 
+## 0. The boundary (authoritative, 2026-10-01)
+
+The existing production system is the source of truth and **is not rebuilt here**: backend and APIs, smart contracts,
+contract addresses and ABIs, escrow, ownership, settlement, battle, lending, buyback and marketplace logic, wallet
+infrastructure (Privy on wagmi), transaction semantics, and chain configuration (Avalanche C-Chain 43114).
+
+This repo is the **new client/product layer** only: frontend, UX, design system, responsive UI, and presentation state.
+It consumes production through production's existing interfaces:
+
+| Layer | Disposition | Meaning |
+| --- | --- | --- |
+| Contracts, ABIs, addresses, chain, escrow, settlement and business rules | **PRESERVE** | Never modified, redeployed, reimplemented or "improved" from this repo |
+| Production API (`api.yourgrails.com/api`) | **PRESERVE** | Consumed as-is. Where the API abstracts a Web3 operation (vouchers, confirmations, CCTP prepare and relay), Nitro calls the API |
+| Wallet infrastructure (Privy app, wagmi config) | **PRESERVE** | Nitro must reuse production's wallet stack and contract interfaces, not add a second one |
+| Nitro screens, flows, copy, design system | **REBUILD** | New |
+| Nitro invoking production (correct endpoint, function, arguments, confirmation call) | **VERIFY** | Must be runtime-tested against production. Until an authenticated wallet session exists, this is **UNVERIFIED** |
+
+No second source of truth: Nitro computes no ownership, prices, odds, eligibility, battle outcomes, loan terms or settlement.
+It displays what production reports. `src/lib/contracts.test.ts` fails if any referenced address drifts from production's
+published list.
+
+State of this repo against the boundary: no Web3 library, no contract call, no signature, no transaction code. Addresses are
+display-only references (docs page, explorer links).
+
 ## 1. Production backend/API — VERIFIED
 
 **Base URL: `https://api.yourgrails.com/api`**
@@ -86,13 +110,15 @@ api.yourgrails.com/api (production data)        Avalanche C-Chain 43114 (contrac
 
 - Reads go through the server layer. That avoids browser CORS dependence on api.yourgrails.com, keeps one place for caching and error handling, and keeps any future server credentials out of the client.
 - No production secret is needed for public reads. `YG_API_BASE_URL` (server-only env) defaults to the production base URL.
-- Writes (wallet transactions) will run in the browser through the user's wallet. They are **BLOCKED**, see §4.
+- Wallet actions will reuse production's existing wallet stack (Privy on wagmi) and existing contract interfaces: the same
+  addresses, the verified production ABIs and production's confirmation endpoints. Nothing is reimplemented. Their Nitro
+  integration is **UNVERIFIED** until an authenticated session exists, see §4.
 
-## 4. What remains BLOCKED and the exact evidence needed
+## 4. What remains UNVERIFIED and the exact evidence needed
 
-| Area | Blocker | What resolves it |
+| Nitro integration (Web3 layer: PRESERVE) | Why it can't be runtime-tested yet | What resolves it |
 | --- | --- | --- |
-| Sign-in, referral admission, every bearer endpoint | The production API expects a **Privy access token issued by YourGrails' Privy app**. Privy only issues tokens to origins on that app's allow-list. The rebuild's preview domain is not on it. | YourGrails adds the preview/prod origin to their Privy app and confirms the app ID to use, **or** confirms the API accepts tokens from another Privy app. Needs written authorization from YourGrails LLC. |
+| Sign-in, referral admission, every bearer endpoint | The production API expects a **Privy access token issued by YourGrails' Privy app**. Privy only issues tokens to origins on that app's allow-list. The rebuild's preview domain is not on it. | YourGrails adds the Nitro preview/production origins to their **existing** Privy app and confirms its app ID for reuse. A separate Privy app is out of bounds: it would be a second wallet stack. Needs written authorization from YourGrails LLC. |
 | All on-chain writes (buy pack, list, buy, offer, buyback, battle, lend, trade) | Real-money mainnet transactions cannot be verified without an admitted test wallet with funds. The trade contract address is unverified. | An admitted test wallet plus a budget, or a staging/Fuji environment from YourGrails (docs mention one). |
 | Battle lobby | List endpoint not found | Observe logged-in `/battles` network traffic (HAR) or get the API docs from YourGrails |
 | Runtime verification from this sandbox | Egress policy blocks `api.yourgrails.com` and `yourgrails.com` | Allow-list them in the environment network policy, or verify on Vercel preview deployments (used here) |
