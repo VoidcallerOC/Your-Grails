@@ -9,7 +9,7 @@ export const Route = createFileRoute("/account")({
 function Account() {
   return (
     <>
-      <PageHead title="Getting in">
+      <PageHead eyebrow="Sign in" title="Getting in">
         YourGrails is invite-only right now. In production you connect a wallet (your own, or one made for you at sign-in) and redeem a
         one-time referral code. Collectors unlock their own codes as they open packs and battle.
       </PageHead>

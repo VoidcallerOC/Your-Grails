@@ -1,34 +1,43 @@
 @import "tailwindcss";
 @import "@fontsource-variable/inter/wght.css";
+@import "@fontsource/chakra-petch/500.css";
+@import "@fontsource/chakra-petch/600.css";
+@import "@fontsource/chakra-petch/700.css";
+@import "@fontsource/chakra-petch/700-italic.css";
 @import "@fontsource/ibm-plex-mono/500.css";
 
 /*
- * Your Grails design system.
- * The slab photography leads. Type is plain and readable (Inter, sentence case), surfaces are soft tonal
- * steps rather than boxed panels, and brass is kept for the one primary action on a screen.
- * Mono is for identifiers only (certs, tokens, addresses), never for prices.
+ * YOUR GRAILS — "the vault, after hours".
+ * A members' card shop at night: black velvet, warm spotlights, slabs on lit shelves, gold placards.
+ * Shape language comes from the wordmark: forward slant and cut (chamfered) corners, never soft pills.
+ * Display and numbers: Chakra Petch. Reading: Inter. Identifiers only: IBM Plex Mono.
  */
 @theme {
   --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Chakra Petch", "Inter Variable", ui-sans-serif, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 
-  --color-ink: #0d0c0b;
-  --color-vault: #151412;
-  --color-shelf: #1c1b18;
-  --color-raised: #201f1c;
-  --color-line: #2c2a26;
-  --color-line-strong: #423f39;
-  --color-paper: #efe9dd;
-  --color-paper-dim: #cfc7b8;
-  --color-muted: #9a9387;
-  --color-brass: #c9a24a;
-  --color-brass-dim: #8f7333;
-  --color-pro: #8b7cf6;
-  --color-ok: #4fae74;
-  --color-warn: #d9a33a;
-  --color-err: #e0675f;
+  --color-ink: #0a0908;
+  --color-velvet: #110f0d;
+  --color-vault: #161310;
+  --color-shelf: #1d1a16;
+  --color-raised: #24201b;
+  --color-line: #2c2822;
+  --color-line-strong: #453f36;
+  --color-paper: #ece6da;
+  --color-paper-dim: #c9c1b2;
+  --color-muted: #948c7f;
+  --color-gold: #d4a84b;
+  --color-gold-bright: #e8c46f;
+  --color-gold-deep: #8a6a27;
+  --color-brass: #d4a84b;
+  --color-live: #e5484d;
+  --color-pro: #8f7cf8;
+  --color-ok: #58b97f;
+  --color-warn: #e0a83e;
+  --color-err: #e5675f;
 
-  --radius-slab: 8px;
+  --radius-slab: 6px;
 }
 
 @layer base {
@@ -37,19 +46,24 @@
     -webkit-text-size-adjust: 100%;
   }
   body {
-    @apply bg-ink text-paper font-sans antialiased;
-    font-feature-settings: "tnum" 1;
+    @apply bg-ink font-sans text-paper antialiased;
     min-height: 100dvh;
+    /* The room: a faint warm ceiling light falling off into black. */
+    background-image: radial-gradient(1200px 520px at 50% -180px, rgba(212, 168, 75, 0.09), transparent 70%);
+    background-repeat: no-repeat;
   }
   :focus-visible {
-    outline: 2px solid var(--color-brass);
-    outline-offset: 2px;
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
   }
   a {
     @apply text-inherit no-underline;
   }
   img {
     @apply max-w-full;
+  }
+  ::selection {
+    background: rgba(212, 168, 75, 0.35);
   }
   @media (prefers-reduced-motion: reduce) {
     *,
@@ -65,57 +79,208 @@
 
 @layer components {
   .wrap {
-    @apply mx-auto w-full max-w-[1240px] px-4 sm:px-6;
+    @apply mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8;
   }
+
+  /* ---------- Type ---------- */
   .display {
-    @apply font-sans font-semibold leading-[1.1] tracking-[-0.02em] text-balance;
+    @apply font-display font-bold leading-[0.98] tracking-[-0.01em];
+  }
+  /* The wordmark's voice: bold italic, leaning forward. For statements, not labels. */
+  .shout {
+    @apply font-display font-bold italic leading-[0.92] tracking-[-0.02em];
+  }
+  .eyebrow {
+    @apply font-display text-[13px] font-semibold tracking-[0.04em] text-gold;
   }
   .label {
     @apply text-[13px] leading-snug text-muted;
   }
-  .money {
-    @apply font-semibold tabular-nums text-paper;
+  .num {
+    @apply font-display font-semibold tabular-nums tracking-[-0.01em];
   }
-  .rule {
-    @apply border-t border-line;
+  .money {
+    @apply font-display font-semibold tabular-nums text-paper;
   }
   .link {
-    @apply underline decoration-line-strong underline-offset-4 hover:decoration-brass;
+    @apply underline decoration-line-strong underline-offset-4 transition-colors hover:decoration-gold;
   }
 
-  /* The slab: the photographed case sits on a soft tonal stage, no frame. */
-  .slab {
-    @apply relative flex aspect-[5/8] items-center justify-center overflow-hidden rounded-[var(--radius-slab)] bg-shelf p-[6%];
-    background-image: radial-gradient(120% 80% at 50% 0%, #2a2824 0%, transparent 70%);
+  /* ---------- Shape: the wordmark's cut corner ---------- */
+  .cut {
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
   }
-  .slab img {
-    @apply h-full w-full object-contain drop-shadow-[0_10px_18px_rgba(0,0,0,0.45)];
+  .cut-sm {
+    clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
   }
 
-  .panel {
-    @apply rounded-[var(--radius-slab)] bg-vault;
+  /* ---------- The slab on display ---------- */
+  /* A pool of warm light behind the case, and a soft floor shadow beneath it. No frame, no box. */
+  .stage {
+    @apply relative flex items-end justify-center;
+    aspect-ratio: 5 / 7.4;
   }
-  /* A full-bleed tonal band for alternating page sections. */
-  .band {
-    @apply bg-vault;
+  .stage::before {
+    content: "";
+    position: absolute;
+    inset: 4% 6% 10%;
+    background: radial-gradient(closest-side, rgba(232, 196, 111, 0.16), rgba(232, 196, 111, 0.04) 60%, transparent 100%);
+    filter: blur(6px);
+    pointer-events: none;
   }
+  .stage::after {
+    content: "";
+    position: absolute;
+    left: 14%;
+    right: 14%;
+    bottom: 1.5%;
+    height: 7%;
+    background: radial-gradient(closest-side, rgba(0, 0, 0, 0.85), transparent);
+    pointer-events: none;
+  }
+  .stage img.slab-img {
+    position: relative;
+    z-index: 1;
+    max-height: 96%;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 18px 22px rgba(0, 0, 0, 0.55));
+  }
+  /* Pointer-follow tilt (vars set by <Tilt>). Disabled under reduced motion. */
+  .tilt {
+    transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(var(--lift, 0px));
+    transition: transform 0.25s ease-out;
+    transform-style: preserve-3d;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tilt {
+      transform: none !important;
+    }
+  }
+
+  /* The shelf: a lit ledge under a row of objects. */
+  .shelf {
+    position: relative;
+  }
+  .shelf::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212, 168, 75, 0.45) 20%, rgba(212, 168, 75, 0.45) 80%, transparent);
+  }
+
+  /* ---------- Grade tag: the slab's label, as an object ---------- */
+  .grade-tag {
+    @apply inline-flex items-stretch font-display leading-none;
+    clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+  }
+  .grade-tag > .gt-who {
+    @apply flex items-center bg-paper px-1.5 text-[10px] font-bold tracking-[0.06em] text-ink;
+  }
+  .grade-tag > .gt-num {
+    @apply flex items-center bg-ink/85 px-1.5 text-[13px] font-bold text-paper;
+  }
+  .grade-tag.is-gem > .gt-num {
+    @apply bg-gold text-ink;
+  }
+
+  /* ---------- Fields and panels ---------- */
   .field {
-    @apply min-h-11 w-full rounded-[var(--radius-slab)] border border-line bg-shelf px-3 text-sm text-paper placeholder:text-muted hover:border-line-strong focus:border-paper-dim;
+    @apply min-h-11 w-full border border-line bg-velvet px-3 text-sm text-paper placeholder:text-muted hover:border-line-strong focus:border-paper-dim;
+    clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+  }
+  .panel {
+    @apply bg-vault;
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  }
+  .band {
+    @apply bg-velvet;
   }
   .ledger-row {
-    @apply grid items-center gap-3 border-t border-line px-3 py-3;
+    @apply grid items-center gap-3 border-t border-line px-1 py-3;
+  }
+
+  /* ---------- Ticker: the shop's "just pulled" board ---------- */
+  .ticker {
+    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  }
+  .ticker-track {
+    display: flex;
+    width: max-content;
+    animation: ticker 60s linear infinite;
+  }
+  .ticker:hover .ticker-track {
+    animation-play-state: paused;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ticker {
+      overflow-x: auto;
+    }
+    .ticker-track {
+      animation: none;
+    }
+  }
+
+  /* ---------- Entrance: objects rise into the light as they scroll in ---------- */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .rise {
+        animation: rise both ease-out;
+        animation-timeline: view();
+        animation-range: entry 0% entry 55%;
+      }
+    }
+  }
+
+  /* Live dot for battles and the race. */
+  .live-dot {
+    @apply inline-block h-2 w-2 rounded-full bg-live;
+    box-shadow: 0 0 0 0 rgba(229, 72, 77, 0.6);
+    animation: pulse 1.8s ease-out infinite;
   }
 }
 
-/* Buttons: rectangular, label-weight. Utilities so they compose with other utilities. */
+/* Buttons: cut-corner plaques. Utilities so they compose with other utilities. */
 @utility btn {
-  @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-[var(--radius-slab)] border px-4 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+  @apply inline-flex min-h-11 items-center justify-center gap-2 px-5 font-display text-[15px] font-semibold tracking-[0.01em] transition-colors disabled:cursor-not-allowed;
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
 }
 @utility btn-primary {
-  @apply btn border-brass bg-brass text-ink hover:bg-[#d8b25c];
+  @apply btn bg-gold text-ink hover:bg-gold-bright disabled:bg-raised disabled:text-muted;
 }
 @utility btn-quiet {
-  @apply btn border-line-strong text-paper hover:border-paper-dim hover:bg-shelf;
+  @apply btn bg-raised text-paper hover:bg-line-strong disabled:text-muted;
+}
+@utility btn-ghost {
+  @apply btn bg-transparent px-0 text-paper-dim hover:text-paper;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes pulse {
+  70% {
+    box-shadow: 0 0 0 7px rgba(229, 72, 77, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(229, 72, 77, 0);
+  }
 }
 
 /* Navigation progress: indeterminate sweep. Static (full width) under reduced motion. */
@@ -124,9 +289,16 @@
   animation: nav-sweep 1.1s ease-in-out infinite;
 }
 @keyframes nav-sweep {
-  from { transform: translateX(-100%); }
-  to { transform: translateX(260%); }
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(260%);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  .nav-progress { width: 100%; animation: none; }
+  .nav-progress {
+    width: 100%;
+    animation: none;
+  }
 }

@@ -48,15 +48,19 @@ function Market() {
 
   return (
     <>
-      <PageHead title="Graded cards for sale">
+      <PageHead
+        eyebrow="Collector to collector"
+        title="Graded cards for sale"
+      >
         Every card listed here is a vaulted slab held in escrow until it sells. Prices are set by sellers in USDC.
       </PageHead>
-      <div className="wrap">
-        <form onSubmit={onSubmit} className="rounded-[var(--radius-slab)] bg-vault p-3" aria-label="Filter listings" key={JSON.stringify(search)}>
+      <div className="sticky top-14 z-30 border-y border-line/70 bg-ink/90 backdrop-blur-md lg:top-16">
+      <div className="wrap py-3">
+        <form onSubmit={onSubmit} aria-label="Filter listings" key={JSON.stringify(search)}>
           <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-2 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,4.2fr)]">
             <div className="relative">
               <label htmlFor="q" className="sr-only">Search by card name</label>
-              <Search size={16} aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+              <Search size={16} aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 text-muted" />
               <input id="q" name="query" type="search" className="field pl-9" defaultValue={search.query} placeholder="Search cards" />
             </div>
             <button
@@ -102,16 +106,19 @@ function Market() {
                 <span className="text-muted" aria-hidden="true">–</span>
                 <input name="priceMax" className="field" inputMode="decimal" aria-label="Maximum price, USDC" placeholder="Max $" defaultValue={search.priceMax} />
               </fieldset>
-              <button type="submit" className="btn-quiet col-span-2 bg-raised lg:col-span-1">Apply</button>
+              <button type="submit" className="btn-primary col-span-2 lg:col-span-1">Apply</button>
             </div>
           </div>
         </form>
+      </div>
+      </div>
+      <div className="wrap pt-6">
 
         <section aria-label="Listings">
           <PartView part={listings} what="Listings">
             {({ listings: list, pagination }) => (
               <>
-                <div className="mb-6 mt-5 flex items-baseline justify-between gap-4">
+                <div className="mb-8 flex items-baseline justify-between gap-4">
                   <p className="text-sm text-paper-dim" aria-live="polite">
                     {pagination ? `${count(pagination.total)} ${pagination.total === 1 ? "listing" : "listings"}` : `${list.length} listings`}
                     {filtered ? " match your filters" : " active"}
@@ -119,7 +126,7 @@ function Market() {
                   {filtered && <Link to="/market" search={{ page: 1 }} className="text-sm text-paper-dim underline underline-offset-4 hover:text-paper">Clear filters</Link>}
                 </div>
                 {list.length ? (
-                  <CardGrid>
+                  <CardGrid dense>
                     {list.map((l) => (
                       <CardTile
                         key={l.id}
@@ -128,7 +135,7 @@ function Market() {
                         price={l.priceUsd}
                         priceLabel="Price"
                         footer={
-                          l.bidCount > 0 ? <p className="mt-1 text-xs text-paper-dim">{l.bidCount} {l.bidCount === 1 ? "offer" : "offers"}</p> : null
+                          l.bidCount > 0 ? <p className="mt-1.5 inline-block bg-gold/15 px-1.5 py-0.5 font-display text-[11.5px] font-semibold text-gold cut-sm">{l.bidCount} {l.bidCount === 1 ? "offer" : "offers"} in</p> : null
                         }
                       />
                     ))}
@@ -137,11 +144,11 @@ function Market() {
                   <EmptyPanel>No listings match. Try fewer filters.</EmptyPanel>
                 )}
                 {pagination && pagination.totalPages > 1 && (
-                  <nav aria-label="Pages" className="mt-12 flex items-center justify-between gap-4 text-sm">
+                  <nav aria-label="Pages" className="mt-16 flex items-center justify-between gap-4 text-sm">
                     {pagination.hasPrev ? (
                       <Link to="/market" search={{ ...search, page: pagination.page - 1 }} className="btn-quiet">← Previous</Link>
                     ) : <span />}
-                    <span className="text-muted">Page {pagination.page} of {pagination.totalPages}</span>
+                    <span className="font-display text-muted">Page <span className="text-paper">{pagination.page}</span> of {pagination.totalPages}</span>
                     {pagination.hasNext ? (
                       <Link to="/market" search={{ ...search, page: pagination.page + 1 }} className="btn-quiet">Next →</Link>
                     ) : <span />}

@@ -9,7 +9,7 @@ export const Route = createFileRoute("/redeem")({
 function Redeem() {
   return (
     <>
-      <PageHead note="Coming soon" title="Ship the slab home">
+      <PageHead eyebrow="Redemption" note="Coming soon" title="Ship the slab home">
         Physical redemption isn't open yet. YourGrails lists it as coming after the beta.
       </PageHead>
       <div className="wrap [&>*]:max-w-3xl">

@@ -35,21 +35,21 @@ const SECTIONS: [string, string[]][] = [
 function Docs() {
   return (
     <>
-      <PageHead title="The short version">
+      <PageHead eyebrow="How it works" title="The short version">
         What happens under the hood, in plain English. For the full current guide, see{" "}
         <a className="link" href="https://yourgrails.com/docs" rel="noopener noreferrer">yourgrails.com/docs</a>.
       </PageHead>
-      <div className="wrap space-y-10 [&>*]:max-w-4xl">
+      <div className="wrap">
         {SECTIONS.map(([title, paras]) => (
-          <section key={title}>
-            <h2 className="display text-2xl">{title}</h2>
-            <div className="mt-3 space-y-3 text-paper-dim">
+          <section key={title} className="grid grid-cols-1 gap-3 border-t border-line py-10 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:gap-12">
+            <h2 className="shout text-3xl">{title}</h2>
+            <div className="max-w-2xl space-y-4 text-[16px] leading-relaxed text-paper-dim">
               {paras.map((p) => <p key={p}>{p}</p>)}
             </div>
           </section>
         ))}
-        <section>
-          <h2 className="display text-2xl">Contracts</h2>
+        <section className="border-t border-line pt-10">
+          <h2 className="shout text-3xl">Contracts</h2>
           <p className="mt-3 text-sm text-paper-dim">
             Avalanche C-Chain (43114). "Source verified" means the explorer shows verified source code for that address as of 1 Oct 2026.
           </p>

@@ -4,6 +4,7 @@ import { CardGrid, CardTile } from "@/components/slab";
 import { BlockedAction, EmptyPanel, PartView } from "@/components/states";
 import { getTradeDiscovery } from "@/lib/api";
 import { count } from "@/lib/format";
+import { Avatar } from "@/components/person";
 
 export const Route = createFileRoute("/trading")({
   validateSearch: (s: Record<string, unknown>) => ({
@@ -21,12 +22,15 @@ function Trading() {
   const search = Route.useSearch();
   return (
     <>
-      <PageHead title="Trade card for card">
+      <PageHead
+        eyebrow="Collector to collector"
+        title="Trade card for card"
+        aside={<BlockedAction tone="primary" className="w-full max-w-sm" label="Make a trade offer" does="Offers one or more of your cards for a card another collector owns." />}
+      >
         Find a card in someone's collection and offer one of yours for it. The owner accepts or declines. Cards move only if they accept.
       </PageHead>
       <div className="wrap">
-        <BlockedAction className="mb-8 max-w-md" label="Make a trade offer" does="Offers one or more of your cards for a card another collector owns." />
-        <form method="get" action="/trading" className="mb-6 flex max-w-md gap-2" role="search">
+        <form method="get" action="/trading" className="mb-8 flex max-w-xl gap-2" role="search">
           <label htmlFor="tq" className="sr-only">Search cards open to trade</label>
           <input id="tq" name="query" defaultValue={search.query} className="field" placeholder="Search cards open to trade" />
           <button className="btn-quiet" type="submit">Search</button>
@@ -43,8 +47,9 @@ function Trading() {
                       card={card}
                       footer={
                         owner?.username ? (
-                          <p className="mt-1 truncate text-xs text-muted">
-                            Owner <Link to="/u/$username" params={{ username: owner.username }} search={{ page: 1 }} className="link">{owner.username}</Link>
+                          <p className="mt-3 flex items-center gap-2 border-t border-line pt-3 text-xs text-muted">
+                            <Avatar person={{ address: "", username: owner.username }} size={22} />
+                            <span className="truncate">Owner <Link to="/u/$username" params={{ username: owner.username }} search={{ page: 1 }} className="font-semibold text-paper-dim hover:text-gold">{owner.username}</Link></span>
                           </p>
                         ) : null
                       }
@@ -55,7 +60,7 @@ function Trading() {
                 <EmptyPanel>No cards match.</EmptyPanel>
               )}
               {pagination && pagination.totalPages > 1 && (
-                <nav aria-label="Pages" className="mt-12 flex items-center justify-between text-sm">
+                <nav aria-label="Pages" className="mt-16 flex items-center justify-between text-sm">
                   {pagination.hasPrev ? <Link to="/trading" search={{ ...search, page: pagination.page - 1 }} className="btn-quiet">← Previous</Link> : <span />}
                   <span className="text-muted">Page {pagination.page} of {pagination.totalPages}</span>
                   {pagination.hasNext ? <Link to="/trading" search={{ ...search, page: pagination.page + 1 }} className="btn-quiet">Next →</Link> : <span />}
