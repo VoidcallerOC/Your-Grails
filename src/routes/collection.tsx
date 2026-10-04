@@ -29,7 +29,6 @@ function CollectionPage() {
       <div className="wrap grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
         {/* The empty case waiting for your slabs. */}
         <section className="panel relative overflow-hidden px-6 pb-8 pt-10 sm:px-10">
-          <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(520px 260px at 50% 0%, rgba(212,168,75,0.13), transparent 70%)" }} aria-hidden="true" />
           <div className="relative grid grid-cols-3 gap-4 sm:gap-8" aria-hidden="true">
             {[0, 1, 2].map((i) => (
               <div key={i} className="shelf pb-px">

@@ -30,7 +30,7 @@ function Podium({ rows }: { rows: { person: Person; metric: ReactNode }[] }) {
               <span className="mt-3 block max-w-full truncate font-display text-sm font-semibold group-hover:text-gold sm:text-base">{personName(r.person)}</span>
               <span className="mt-1 block">{r.metric}</span>
             </Link>
-            <span className={`mt-4 flex w-full items-start justify-center ${pl.h} cut`} style={{ background: `linear-gradient(180deg, ${pl.ring}33, ${pl.ring}0d)` }}>
+            <span className={`mt-4 flex w-full items-start justify-center ${pl.h} cut`} style={{ background: `${pl.ring}1f` }}>
               <span className="shout mt-2 text-3xl sm:text-4xl" style={{ color: pl.ring }}>{pl.label}</span>
             </span>
           </li>

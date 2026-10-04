@@ -40,7 +40,7 @@ export function GradeCompartments({ grades, current, base }: { grades: Facet[]; 
   const cell = (on: boolean) =>
     `flex min-w-[92px] shrink-0 flex-col justify-between border px-4 py-3 text-left transition-colors ${on ? "border-gold bg-gold/10" : "border-line bg-velvet hover:border-line-strong"}`;
   return (
-    <nav ref={strip} aria-label="Case compartments by grade" className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+    <nav ref={strip} aria-label="Case compartments by grade" className="relative -mx-4 overflow-x-auto px-4 [contain:paint] sm:mx-0 sm:px-0">
       <ul className="flex gap-2">
         <li>
           <Link to="/market" search={{ ...base, grade: undefined, page: 1 }} activeOptions={exact} aria-current={!current ? "page" : undefined} className={cell(!current)}>

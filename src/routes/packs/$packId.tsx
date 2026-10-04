@@ -39,7 +39,6 @@ function PackPage() {
             <>
               {/* The product on its plinth. */}
               <section className="relative overflow-hidden">
-                <div className="pointer-events-none absolute inset-0" style={{ background: `radial-gradient(700px 520px at 28% 52%, rgba(${rgb},0.16), transparent 70%)` }} aria-hidden="true" />
                 <div className="wrap relative grid grid-cols-1 items-center gap-10 pb-16 pt-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-16">
                   <div className="mx-auto w-full max-w-[300px] sm:max-w-[380px] lg:max-w-[440px]">
                     <PackStage tier={p.tier} name={p.name} />
@@ -53,7 +52,7 @@ function PackPage() {
                     <dl className="mt-7 grid max-w-lg grid-cols-3 gap-4 border-y border-line py-4">
                       <div>
                         <dt className="label">Expected pull value</dt>
-                        <dd className="num mt-1 text-2xl text-gold">{usd(p.evUsd)}</dd>
+                        <dd className="num mt-1 text-2xl text-paper">{usd(p.evUsd)}</dd>
                       </div>
                       <div>
                         <dt className="label">Cards in the pool</dt>

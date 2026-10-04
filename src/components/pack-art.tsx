@@ -102,11 +102,11 @@ export function LivePack({
   );
 }
 
-/** Pack detail stage: the live pack at its largest. */
+/** Pack detail stage: the pack art at its largest, still. */
 export function PackStage({ tier, name }: { tier: string; name: string }) {
   return (
     <div className="mx-auto w-full max-w-[420px]">
-      <LivePack tier={tier} name={name} eager />
+      <PackArt tier={tier} name={name} eager />
     </div>
   );
 }

@@ -27,7 +27,6 @@ function Battles() {
     <>
       {/* The fight poster. */}
       <section className="relative overflow-hidden border-b border-line">
-        <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(800px 480px at 72% 45%, rgba(229,72,77,0.16), transparent 70%)" }} aria-hidden="true" />
         <div className="wrap relative grid grid-cols-1 items-center gap-10 py-12 sm:py-16 lg:grid-cols-[minmax(0,6fr)_minmax(0,5fr)]">
           <div>
             <p className="eyebrow mb-4 !text-live"><span className="live-dot mr-2 align-middle" aria-hidden="true" />Pack battles</p>
@@ -91,13 +90,13 @@ function Battles() {
                   <article key={p.id} className="panel grid grid-cols-[96px_minmax(0,1fr)] items-center gap-5 p-5">
                     <PackPedestal tier={p.tier} name={p.name} />
                     <div>
-                      <h3 className="font-display text-xl font-semibold italic">{p.name}</h3>
+                      <h3 className="font-display text-xl font-semibold">{p.name}</h3>
                       <p className="money mt-1 text-2xl">{usd(p.priceUsd)} <span className="font-sans text-xs font-normal text-muted">a side</span></p>
                       {(() => {
                         const top = Math.max(0, ...p.chase.map((c) => c.valueUsd ?? 0));
                         return (
                           <p className="mt-2 text-[12px] text-muted">
-                            {top > 0 && <>Top chase <span className="num text-gold">{usd(top)}</span></>}
+                            {top > 0 && <>Top chase <span className="num text-paper">{usd(top)}</span></>}
                             {top > 0 && p.availableInventory !== null && " · "}
                             {p.availableInventory !== null && <>{count(p.availableInventory)} slabs in the pool</>}
                           </p>
@@ -135,7 +134,7 @@ function Battles() {
                   const total = r.wins + r.losses || 1;
                   return (
                     <li key={r.address} className="grid grid-cols-[34px_minmax(0,1fr)_auto] items-center gap-3 py-4">
-                      <span className={`shout text-2xl ${i === 0 ? "text-gold" : "text-line-strong"}`}>{i + 1}</span>
+                      <span className={`shout text-2xl ${i === 0 ? "text-paper" : "text-line-strong"}`}>{i + 1}</span>
                       <div className="min-w-0">
                         <PersonLink person={r} size={32} />
                         <span className="mt-2 flex h-1 overflow-hidden bg-shelf" aria-hidden="true">

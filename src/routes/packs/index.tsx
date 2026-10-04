@@ -26,7 +26,7 @@ function PacksPage() {
               {list.map((p, i) => (
                 <section key={p.id} className={i % 2 ? "border-y border-line bg-velvet" : ""}>
                   <div className="wrap py-14 lg:py-20">
-                    <PackCard pack={p} eager={i < 2} flip={i % 2 === 1} live phase={i * 1.9} />
+                    <PackCard pack={p} eager={i < 2} flip={i % 2 === 1} />
                   </div>
                 </section>
               ))}

@@ -1,8 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Lock } from "lucide-react";
-import { tierColor } from "@/lib/packs";
 import { PackCard, PackPedestal, PullTicker, SectionHead, StatsLedger } from "@/components/blocks";
-import { CardTile, ShelfRow, Tilt } from "@/components/slab";
+import { CardTile, ShelfRow } from "@/components/slab";
 import { ErrorPanel, PartView } from "@/components/states";
 import { getHome } from "@/lib/api";
 import { count, usd } from "@/lib/format";
@@ -23,48 +22,30 @@ function topChase(packs: Pack[], n: number): (CardSummary & { packName: string }
 }
 
 /** Three slabs in the window: the most valuable front and centre, the others set back in the light. */
-/**
- * One slab in the window, as the object it is: the real photo is the front face of a clear acrylic block (see .slab3d).
- * The photo is shown as supplied; the side slabs turn in toward the centre like a dealer's display.
- */
-function CaseFrame({ card, yaw }: { card: CardSummary; yaw: number }) {
+/** One slab in the window: the photo as supplied, in a plain catalogue frame. */
+function CaseFrame({ card }: { card: CardSummary }) {
   const src = card.images.slab ?? card.images.front ?? card.images.thumb;
   return (
-    <div className="relative [perspective:1100px]">
-      <div className="slab3d-shadow" aria-hidden="true" />
-      <div className="slab3d" style={{ "--yaw": `${yaw}deg` } as React.CSSProperties}>
-        <div className="slab3d-back" aria-hidden="true" />
-        <span className="slab3d-edge l" aria-hidden="true" />
-        <span className="slab3d-edge r" aria-hidden="true" />
-        <span className="slab3d-edge t" aria-hidden="true" />
-        <span className="slab3d-edge b" aria-hidden="true" />
-        <div className="slab3d-face">
-          {src ? (
-            <img src={src} alt={`${card.title}${card.grader ? `, ${card.grader} ${card.grade ?? ""}` : ""}`} loading="eager" decoding="async" width={300} height={500} />
-          ) : (
-            <span className="flex h-full items-center justify-center bg-velvet px-3 text-center text-sm text-muted">Photo not provided</span>
-          )}
-          <span className="slab3d-glare" aria-hidden="true" />
-        </div>
-      </div>
+    <div className="aspect-[3/5] overflow-hidden rounded-md border border-line bg-vault">
+      {src ? (
+        <img src={src} alt={`${card.title}${card.grader ? `, ${card.grader} ${card.grade ?? ""}` : ""}`} loading="eager" decoding="async" width={300} height={500} className="h-full w-full object-contain" />
+      ) : (
+        <span className="flex h-full items-center justify-center px-3 text-center text-sm text-muted">Photo not provided</span>
+      )}
     </div>
   );
 }
 
 function ShowWindow({ cards }: { cards: (CardSummary & { packName: string })[] }) {
-  const order = cards.length === 3 ? [cards[1], cards[0], cards[2]] : cards;
   return (
     <figure className="relative">
-      <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)_minmax(0,1fr)] items-end gap-2 sm:gap-5">
-        {order.map((c, i) => {
-          const hero = cards.length === 3 ? i === 1 : i === 0;
+      <div className="grid grid-cols-3 items-start gap-3 sm:gap-5">
+        {cards.map((c) => {
           return (
-            <Link key={c.id} to="/packs" className={`group block min-w-0 ${hero ? "z-10" : "translate-y-6 opacity-90 sm:translate-y-10"}`}>
-              <Tilt max={hero ? 9 : 6}>
-                <CaseFrame card={c} yaw={hero ? 0 : i === 0 ? 16 : -16} />
-              </Tilt>
+            <Link key={c.id} to="/packs" className="group block min-w-0">
+              <CaseFrame card={c} />
               <figcaption className="mt-4 text-center sm:text-left">
-                <span className={`num block leading-none ${hero ? "text-2xl text-gold sm:text-3xl" : "text-lg text-paper sm:text-xl"}`}>{usd(c.valueUsd)}</span>
+                <span className="num block text-lg leading-none text-paper sm:text-xl">{usd(c.valueUsd)}</span>
                 <span className="mt-1.5 block truncate text-[12px] text-muted sm:text-[13px]">
                   {c.grade ? <span className="hidden text-paper-dim sm:inline">{c.grader ?? "Grade"} {c.grade} · </span> : null}
                   {c.title}
@@ -100,10 +81,10 @@ function Home() {
           {stats.ok && stats.data.packsOpened !== null && (
             <p className="eyebrow mb-5"><span className="live-dot mr-2 align-middle" aria-hidden="true" />{count(stats.data.packsOpened)} packs ripped so far</p>
           )}
-          <h1 className="shout text-[3rem] sm:text-7xl lg:text-[4.6rem] xl:text-[5.1rem]">
+          <h1 className="shout text-[2.8rem] sm:text-6xl lg:text-[3.9rem] xl:text-[4.3rem]">
             Real graded cards,
             <br />
-            <span className="text-gold">sealed in packs.</span>
+            <span className="text-paper-dim">sealed in packs.</span>
           </h1>
           <p className="mt-6 max-w-md text-[17px] leading-relaxed text-paper-dim">
             Every pack holds one slab from the vault. Open it, keep it, list it, battle with it, or sell it back for 90% of
@@ -131,10 +112,9 @@ function Home() {
           {(list) => list.length === 0 ? (
             <p className="text-muted">No packs are on sale right now.</p>
           ) : (
-            // Desktop: the packs float, at half the strength of the packs page, so they sit quietly beside the copy.
             <div className="grid grid-cols-1 gap-16 lg:grid-cols-2 lg:gap-12">
               {list.map((p, i) => (
-                <PackCard key={p.id} pack={p} eager={i === 0} compact live amp={0.5} minWidth={1024} phase={i * 1.9} />
+                <PackCard key={p.id} pack={p} eager={i === 0} compact />
               ))}
             </div>
           )}
@@ -202,8 +182,7 @@ function Home() {
                 {i === 0 && firstPack && <div className="w-[104px]"><PackPedestal tier={firstPack.tier} name={firstPack.name} /></div>}
                 {i === 1 && latestPull?.image && (
                   <div className="relative">
-                    <span className="absolute inset-[-30%] rounded-full" style={{ background: `radial-gradient(closest-side, ${tierColor(latestPull.pullTier)}55, transparent)` }} />
-                    <img src={latestPull.image} alt="" loading="lazy" className="relative h-[150px] w-auto object-contain drop-shadow-[0_14px_18px_rgba(0,0,0,0.6)]" />
+                    <img src={latestPull.image} alt="" loading="lazy" className="relative h-[150px] w-auto object-contain" />
                   </div>
                 )}
                 {i === 2 && latestPull?.image && (
@@ -212,9 +191,9 @@ function Home() {
                     <span className="absolute -right-3 -top-3 flex h-8 w-8 items-center justify-center bg-gold text-ink cut-sm"><Lock size={14} /></span>
                   </div>
                 )}
-                {i === 3 && <span className="shout pb-6 text-7xl text-gold">90%</span>}
+                {i === 3 && <span className="shout pb-6 text-7xl text-paper">90%</span>}
               </div>
-              <p className="mt-5 font-display text-sm font-semibold text-gold">Step {i + 1}</p>
+              <p className="mt-5 font-display text-sm font-semibold text-muted">Step {i + 1}</p>
               <h3 className="mt-1 font-display text-xl font-semibold">{t}</h3>
               <p className="mt-2 text-sm leading-relaxed text-paper-dim">{d}</p>
             </li>

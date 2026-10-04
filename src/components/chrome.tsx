@@ -45,7 +45,7 @@ function Wordmark({ className }: { className: string }) {
 export function SiteHeader() {
   const path = useRouterState({ select: (s) => s.location.pathname });
   return (
-    <header className="sticky top-0 z-40 border-b border-line/70 bg-ink/90 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-line/70 bg-ink">
       <div className="wrap flex h-14 items-center justify-between gap-6 lg:h-16">
         <Wordmark className="h-6 lg:h-7" />
         <nav aria-label="Main" className="hidden flex-1 lg:block">
@@ -60,7 +60,7 @@ export function SiteHeader() {
                     className={`relative block px-3 py-2 font-display text-[15px] font-semibold tracking-[0.01em] transition-colors ${on ? "text-gold" : "text-paper-dim hover:text-paper"}`}
                   >
                     {label}
-                    {on && <span className="absolute inset-x-3 -bottom-[13px] h-[2px] -skew-x-[30deg] bg-gold" aria-hidden="true" />}
+                    {on && <span className="absolute inset-x-3 -bottom-[13px] h-[2px] bg-gold" aria-hidden="true" />}
                   </Link>
                 </li>
               );
@@ -99,7 +99,7 @@ function TabBar() {
     <>
       {open && (
         <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="More">
-          <button type="button" className="absolute inset-0 bg-ink/70 backdrop-blur-sm" aria-label="Close menu" onClick={() => setOpen(false)} />
+          <button type="button" className="absolute inset-0 bg-ink/70" aria-label="Close menu" onClick={() => setOpen(false)} />
           <div className="cut absolute inset-x-2 bottom-[calc(4.5rem+env(safe-area-inset-bottom))] bg-vault p-2">
             <ul>
               {MORE.map(([href, label]) => (
@@ -113,7 +113,7 @@ function TabBar() {
           </div>
         </div>
       )}
-      <nav aria-label="Main" className="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-ink/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden">
+      <nav aria-label="Main" className="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-ink pb-[env(safe-area-inset-bottom)] lg:hidden">
         <ul className="grid grid-cols-5">
           {TABS.map(([href, label, Icon]) => {
             const on = isActive(path, href);
@@ -235,7 +235,7 @@ export function Shell({ children }: { children: ReactNode }) {
 }
 
 /**
- * Page title as a statement: the wordmark's forward-leaning italic.
+ * Page title: plain, upright and tight.
  * `eyebrow` is a short live or contextual line above it; `note` is a status beside it (e.g. "Coming soon").
  */
 export function PageHead({ eyebrow, note, title, children, aside }: { eyebrow?: ReactNode; note?: string; title: string; children?: ReactNode; aside?: ReactNode }) {

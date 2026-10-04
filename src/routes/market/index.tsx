@@ -55,7 +55,7 @@ function Market() {
       >
         Every card listed here is a vaulted slab held in escrow until it sells. Prices are set by sellers in USDC.
       </PageHead>
-      <div className="sticky top-14 z-30 border-y border-line/70 bg-ink/90 backdrop-blur-md lg:top-16">
+      <div className="sticky top-14 z-30 border-y border-line/70 bg-ink lg:top-16">
       <div className="wrap py-3">
         <form onSubmit={onSubmit} aria-label="Filter listings" key={JSON.stringify(search)}>
           <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-2 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,4.2fr)]">

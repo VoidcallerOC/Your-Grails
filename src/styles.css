@@ -1,32 +1,28 @@
 @import "tailwindcss";
 @import "@fontsource-variable/inter/wght.css";
-@import "@fontsource/chakra-petch/500.css";
-@import "@fontsource/chakra-petch/600.css";
-@import "@fontsource/chakra-petch/700.css";
-@import "@fontsource/chakra-petch/700-italic.css";
 @import "@fontsource/ibm-plex-mono/500.css";
 
 /*
- * YOUR GRAILS — "the vault, after hours".
- * A members' card shop at night: black velvet, warm spotlights, slabs on lit shelves, gold placards.
- * Shape language comes from the wordmark: forward slant and cut (chamfered) corners, never soft pills.
- * Display and numbers: Chakra Petch. Reading: Inter. Identifiers only: IBM Plex Mono.
+ * YOUR GRAILS — catalogue, not casino.
+ * Plain surfaces, real photographs at rest, one typeface, one accent. No glows, gradients, tilt, floating or sparkle:
+ * the slabs and the numbers carry the page. Gold is the brand accent and is used sparingly (primary action, focus,
+ * current nav item). Reading and display: Inter. Identifiers only: IBM Plex Mono.
  */
 @theme {
   --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Chakra Petch", "Inter Variable", ui-sans-serif, sans-serif;
+  --font-display: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 
-  --color-ink: #0a0908;
-  --color-velvet: #110f0d;
-  --color-vault: #161310;
-  --color-shelf: #1d1a16;
-  --color-raised: #24201b;
-  --color-line: #2c2822;
-  --color-line-strong: #453f36;
-  --color-paper: #ece6da;
-  --color-paper-dim: #c9c1b2;
-  --color-muted: #948c7f;
+  --color-ink: #0e0e10;
+  --color-velvet: #141417;
+  --color-vault: #18181c;
+  --color-shelf: #1e1e23;
+  --color-raised: #26262c;
+  --color-line: #2c2c32;
+  --color-line-strong: #3f3f47;
+  --color-paper: #f2f2f3;
+  --color-paper-dim: #d1d1d6;
+  --color-muted: #a0a0a8;
   --color-gold: #d4a84b;
   --color-gold-bright: #e8c46f;
   --color-gold-deep: #8a6a27;
@@ -48,9 +44,6 @@
   body {
     @apply bg-ink font-sans text-paper antialiased;
     min-height: 100dvh;
-    /* The room: a faint warm ceiling light falling off into black. */
-    background-image: radial-gradient(1200px 520px at 50% -180px, rgba(212, 168, 75, 0.09), transparent 70%);
-    background-repeat: no-repeat;
   }
   :focus-visible {
     outline: 2px solid var(--color-gold);
@@ -84,159 +77,49 @@
 
   /* ---------- Type ---------- */
   .display {
-    @apply font-display font-bold leading-[0.98] tracking-[-0.01em];
+    @apply font-display font-semibold leading-[1.05] tracking-[-0.02em];
   }
-  /* The wordmark's voice: bold italic, leaning forward. For statements, not labels. */
+  /* Page and section titles: upright, plain, tight. (Name kept for existing call sites.) */
   .shout {
-    @apply font-display font-bold italic leading-[0.92] tracking-[-0.02em];
+    @apply font-display font-semibold leading-[1.05] tracking-[-0.025em];
   }
   .eyebrow {
-    @apply font-display text-[13px] font-semibold tracking-[0.04em] text-gold;
+    @apply text-[13px] font-medium text-muted;
   }
   .label {
     @apply text-[13px] leading-snug text-muted;
   }
   .num {
-    @apply font-display font-semibold tabular-nums tracking-[-0.01em];
+    @apply font-semibold tabular-nums tracking-[-0.01em];
   }
   .money {
-    @apply font-display font-semibold tabular-nums text-paper;
+    @apply font-semibold tabular-nums text-paper;
   }
   .link {
     @apply underline decoration-line-strong underline-offset-4 transition-colors hover:decoration-gold;
   }
 
-  /* ---------- Shape: the wordmark's cut corner ---------- */
+  /* ---------- Shape: small, quiet radii (names kept for existing call sites) ---------- */
   .cut {
-    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    @apply rounded-md;
   }
   .cut-sm {
-    clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+    @apply rounded;
   }
 
-  /* ---------- The slab on display ---------- */
-  /* A pool of warm light behind the case, and a soft floor shadow beneath it. No frame, no box. */
+  /* ---------- The slab: the photograph, at rest ---------- */
   .stage {
     @apply relative flex items-end justify-center;
     aspect-ratio: 5 / 7.4;
   }
-  .stage::before {
-    content: "";
-    position: absolute;
-    inset: 4% 6% 10%;
-    background: radial-gradient(closest-side, rgba(232, 196, 111, 0.16), rgba(232, 196, 111, 0.04) 60%, transparent 100%);
-    filter: blur(6px);
-    pointer-events: none;
-  }
-  .stage::after {
-    content: "";
-    position: absolute;
-    left: 14%;
-    right: 14%;
-    bottom: 1.5%;
-    height: 7%;
-    background: radial-gradient(closest-side, rgba(0, 0, 0, 0.85), transparent);
-    pointer-events: none;
-  }
   .stage img.slab-img {
-    position: relative;
-    z-index: 1;
-    max-height: 96%;
+    max-height: 100%;
     width: auto;
     max-width: 100%;
     object-fit: contain;
-    filter: drop-shadow(0 18px 22px rgba(0, 0, 0, 0.55));
-  }
-  /*
-   * A slab as an object: the real photo is the front face of a clear acrylic block. Four thin edges give it depth,
-   * a glare band moves with the pointer tilt, and a contact shadow sits it on the shelf. Nothing is drawn on the face.
-   */
-  .slab3d {
-    --t: 9px; /* acrylic thickness */
-    position: relative;
-    aspect-ratio: 3 / 5;
-    transform-style: preserve-3d;
-    transform: rotateY(var(--yaw, 0deg)) rotateX(3deg);
-  }
-  .slab3d-face {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    border-radius: 7px;
-    background: #cfd3da;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
-    transform: translateZ(calc(var(--t) / 2));
-  }
-  .slab3d-face img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .slab3d-glare {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: linear-gradient(112deg, transparent 32%, rgba(255, 255, 255, 0.16) 44%, rgba(255, 255, 255, 0.04) 52%, transparent 60%);
-    background-size: 260% 100%;
-    background-position: calc(50% + var(--ry, 0deg) / 1deg * 3%) 0;
-    mix-blend-mode: screen;
-    transition: background-position 0.25s ease-out;
-  }
-  .slab3d-back {
-    position: absolute;
-    inset: 0;
-    border-radius: 7px;
-    background: #1d2027;
-    transform: translateZ(calc(var(--t) / -2));
-  }
-  .slab3d-edge {
-    position: absolute;
-    background: linear-gradient(90deg, rgba(235, 238, 244, 0.55), rgba(150, 156, 168, 0.4) 50%, rgba(235, 238, 244, 0.45));
-  }
-  .slab3d-edge.l,
-  .slab3d-edge.r {
-    top: 7px;
-    bottom: 7px;
-    width: var(--t);
-  }
-  .slab3d-edge.l { left: 0; transform: translateX(-50%) rotateY(-90deg); }
-  .slab3d-edge.r { right: 0; transform: translateX(50%) rotateY(90deg); }
-  .slab3d-edge.t,
-  .slab3d-edge.b {
-    left: 7px;
-    right: 7px;
-    height: var(--t);
-    background: linear-gradient(180deg, rgba(235, 238, 244, 0.55), rgba(150, 156, 168, 0.4) 50%, rgba(235, 238, 244, 0.45));
-  }
-  .slab3d-edge.t { top: 0; transform: translateY(-50%) rotateX(90deg); }
-  .slab3d-edge.b { bottom: 0; transform: translateY(50%) rotateX(-90deg); }
-  .slab3d-shadow {
-    position: absolute;
-    left: 6%;
-    right: 6%;
-    bottom: -7%;
-    height: 9%;
-    background: radial-gradient(closest-side, rgba(0, 0, 0, 0.8), transparent);
-    filter: blur(2px);
-    pointer-events: none;
   }
 
-  /* Pointer-follow tilt (vars set by <Tilt>). Disabled under reduced motion. */
-  .tilt {
-    transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(var(--lift, 0px));
-    transition: transform 0.25s ease-out;
-    /* Flat on purpose: preserve-3d put the slab photo and the stage's glow/shadow on one plane, and while tilted the
-       browser would z-fight them, drawing the shadow over the card at random. Children that need depth (.slab3d)
-       keep their own 3D context. */
-    transform-style: flat;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .tilt {
-      transform: none !important;
-    }
-  }
-
-  /* The shelf: a lit ledge under a row of objects. */
+  /* The shelf: a plain rule under a row of objects. */
   .shelf {
     position: relative;
   }
@@ -247,13 +130,12 @@
     right: 0;
     bottom: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(212, 168, 75, 0.45) 20%, rgba(212, 168, 75, 0.45) 80%, transparent);
+    background: var(--color-line);
   }
 
   /* ---------- Grade tag: the slab's label, as an object ---------- */
   .grade-tag {
-    @apply inline-flex items-stretch font-display leading-none;
-    clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+    @apply inline-flex items-stretch overflow-hidden rounded-sm leading-none;
   }
   .grade-tag > .gt-who {
     @apply flex items-center bg-paper px-1.5 text-[10px] font-bold tracking-[0.06em] text-ink;
@@ -267,12 +149,10 @@
 
   /* ---------- Fields and panels ---------- */
   .field {
-    @apply min-h-11 w-full border border-line bg-velvet px-3 text-sm text-paper placeholder:text-muted hover:border-line-strong focus:border-paper-dim;
-    clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+    @apply min-h-11 w-full rounded-md border border-line bg-velvet px-3 text-sm text-paper placeholder:text-muted hover:border-line-strong focus:border-paper-dim;
   }
   .panel {
-    @apply bg-vault;
-    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    @apply rounded-md bg-vault;
   }
   .band {
     @apply bg-velvet;
@@ -281,50 +161,27 @@
     @apply grid items-center gap-3 border-t border-line px-1 py-3;
   }
 
-  /* ---------- Ticker: the shop's "just pulled" board ---------- */
+  /* ---------- "Just pulled": a plain row that scrolls sideways by hand. No marquee. ---------- */
   .ticker {
-    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    position: relative;
+    overflow-x: auto;
+    contain: paint; /* scrollers own their overflow; nothing inside may widen the page */
+    scrollbar-width: thin;
   }
   .ticker-track {
     display: flex;
     width: max-content;
-    animation: ticker 60s linear infinite;
-  }
-  .ticker:hover .ticker-track {
-    animation-play-state: paused;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .ticker {
-      overflow-x: auto;
-    }
-    .ticker-track {
-      animation: none;
-    }
   }
 
-  /* ---------- Entrance: objects rise into the light as they scroll in ---------- */
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      .rise {
-        animation: rise both ease-out;
-        animation-timeline: view();
-        animation-range: entry 0% entry 55%;
-      }
-    }
-  }
-
-  /* Live dot for battles and the race. */
+  /* Live marker for battles and the race: a steady dot, no pulse. */
   .live-dot {
     @apply inline-block h-2 w-2 rounded-full bg-live;
-    box-shadow: 0 0 0 0 rgba(229, 72, 77, 0.6);
-    animation: pulse 1.8s ease-out infinite;
   }
 }
 
-/* Buttons: cut-corner plaques. Utilities so they compose with other utilities. */
+/* Buttons: plain, slightly rounded. Utilities so they compose with other utilities. */
 @utility btn {
-  @apply inline-flex min-h-11 items-center justify-center gap-2 px-5 font-display text-[15px] font-semibold tracking-[0.01em] transition-colors disabled:cursor-not-allowed;
-  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+  @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-5 text-[15px] font-semibold transition-colors disabled:cursor-not-allowed;
 }
 @utility btn-primary {
   @apply btn bg-gold text-ink hover:bg-gold-bright disabled:bg-raised disabled:text-muted;
@@ -334,30 +191,6 @@
 }
 @utility btn-ghost {
   @apply btn bg-transparent px-0 text-paper-dim hover:text-paper;
-}
-
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(28px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-@keyframes ticker {
-  to {
-    transform: translateX(-50%);
-  }
-}
-@keyframes pulse {
-  70% {
-    box-shadow: 0 0 0 7px rgba(229, 72, 77, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(229, 72, 77, 0);
-  }
 }
 
 /* Navigation progress: indeterminate sweep. Static (full width) under reduced motion. */

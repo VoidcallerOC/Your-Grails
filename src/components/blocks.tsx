@@ -29,7 +29,7 @@ export function StatsLedger({ stats, fetchedAt }: { stats: SiteStats; fetchedAt:
   const rows: [string, string, boolean?][] = [
     ["Packs ripped", count(stats.packsOpened)],
     ["Chase pulls", count(stats.chaseCards)],
-    ["Grails pulled", count(stats.grails), true],
+    ["Grails pulled", count(stats.grails)],
     ["Battles fought", count(stats.completedBattles)],
     ["Slabs for sale", count(stats.activeListings)],
     ["Bought back", usdCompact(stats.buybackPaidUsd)],
@@ -37,10 +37,10 @@ export function StatsLedger({ stats, fetchedAt }: { stats: SiteStats; fetchedAt:
   return (
     <section aria-label="Live figures" className="border-y border-line bg-velvet">
       <dl className="wrap grid grid-cols-3 gap-x-4 lg:grid-cols-6">
-        {rows.map(([k, v, hot]) => (
+        {rows.map(([k, v]) => (
           <div key={k} className="flex flex-col-reverse border-line py-5 lg:border-l lg:pl-5 lg:first:border-l-0 lg:first:pl-0">
             <dt className="label mt-1">{k}</dt>
-            <dd className={`num text-[1.7rem] leading-none sm:text-4xl ${hot ? "text-gold" : "text-paper"}`}>{v}</dd>
+            <dd className="num text-[1.7rem] leading-none text-paper sm:text-4xl">{v}</dd>
           </div>
         ))}
       </dl>
@@ -116,17 +116,14 @@ export function OddsTable({ odds, caption }: { odds: OddsTier[]; caption?: strin
 /** The sealed pack, standing on a lit pedestal in its own colour. Exact artwork pixels, no filters. */
 export function PackPedestal({ tier, name, eager = false, live = false, phase = 0, amp = 1, minWidth = 0, className = "" }: { tier: string; name: string; eager?: boolean; live?: boolean; phase?: number; amp?: number; minWidth?: number; className?: string }) {
   const src = packArtSrc(tier);
-  const rgb = glow(tier);
   return (
     <div className={`relative flex items-end justify-center ${className}`}>
-      <div className="pointer-events-none absolute inset-x-[8%] bottom-[6%] top-[4%]" style={{ background: `radial-gradient(closest-side, rgba(${rgb},0.34), rgba(${rgb},0.08) 60%, transparent)` }} aria-hidden="true" />
-      <div className="pointer-events-none absolute bottom-0 left-[18%] right-[18%] h-[6%]" style={{ background: "radial-gradient(closest-side, rgba(0,0,0,0.9), transparent)" }} aria-hidden="true" />
       {src && live ? (
         <div className="relative z-10 w-full">
           <LivePack tier={tier} name={name} eager={eager} phase={phase} amp={amp} minWidth={minWidth} />
         </div>
       ) : src ? (
-        <img src={src} alt={`${name} pack`} width={600} height={900} loading={eager ? "eager" : "lazy"} decoding="async" className="relative z-10 aspect-[2/3] w-full object-contain drop-shadow-[0_24px_30px_rgba(0,0,0,0.6)]" />
+        <img src={src} alt={`${name} pack`} width={600} height={900} loading={eager ? "eager" : "lazy"} decoding="async" className="relative z-10 aspect-[2/3] w-full object-contain" />
       ) : (
         <div className="relative z-10 flex aspect-[2/3] w-full items-center justify-center text-sm text-muted">{name}</div>
       )}
@@ -196,7 +193,7 @@ function ChaseThumb({ card }: { card: CardSummary }) {
     <figure className="min-w-0">
       <Slab card={card} sizes="120px" />
       <figcaption className="mt-1.5">
-        <span className="num block text-sm text-gold">{usd(card.valueUsd)}</span>
+        <span className="num block text-sm text-paper">{usd(card.valueUsd)}</span>
         <span className="block truncate text-[11.5px] text-muted">{card.title}</span>
       </figcaption>
     </figure>
@@ -218,27 +215,24 @@ function PullItem({ p, now }: { p: Pull; now: number }) {
           {p.packName ? ` · ${p.packName}` : ""} · {ago(p.revealedAt, now)}
         </span>
       </span>
-      <span className="num text-lg text-gold">{usd(p.valueUsd)}</span>
+      <span className="num text-lg text-paper">{usd(p.valueUsd)}</span>
     </span>
   );
 }
 
-/** The "just pulled" board: real reveals scrolling past. Pauses on hover; static under reduced motion. */
+/** The "just pulled" row: real reveals, newest first, scrolled sideways by hand. */
 export function PullTicker({ pulls, now }: { pulls: Pull[]; now: number }) {
   if (!pulls.length) return null;
   return (
     <section aria-label="Just pulled" className="border-y border-line bg-velvet">
       <div className="flex items-center">
-        <p className="z-10 flex h-[72px] shrink-0 items-center gap-2 border-r border-line bg-velvet px-4 font-display text-sm font-bold italic text-paper sm:px-6">
+        <p className="z-10 flex h-[72px] shrink-0 items-center gap-2 border-r border-line bg-velvet px-4 font-display text-sm font-bold text-paper sm:px-6">
           <span className="live-dot" aria-hidden="true" /> Just pulled
         </p>
-        <div className="ticker min-w-0 flex-1 overflow-hidden">
+        <div className="ticker min-w-0 flex-1">
           <ul className="ticker-track items-center py-3 pl-6">
             {pulls.map((p) => (
               <li key={p.id}><PullItem p={p} now={now} /></li>
-            ))}
-            {pulls.map((p) => (
-              <li key={`dup-${p.id}`} aria-hidden="true"><PullItem p={p} now={now} /></li>
             ))}
           </ul>
         </div>
@@ -262,7 +256,7 @@ export function PullsList({ pulls, now }: { pulls: Pull[]; now: number }) {
             <span className="font-display font-semibold capitalize" style={{ color: tierColor(p.pullTier) }}>{p.pullTier ?? "Pull"}</span>
             <span className="text-muted">{ago(p.revealedAt, now)}</span>
           </p>
-          <p className="num text-lg text-gold">{usd(p.valueUsd)}</p>
+          <p className="num text-lg text-paper">{usd(p.valueUsd)}</p>
         </li>
       ))}
     </ol>
