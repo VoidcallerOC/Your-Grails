@@ -134,7 +134,7 @@ function ListingPage() {
 
                 <section className="mt-12 max-w-xl border-t border-line pt-6">
                   <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
-                    <ShieldCheck size={19} className="text-gold" aria-hidden="true" /> The slab
+                    <ShieldCheck size={19} className="text-paper-dim" aria-hidden="true" /> The slab
                   </h2>
                   <dl className="mt-4 grid grid-cols-[auto_minmax(0,1fr)] gap-x-8 gap-y-2.5 text-sm">
                     <dt className="text-muted">Grader</dt><dd>{c.grader ?? "—"} {c.grade}</dd>

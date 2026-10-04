@@ -27,7 +27,7 @@ function TheirGrail({ c }: { c: Collection }) {
       <figcaption className="pb-6">
         <p className="eyebrow">Their grail</p>
         <p className="mt-2 font-display text-xl font-semibold leading-tight">{grail.title}</p>
-        <p className="num mt-2 text-3xl text-gold">{usd(grail.valueUsd)}</p>
+        <p className="num mt-2 text-3xl text-paper">{usd(grail.valueUsd)}</p>
         <p className="label mt-1">{paged ? "Most valuable card on this page" : "Most valuable card in the collection"}</p>
       </figcaption>
     </figure>
@@ -48,7 +48,6 @@ export function ProfileView({ profile, address, collection }: { profile: Part<Pr
       )}
       {person && (
         <section className="relative overflow-hidden border-b border-line">
-          <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 420px at 78% 40%, rgba(212,168,75,0.14), transparent 70%)" }} aria-hidden="true" />
           <div className="wrap relative grid grid-cols-1 items-center gap-10 py-12 sm:py-14 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
             <div className="min-w-0">
               <div className="flex min-w-0 items-center gap-5 sm:gap-7">
@@ -73,7 +72,7 @@ export function ProfileView({ profile, address, collection }: { profile: Part<Pr
                   </div>
                   <div className="flex flex-col-reverse">
                     <dt className="label mt-1">Collection value</dt>
-                    <dd className="num text-4xl leading-none text-gold sm:text-5xl">{usd(collection.data.totalValueUsd)}</dd>
+                    <dd className="num text-4xl leading-none text-paper sm:text-5xl">{usd(collection.data.totalValueUsd)}</dd>
                   </div>
                 </dl>
               )}

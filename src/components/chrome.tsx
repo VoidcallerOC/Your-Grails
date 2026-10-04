@@ -37,7 +37,10 @@ function isActive(path: string, href: string) {
 function Wordmark({ className }: { className: string }) {
   return (
     <Link to="/" className="flex shrink-0 items-center" aria-label="YourGrails home">
-      <img src="/brand/wordmark.svg" alt="YourGrails" width={157} height={32} className={`${className} w-auto`} />
+      {/* Typeset placeholder: the logo is the founder's call, so no mark ships here. */}
+      <span className={`${className} font-display font-bold uppercase leading-none tracking-[0.01em] text-paper`}>
+        Your<span className="text-gold">Grails</span>
+      </span>
     </Link>
   );
 }
@@ -45,9 +48,9 @@ function Wordmark({ className }: { className: string }) {
 export function SiteHeader() {
   const path = useRouterState({ select: (s) => s.location.pathname });
   return (
-    <header className="sticky top-0 z-40 border-b border-line/70 bg-ink/90 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-line/70 bg-ink">
       <div className="wrap flex h-14 items-center justify-between gap-6 lg:h-16">
-        <Wordmark className="h-6 lg:h-7" />
+        <Wordmark className="text-[22px] lg:text-[25px]" />
         <nav aria-label="Main" className="hidden flex-1 lg:block">
           <ul className="flex items-center gap-1">
             {NAV.map(([href, label]) => {
@@ -60,7 +63,7 @@ export function SiteHeader() {
                     className={`relative block px-3 py-2 font-display text-[15px] font-semibold tracking-[0.01em] transition-colors ${on ? "text-gold" : "text-paper-dim hover:text-paper"}`}
                   >
                     {label}
-                    {on && <span className="absolute inset-x-3 -bottom-[13px] h-[2px] -skew-x-[30deg] bg-gold" aria-hidden="true" />}
+                    {on && <span className="absolute inset-x-3 -bottom-[13px] h-[2px] bg-gold" aria-hidden="true" />}
                   </Link>
                 </li>
               );
@@ -99,7 +102,7 @@ function TabBar() {
     <>
       {open && (
         <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="More">
-          <button type="button" className="absolute inset-0 bg-ink/70 backdrop-blur-sm" aria-label="Close menu" onClick={() => setOpen(false)} />
+          <button type="button" className="absolute inset-0 bg-paper/40" aria-label="Close menu" onClick={() => setOpen(false)} />
           <div className="cut absolute inset-x-2 bottom-[calc(4.5rem+env(safe-area-inset-bottom))] bg-vault p-2">
             <ul>
               {MORE.map(([href, label]) => (
@@ -113,7 +116,7 @@ function TabBar() {
           </div>
         </div>
       )}
-      <nav aria-label="Main" className="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-ink/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden">
+      <nav aria-label="Main" className="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-ink pb-[env(safe-area-inset-bottom)] lg:hidden">
         <ul className="grid grid-cols-5">
           {TABS.map(([href, label, Icon]) => {
             const on = isActive(path, href);
@@ -170,9 +173,9 @@ export function SiteFooter() {
     <footer className="mt-28 border-t border-line bg-velvet">
       <div className="wrap grid grid-cols-3 gap-x-6 gap-y-10 py-14 md:grid-cols-[minmax(0,1.6fr)_repeat(3,minmax(0,1fr))]">
         <div className="col-span-3 max-w-sm md:col-span-1">
-          <img src="/brand/lockup.svg" alt="YourGrails: Rip, Battle, Grail" width={240} height={66} className="h-14 w-auto" loading="lazy" />
+          <p className="font-display text-[28px] font-bold uppercase leading-none text-paper">Your<span className="text-gold">Grails</span></p>
           <p className="mt-5 text-sm leading-relaxed text-muted">
-            Sealed packs of real graded cards. Every pull is a PSA, BGS or CGC slab held in the vault and owned by you.
+            Graded cards held in a vault. Open packs with the full pool on show, borrow against a slab, or battle with the slabs you own.
           </p>
         </div>
         {FOOTER.map(([title, links]) => (
@@ -235,7 +238,7 @@ export function Shell({ children }: { children: ReactNode }) {
 }
 
 /**
- * Page title as a statement: the wordmark's forward-leaning italic.
+ * Page title: plain, upright and tight.
  * `eyebrow` is a short live or contextual line above it; `note` is a status beside it (e.g. "Coming soon").
  */
 export function PageHead({ eyebrow, note, title, children, aside }: { eyebrow?: ReactNode; note?: string; title: string; children?: ReactNode; aside?: ReactNode }) {

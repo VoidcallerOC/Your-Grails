@@ -10,7 +10,7 @@ export function Avatar({ person, size = 36 }: { person: Person; size?: number })
   return (
     <span
       aria-hidden="true"
-      className="flex shrink-0 items-center justify-center rounded-full bg-raised font-display font-bold italic text-paper"
+      className="flex shrink-0 items-center justify-center rounded-full bg-raised font-display font-bold text-paper"
       style={{ width: size, height: size, fontSize: Math.round(size * 0.42) }}
     >
       {name.replace(/^0x/, "").slice(0, 1).toUpperCase()}

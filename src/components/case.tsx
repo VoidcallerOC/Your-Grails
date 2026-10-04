@@ -40,7 +40,7 @@ export function GradeCompartments({ grades, current, base }: { grades: Facet[]; 
   const cell = (on: boolean) =>
     `flex min-w-[92px] shrink-0 flex-col justify-between border px-4 py-3 text-left transition-colors ${on ? "border-gold bg-gold/10" : "border-line bg-velvet hover:border-line-strong"}`;
   return (
-    <nav ref={strip} aria-label="Case compartments by grade" className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+    <nav ref={strip} aria-label="Case compartments by grade" className="relative -mx-4 overflow-x-auto px-4 [contain:paint] sm:mx-0 sm:px-0">
       <ul className="flex gap-2">
         <li>
           <Link to="/market" search={{ ...base, grade: undefined, page: 1 }} activeOptions={exact} aria-current={!current ? "page" : undefined} className={cell(!current)}>
@@ -89,19 +89,19 @@ function LabelRow({ l, on, onPull }: { l: Listing; on: boolean; onPull: () => vo
         </span>
         <span className="grid min-w-0 grid-cols-1 gap-2 lg:contents">
           {/* the label */}
-          <span className={`grid min-w-0 grid-cols-[minmax(0,1fr)_auto] gap-3 border-l-[3px] bg-paper px-3 py-2.5 text-ink ${on ? "border-gold" : "border-transparent group-hover:border-gold/60"}`}>
+          <span className={`grid min-w-0 grid-cols-[minmax(0,1fr)_auto] gap-3 border-l-[3px] bg-label px-3 py-2.5 text-label-ink ${on ? "border-gold" : "border-transparent group-hover:border-gold/60"}`}>
             <span className="min-w-0 font-display uppercase leading-[1.15] tracking-[0.02em]">
-              <span className="block truncate text-[11px] font-semibold text-ink/60">{top || " "}</span>
+              <span className="block truncate text-[11px] font-semibold text-label-ink/60">{top || " "}</span>
               <span className="block truncate text-[15px] font-bold">{c.title}</span>
-              <span className="block truncate text-[11px] font-semibold text-ink/60">{c.number ? `#${c.number}` : " "}{c.rarity ? ` · ${c.rarity}` : ""}</span>
+              <span className="block truncate text-[11px] font-semibold text-label-ink/60">{c.number ? `#${c.number}` : " "}{c.rarity ? ` · ${c.rarity}` : ""}</span>
             </span>
             <span className="flex flex-col items-end justify-between text-right font-display uppercase leading-none">
-              <span className="text-[11px] font-semibold text-ink/60">{c.grader ?? "Grade"}</span>
+              <span className="text-[11px] font-semibold text-label-ink/60">{c.grader ?? "Grade"}</span>
               <span className="mt-0.5 flex items-baseline gap-1.5">
                 {word && <span className="text-[11px] font-bold">{word}</span>}
                 <span className="text-2xl font-bold">{c.grade ?? "—"}</span>
               </span>
-              <span className="mt-1 font-mono text-[10.5px] normal-case text-ink/60">{c.cert ?? ""}</span>
+              <span className="mt-1 font-mono text-[10.5px] normal-case text-label-ink/60">{c.cert ?? ""}</span>
             </span>
           </span>
           {/* the ask, against the market */}

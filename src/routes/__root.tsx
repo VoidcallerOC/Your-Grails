@@ -11,7 +11,7 @@ export const Route = createRootRoute({
       { name: "description", content: "Open sealed packs of real PSA, BGS and CGC graded cards. Keep them in the vault, list them, battle with them or sell them back." },
       // Preview build: keep it out of search until it replaces production.
       { name: "robots", content: "noindex, nofollow" },
-      { name: "theme-color", content: "#0a0908" },
+      { name: "theme-color", content: "#f3f4f5" },
     ],
     links: [
       { rel: "icon", type: "image/svg+xml", href: "/brand/monogram.svg" },

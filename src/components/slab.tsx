@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useRef, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { cardLine, usd } from "@/lib/format";
 import type { CardSummary } from "@/lib/types";
 
@@ -21,27 +21,10 @@ export function GradeMark({ card }: { card: Pick<CardSummary, "grader" | "grade"
 }
 
 /** Pointer-follow tilt for objects. CSS disables it under reduced motion. */
-export function Tilt({ children, max = 7, className = "" }: { children: ReactNode; max?: number; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const move = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (e.pointerType !== "mouse" || !ref.current) return;
-    const r = ref.current.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width - 0.5;
-    const y = (e.clientY - r.top) / r.height - 0.5;
-    ref.current.style.setProperty("--ry", `${(x * max * 2).toFixed(2)}deg`);
-    ref.current.style.setProperty("--rx", `${(-y * max * 2).toFixed(2)}deg`);
-    ref.current.style.setProperty("--lift", "-6px");
-  };
-  const leave = () => {
-    ref.current?.style.removeProperty("--rx");
-    ref.current?.style.removeProperty("--ry");
-    ref.current?.style.removeProperty("--lift");
-  };
-  return (
-    <div ref={ref} className={`tilt ${className}`} onPointerMove={move} onPointerLeave={leave}>
-      {children}
-    </div>
-  );
+export function Tilt({ children, className = "" }: { children: ReactNode; max?: number; className?: string }) {
+  // Kept as a plain wrapper so call sites stay put; cards no longer lean toward the pointer. It stays the positioning
+  // anchor for the card's absolutely placed parts (the old transform did that implicitly), so they stay inside scrollers.
+  return <div className={`relative ${className}`}>{children}</div>;
 }
 
 /** A real slab photograph standing in its own light. When production has no photo, say so instead of drawing a card. */
@@ -101,6 +84,7 @@ export function CardTile({
       <div className="pt-3">
         <h3 className="line-clamp-2 text-[15px] font-medium leading-snug text-paper group-hover:text-gold-bright">{card.title}</h3>
         <p className="mt-0.5 truncate text-[12.5px] text-muted">{cardLine(card) || " "}</p>
+        {card.cert && <p className="mt-0.5 truncate font-mono text-[11px] text-muted">Cert {card.cert}</p>}
         <p className="mt-1.5 leading-none">
           <span className="sr-only">{priceLabel}: </span>
           <span className="money text-xl">{amount}</span>
@@ -134,7 +118,7 @@ export function CardGrid({ children, dense = false }: { children: ReactNode; den
 /** One long shelf you can swipe along: used where a few objects should tease a whole room. */
 export function ShelfRow({ children, label }: { children: ReactNode; label: string }) {
   return (
-    <div role="region" aria-label={label} className="-mx-4 overflow-x-auto px-4 pb-4 [scrollbar-width:thin] sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+    <div role="region" aria-label={label} className="relative -mx-4 overflow-x-auto px-4 pb-4 [contain:paint] [scrollbar-width:thin] sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
       <div className="grid auto-cols-[44%] grid-flow-col gap-5 sm:auto-cols-[30%] lg:auto-cols-[calc((100%-6rem)/5)] [&>*]:snap-start" style={{ scrollSnapType: "x mandatory" }}>
         {children}
       </div>

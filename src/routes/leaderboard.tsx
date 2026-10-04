@@ -30,7 +30,7 @@ function Podium({ rows }: { rows: { person: Person; metric: ReactNode }[] }) {
               <span className="mt-3 block max-w-full truncate font-display text-sm font-semibold group-hover:text-gold sm:text-base">{personName(r.person)}</span>
               <span className="mt-1 block">{r.metric}</span>
             </Link>
-            <span className={`mt-4 flex w-full items-start justify-center ${pl.h} cut`} style={{ background: `linear-gradient(180deg, ${pl.ring}33, ${pl.ring}0d)` }}>
+            <span className={`mt-4 flex w-full items-start justify-center ${pl.h} cut`} style={{ background: `${pl.ring}1f` }}>
               <span className="shout mt-2 text-3xl sm:text-4xl" style={{ color: pl.ring }}>{pl.label}</span>
             </span>
           </li>
@@ -72,7 +72,7 @@ function RaceView({ cats, selected, sort }: { cats: RaceCategory[]; selected?: s
             to="/leaderboard"
             search={{ tab: "race", sort, category: c.key }}
             aria-current={c.key === cat.key ? "true" : undefined}
-            className={`btn min-h-10 px-4 text-sm ${c.key === cat.key ? "bg-gold text-ink" : "bg-raised text-paper-dim hover:text-paper"}`}
+            className={`btn min-h-10 px-4 text-sm ${c.key === cat.key ? "bg-gold text-label" : "bg-raised text-paper-dim hover:text-paper"}`}
           >
             {c.shortTitle} · {c.totalParticipants}
           </Link>
@@ -172,7 +172,7 @@ function Board() {
             <div className="mb-4 flex gap-2">
               {(["wins", "bestWinStreak"] as const).map((s) => (
                 <Link key={s} to="/leaderboard" search={{ tab: "battles", sort: s }} aria-current={search.sort === s ? "true" : undefined}
-                  className={`btn min-h-10 px-4 text-sm ${search.sort === s ? "bg-gold text-ink" : "bg-raised text-paper-dim hover:text-paper"}`}>
+                  className={`btn min-h-10 px-4 text-sm ${search.sort === s ? "bg-gold text-label" : "bg-raised text-paper-dim hover:text-paper"}`}>
                   {s === "wins" ? "Most wins" : "Best streak"}
                 </Link>
               ))}

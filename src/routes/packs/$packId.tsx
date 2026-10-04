@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { OddsTable, PullsList, SectionHead } from "@/components/blocks";
-import { glow, packAvailability } from "@/lib/packs";
+import { packAvailability } from "@/lib/packs";
 import { PackStage } from "@/components/pack-art";
 import { PoolView, RevealReplay } from "@/components/experience";
 import { CardGrid, CardTile } from "@/components/slab";
@@ -34,18 +34,16 @@ function PackPage() {
       {pack.ok && (() => {
           const p = pack.data;
           const avail = packAvailability(p);
-          const rgb = glow(p.tier);
           return (
             <>
               {/* The product on its plinth. */}
               <section className="relative overflow-hidden">
-                <div className="pointer-events-none absolute inset-0" style={{ background: `radial-gradient(700px 520px at 28% 52%, rgba(${rgb},0.16), transparent 70%)` }} aria-hidden="true" />
                 <div className="wrap relative grid grid-cols-1 items-center gap-10 pb-16 pt-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-16">
                   <div className="mx-auto w-full max-w-[300px] sm:max-w-[380px] lg:max-w-[440px]">
                     <PackStage tier={p.tier} name={p.name} />
                   </div>
                   <div>
-                    <p className="eyebrow first-letter:uppercase" style={{ color: `rgb(${rgb})` }}>{p.tier} tier · {p.category}</p>
+                    <p className="eyebrow first-letter:uppercase">{p.tier} tier · {p.category}</p>
                     <h1 className="shout mt-2 text-5xl sm:text-6xl lg:text-7xl">{p.name}</h1>
                     <p className="mt-7">
                       <span className="money text-6xl leading-none">{usd(p.priceUsd)}</span> <span className="text-base text-muted">USDC</span>
@@ -53,7 +51,7 @@ function PackPage() {
                     <dl className="mt-7 grid max-w-lg grid-cols-3 gap-4 border-y border-line py-4">
                       <div>
                         <dt className="label">Expected pull value</dt>
-                        <dd className="num mt-1 text-2xl text-gold">{usd(p.evUsd)}</dd>
+                        <dd className="num mt-1 text-2xl text-paper">{usd(p.evUsd)}</dd>
                       </div>
                       <div>
                         <dt className="label">Cards in the pool</dt>

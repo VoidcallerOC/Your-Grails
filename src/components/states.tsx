@@ -19,7 +19,7 @@ export function ErrorPanel({ what, error }: { what: string; error: string }) {
 export function EmptyPanel({ children }: { children: ReactNode }) {
   return (
     <div className="shelf px-6 py-14 text-center">
-      <p className="font-display text-lg font-semibold italic text-paper-dim">{children}</p>
+      <p className="font-display text-lg font-semibold text-paper-dim">{children}</p>
     </div>
   );
 }
@@ -62,7 +62,7 @@ export function MobileBuyBar({ price, label }: { price: string; label: string })
   return (
     <>
     <div className="h-16 lg:hidden" aria-hidden="true" />
-    <div className="fixed inset-x-0 bottom-[calc(4rem+env(safe-area-inset-bottom))] z-40 border-t border-line bg-ink/95 backdrop-blur-md lg:hidden">
+    <div className="fixed inset-x-0 bottom-[calc(4rem+env(safe-area-inset-bottom))] z-40 border-t border-line bg-ink lg:hidden">
       <div className="wrap flex items-center justify-between gap-4 py-2.5">
         <p className="leading-none">
           <span className="money text-2xl">{price}</span> <span className="text-xs text-muted">USDC</span>
